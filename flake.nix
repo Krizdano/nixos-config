@@ -38,7 +38,7 @@
       sourceDir = ./.;
       secrets = if builtins.pathExists ("${sourceDir}" + "/secrets.nix")
                 then import ./secrets.nix
-                else import templates/secrets.nix;
+                else lib.warn ''file "secrets.nix" is missing using file "templates/secrets.nix"'' import templates/secrets.nix;
       inherit (secrets) users;
       username = users.primary.userName;
     in
