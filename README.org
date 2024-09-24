@@ -1,0 +1,286 @@
+#+TITLE: My NixOS config
+#+AUTHOR: Krizdano
+#+DESCRIPTION: My personal nixos configuration
+#+STARTUP: overview
+
+This repository contains my personal NixOS configuration.
+
+* Table of Contents :toc:
+- [[#overview][Overview]]
+- [[#disclaimer][Disclaimer]]
+- [[#installation][Installation]]
+  - [[#prepare-a-bootable-usb][Prepare a bootable USB]]
+  - [[#boot-from-the-usb-drive][Boot from the USB Drive]]
+  - [[#connect-to-internet][Connect to Internet]]
+  - [[#manual-partitioning-and-mounting][Manual Partitioning and Mounting]]
+  - [[#automated-partitioning-and-mounting-with-disko][Automated Partitioning and Mounting with Disko]]
+
+* Overview
+This NixOS setup uses Btrfs with LUKS encryption and LVM for managing volumes.
+It also uses [[https://github.com/nix-community/impermanence][impermanence module]] for a stateless option for the root and home directories, and uses [[https://colemakmods.github.io/mod-dh/][Colemak-DH]] as the keyboard layout.
+
+* Disclaimer
+This is not intended to be used by others. If you want to try my ~NixOS~ configuration,
+you can [[#Custom-live-ISO-using-this-configuration][create a custom live ISO image]] using this configuration.
+However, you might need to change or modify a few settings first to suit your own needs and preferences.
+
+*** Key Configuration Changes to Consider
+- [[#keyboard-layout][Keyboard Layout]].
+- [[#Changing-the-username-and-password][Username and password]].
+- [[#Doas][Sudo is replaced with doas]]
+- [[#firefox][Customized Firefox using Firefox policies]]
+
+* Installation
+This installation guide is for my own reference since I tend to forget things. It is also very detailed
+because the next time I install NixOS using this guide might be months or even years later.
+
+** Prepare a bootable USB
+*** Official Live ISO Image
+For an install guide using the official ISO image [[file:docs/nixos-install-using-official-iso-image.org][follow these instructions]].
+
+*** Custom Live ISO Image
+:PROPERTIES:
+:CUSTOM_ID: Custom-live-ISO-using-this-configuration
+:END:
+
+Create a custom live ISO image using this configuration.
+
+**** Keyboard Layout
+:PROPERTIES:
+:CUSTOM_ID: keyboard-layout
+:END:
+
+This configuration uses [[https://colemakmods.github.io/mod-dh/][Colemak-DH]] as the default keyboad layout. You can change it
+by [[#Clone-this-repo][cloning this repo]] and removing ~services.xserver.xkb.variant = "colemak_dh";~ from [[file:hosts/default.nix::variant][hosts/default.nix]].
+
+#+begin_quote
+NOTE: Several programs that uses ~vim keybindings~ for navigation are remapped to work under ~Colemak-DH.~
+If you plan to use ~vim keybindings~ for these programs in ~QWERTY~ layout, you might need to modify their configurations.
+
+These programs includes
+- [[https://neovim.io/][Neovim]] ([[https://github.com/nix-community/nixvim][nixvim]]): Remove the line ~programs.nixvim.opts.langmap~ from [[file:./modules/programs/nixvim.nix::langmap][modules/programs/nixvim.nix]]
+- [[https://www.gnu.org/software/emacs/][Emacs]] using [[https://github.com/emacs-evil/evil][evil-mode]]: Remove the section for ~keybindings for colemak-dh~ and the function ~my-hjkl-rotation~
+  from the evil-collections package in the file [[file:./config/emacs/config.org][config/emacs/config.org]].
+- [[https://github.com/gokcehan/lf][LF]]: remap the keys inside the file [[file:./modules/programs/lf.nix][modules/programs/lf.nix]]
+- Firefox using [[https://addons.mozilla.org/addon/vimium-c/][vimium-c]]: Go to vimium-c settings and remove all the custom keymappings.
+  Alternatively remove the section ~"keyMappings"~ from the file [[file:./modules/programs/firefox/extension-settings/vimium-c-settings.json][modules/programs/firefox/extension-settings/vimium-c-settings.json]]
+  and then import it.
+- [[https://w3m.sourceforge.net/][W3m]]: Remove the file [[file:./config/w3m/keymap][config/w3m/keymap]] and then remove the option ~home.file."${dataHome}/w3m/keymap".source = ../../config/w3m/keymap;~
+  from the [[file:./modules/home/default.nix][modules/home/default.nix]].
+#+end_quote
+
+***** Changing the Keyboard Layout Inside Hyprland
+:PROPERTIES:
+:CUSTOM_ID: Changing-keyboard-Layout-in-hyprland
+:END:
+
+This configuration uses [[https://hyprland.org][Hyprland]] as the Window Manager. You can toggle
+between ~QWERTY~ and ~colemak-dh~ inside ~Hyprland~ by pressing ~ALT+SPACE~. If you want to
+remove ~colemak-dh~ entirely, you can do that by [[#Clone-this-repo][cloning this repo]] and setting ~input.kb_layout = "us"~ and
+removing the line ~input.kb_variant = ",colemak_dh";~ from [[file:modules/windowmanagers/hyprland/default.nix::kb_variant][modules/windowmanagers/hyprland/default.nix]].
+
+**** Changing the Username and Password
+:PROPERTIES:
+:CUSTOM_ID:   Changing-the-username-and-password
+:END:
+
+By default this configuration contains a user with
+
+- *username* - ~admin~
+- *password* - ~test~
+
+You can change the *password* and *username* by [[#Clone-this-repo][cloning this repo]]
+and editing [[file:templates/secrets.nix][templates/secrets.nix]].
+
+To create a *hashed password* run
+
+#+begin_src bash
+mkpasswd "yourpassword"
+#+end_src
+
+Then copy the *hashed password* inside [[file:templates/secrets.nix][templates/secrets.nix]].
+
+**** Doas
+:PROPERTIES:
+:CUSTOM_ID: Doas
+:END:
+
+This configuration uses [[https://github.com/Duncaen/OpenDoas][doas]] instead of [[https://www.sudo.ws/][sudo]].
+You can enable ~sudo~ by changing the value of ~services.sudo.enable~ to "*true*"
+in the file [[file:./modules/security/doas.nix][modules/security/doas.nix]].
+
+#+begin_quote
+Make sure to remove everything related to ~doas~ in that file if you are enabling ~sudo~.
+#+end_quote
+
+**** Firefox
+:PROPERTIES:
+:CUSTOM_ID: Firefox
+:END:
+
+Firefox is customized to fit my needs using [[https://support.mozilla.org/en-US/kb/customizing-firefox-using-policiesjson][Firefox polices]] (see [[file:./docs/firefox-policies.org][docs/firefox-policies.org]] to get the list of policies I enabled)
+and has certain extensions pre-installed and configured. I have also enabled certain settings recommended by the [[https://github.com/arkenfox/user.js][arkenfox team]] for better
+privacy. If you just want firefox without any of my custom configurations, remove "*./firefox*" from [[file:./modules/programs/default.nix::./firefox][modules/programs/default.nix]]
+and add ~firefox~ just as a package in ~home.packages~ inside [[file:./modules/home/default.nix::packages][modules/home/default.nix]].
+
+**** Building the live ISO image
+If you don't want to change the *default configurations*, you can build the live image directly ~with all the default settings~ by running
+
+#+begin_src bash
+  nix build github:Krizdano/nixos-config#nixosConfigurations.iso.config.system.build.isoImage
+#+end_src
+
+If you do want to change the *default configurations*, and have already [[#Clone-this-repo][cloned]] this repo, then cd into the repo and run
+
+#+begin_src bash
+  nix build .#nixosConfigurations.iso.config.system.build.isoImage
+#+end_src
+
+Create a bootable USB drive using tools like ~dd~, [[https://rufus.ie/][Rufus]], or [[https://www.balena.io/etcher][Etcher]]
+
+I am using ~dd~
+
+#+begin_src bash
+  sudo dd if=/path/to/custom-nixos.iso of=/dev/diskname bs=1M status=progress
+#+end_src
+
+Now you have a bootable USB drive with my *custom Nixos configuration* with a *user* ~admin~ and *password* ~test~.
+
+** Boot from the USB Drive
+Insert the bootable USB drive into your machine and boot from it.
+
+You will be greeted by [[https://hyprland.org][Hyprland.]]
+
+If you are planning to use ~QWERTY~ [[#Changing-keyboard-Layout-in-hyprland][change the keyboard layout in Hyprland]], if you haven't done it already.
+
+- Press =SUPER+SHIFT+RETURN= to spawn a ~terminal~ (kitty).
+- Press =SUPER+RETURN= to spawn a terminal inside ~emacs~ (vterm).
+- If you don't want a GUI, press =CTR+ALT+F2= to go to ~tty~.
+
+** Connect to Internet
+If you are using wifi
+#+begin_src bash
+  nmcli device wifi connect SSID
+#+end_src
+
+** Manual Partitioning and Mounting
+:PROPERTIES:
+:CUSTOM-ID: disko-or-manual-partitioning
+:END:
+
+This configuration uses [[https://github.com/nix-community/disko][disko]] for partitioning and mounting. If you prefer to Manually partition
+your disks and mount your partitions, [[file:docs/nixos-manual-partitioning-and-mounting.org][follow these instructions]]. This can be used in case [[https://github.com/nix-community/disko][disko]] fails.
+
+** Automated Partitioning and Mounting with [[https://github.com/nix-community/disko][Disko]]
+*** Clone this Repo
+:PROPERTIES:
+:CUSTOM_ID: Clone-this-repo
+:END:
+
+#+begin_src bash
+  clone -o Krizdano/nixos-config.git nixconfig
+#+end_src
+
+If it doesn't work run
+
+#+begin_src bash
+  git clone https://github.com/Krizdano/nixos-config.git nixconfig
+#+end_src
+
+*** Run Disko
+- disko-install: *TODO*
+
+~disko~ is already installed in the custom live image, just run.
+
+#+begin_quote
+NOTE: sudo is not available on this live image, doas is used instead of sudo
+#+end_quote
+
+#+begin_src bash
+  cd nixconfig
+  doas disko --mode disko ./disko.nix --arg device '"/dev/diskname"
+#+end_src
+
+If for some reason you want the latest version of ~disko~, run
+
+#+begin_src bash
+  doas nix run github:nix-community/disko -- --mode disko ./disko.nix --arg device '"/dev/diskname"'
+#+end_src
+
+If you don't want to generate a new ~hardware-configuration.nix~, you can just run
+
+#+begin_src bash
+  doas nixos-install --flake .#Felix
+#+end_src
+
+and ~reboot~ your system to finish the installation.
+
+If you do want to generate a new ~hardware-configuration.nix,~ follow these steps.
+
+*** Generate Hardware Configuration
+
+#+begin_src bash
+  doas nixos-generate-config --show-hardware-config --no-filesystems --root /mnt > hosts/felix/hardware-configuration.nix
+#+end_src
+
+This command creates ~hardware-configuration.nix~ file that omits everything concerning ~file systems~ and ~swap devices~ from the =hardware configuration=.
+
+*** Edit hardware-configuration.nix
+
+Remove some options that are automatically generated by ~nixos-generate-config~ inside ~hardware-configuration.nix~.
+
+- ~networking.useDHCP~
+  - It is already defined in [[file:./hosts/felix/default.nix][hosts/felix/default.nix]]
+  - Remove it from newly generated [[file:hosts/felix/hardware-configuration.nix][hardware-configuration.nix]]
+- ~nixpkgs.hostPlatform~
+  - It is already defined in [[file:flake.nix][flake.nix]]
+  - Remove it from new generated [[file:./hosts/felix/hardware-configuration.nix][hardware-configuration.nix]]
+
+#+begin_quote
+Removing these options are not necessary. It is done to avoid duplication.
+#+end_quote
+
+If you want use [[https://www.nano-editor.org/][nano]] to edit ~hardware-configuration.nix~, run
+
+#+begin_src bash
+  shell nano
+  nano hosts/felix/hardware-configuration.nix
+#+end_src
+
+~Neovim~ and ~Emacs~ are also available in this live image but are remapped to use ~Colemak-DH~
+As the keyboard layout. See the [[#Keyboard-layout][keyboard layout]] section if you want to change that.
+
+
+*** Install NixOS
+#+begin_src bash
+   doas nixos-install --flake .#Felix
+#+end_src
+
+Follow the prompts to set the *root* password and complete the installation.
+
+#+begin_quote
+NOTE: The *root* password and *user* password will be reset to ~test~ after reboot.
+You can change it by editing [[file:templates/secrets.nix][templates/secrets.nix]]. see section [[#changing-the-username-and-password][changing username and password]] for more info.
+#+end_quote
+
+After you install ~NixOS~ with this config, any changes you made to the config won’t be saved
+after a reboot unless you save them somewhere persistent. Make sure to save them somewhere inside the ~/mnt~ directory.
+for example
+
+#+begin_src bash
+  cd ../
+  doas cp -r nixconfig /mnt/persist/
+#+end_src
+
+The default place where ~NixOS~ looks for configurations are inside =/etc/nixos= (=/mnt/etc/nixos= in this case). I currently keep
+the configuration files inside (=/mnt=) =/persist/home/.config/nixconfig= which links to =/home/user/.config/nixconfig=. If you plan to change
+the configuration location make sure to update ~$NIXOS_CONFIG~ variable inside [[file:modules/home/default.nix::NIXOS_CONFIG][modules/home/default.nix]]
+
+*** Reboot
+Your installation is complete. Now go ahead and reboot your system.
+
+#+begin_src bash
+  reboot
+#+end_src
+
+Remove the USB drive and boot into your newly installed NixOS system.

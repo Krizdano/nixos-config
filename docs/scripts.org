@@ -1,0 +1,680 @@
+#+TITLE: My personal scripts
+#+AUTHOR: Krizdano
+#+DESCRIPTION: Some shell scripts written by me or stolen from the internet to make my life easier.
+#+auto_tangle: t
+#+STARTUP: overview
+
+* Table of Contents :toc:
+- [[#check-for-existing-windows][Check for Existing Windows]]
+  - [[#functions][Functions]]
+  - [[#main-logic][Main Logic]]
+- [[#chpaper][Chpaper]]
+- [[#git-clone][Git Clone]]
+  - [[#command][Command]]
+  - [[#options][Options]]
+  - [[#source][Source]]
+  - [[#dependencies][Dependencies]]
+- [[#copy-url][Copy Url]]
+- [[#organize-files][Organize Files]]
+- [[#neovim-client][Neovim Client]]
+- [[#nix-shell][Nix Shell]]
+  - [[#command-1][Command]]
+  - [[#options-1][Options]]
+  - [[#source-1][source]]
+- [[#system-utilities][System Utilities]]
+  - [[#functions-1][Functions]]
+  - [[#main-logic-1][Main Logic]]
+- [[#volume][Volume]]
+  - [[#functions-2][Functions]]
+  - [[#main-logic-2][Main Logic]]
+
+* Check for Existing Windows
+A bash script that helps to manage my terminal and browser workspaces.
+This script uses hyprctl and only works in [[https://hyprland.org][Hyprland]].
+
+** Functions
+*** Browser
+Function to open Firefox if it's not already running or switch to the 'browser' workspace if it is
+already running.
+
+#+begin_src bash :tangle ../config/scripts/check_for_existing_windows.sh
+  #!/usr/bin/env bash
+
+  # urls for different tabs
+  youtube_url='firefox -new-tab https://www.youtube.com'
+  nixpkgs_url='firefox -new-tab https://search.nixos.org/packages'
+  hm_url='firefox -new-tab https://home-manager-options.extranix.com'
+
+  # Command to switch to the 'browser' workspace
+  browser_workspace='hyprctl dispatch workspace name:browser'
+
+  browser ()
+  {
+      if pgrep "firefox" > /dev/null
+      then
+          $browser_workspace
+      else
+          firefox & disown
+      fi
+  }
+#+end_src
+
+*** YouTube in Browser
+Function to open [[https://youtube.com][YouTube]] in Firefox. It opens [[https://youtube.com][YouTube]] in a new tab if we are already in
+'browser' workspace. Otherwise it switches to 'browser' workspace and opens [[https://youtube.com][YouTube]] in a new tab.
+
+#+begin_src bash :tangle ../config/scripts/check_for_existing_windows.sh
+  youtube_in_browser ()
+  {
+      if [[ $(hyprctl activeworkspace | grep "browser" | awk '{print $4}') == "(browser)" ]]; then
+          $youtube_url # Open YouTube in a new tab if already in 'browser' workspace
+      else
+          $browser_workspace # Switch to 'browser' workspace
+          $youtube_url # Open YouTube search in a new tab
+      fi
+  }
+#+end_src
+
+*** Nixpkgs Search
+Function to open [[https://search.nixos.org/packages][Nixpkgs search]] in Firefox, It opens [[https://search.nixos.org/packages][Nixpkgs search]] in a new tab if we are already in
+'browser' workspace. Otherwise it switches to 'browser' workspace and opens [[https://search.nixos.org/packages][Nixpkgs search]] in a new tab.
+
+#+begin_src bash :tangle ../config/scripts/check_for_existing_windows.sh
+  nixpkgs_search ()
+  {
+      if [[ $(hyprctl activeworkspace | grep "browser" | awk '{print $4}') == "(browser)" ]]; then
+          $nixpkgs_url # Open Nixpkgs search in a new tab if already in 'browser' workspace
+      else
+          $browser_workspace # Switch to 'browser' workspace
+          $nixpkgs_url # Open Nixpkgs search in a new tab
+      fi
+  }
+#+end_src
+
+*** Home Manager Search
+Function to open [[https://home-manager-options.extranix.com][Home Manager search]] in Firefox, It opens [[https://home-manager-options.extranix.com][Home Manager search]] in a new tab if we are already in
+'browser' workspace. Otherwise it switches to 'browser' workspace and opens [[https://home-manager-options.extranix.com][Home Manager search]] in a new tab.
+
+#+begin_src bash :tangle ../config/scripts/check_for_existing_windows.sh
+  home_manager_search ()
+  {
+      if [[ $(hyprctl activeworkspace | grep "browser" | awk '{print $4}') == "(browser)" ]]; then
+          $hm_url # Open Home Manager options in a new tab if already in 'browser' workspace
+      else
+          $browser_workspace # Switch to 'browser' workspace
+          $hm_url # Open Home Manager options in a new tab
+      fi
+  }
+#+end_src
+
+*** Terminal
+Function to open a terminal (vterm) window using Emacs if it's not already open.
+
+#+begin_src bash :tangle ../config/scripts/check_for_existing_windows.sh
+  terminal ()
+  {
+      if pgrep "emacsclient" > /dev/null # Check if Emacs client is running
+      then
+          hyprctl dispatch togglespecialworkspace terminal # Toggle the terminal workspace if Emacs client is running
+      else
+          emacsclient -c -e "(vterm)" & disown # Start Emacs client with a terminal and run in the background
+          hyprctl dispatch togglespecialworkspace terminal # Toggle the terminal workspace
+      fi
+  }
+#+end_src
+
+** Main Logic
+Main script logic to handle different function calls
+
+#+begin_src bash :tangle ../config/scripts/check_for_existing_windows.sh
+  case "$1" in
+      "") ;;  # No argument, do nothing
+      browser) "$@"; exit;;  # Call the 'browser' function
+      terminal) "$@"; exit;;  # Call the 'terminal' function
+      youtube_in_browser) "$@"; exit;;  # Call the 'youtube_in_browser' function
+      nixpkgs_search) "$@"; exit;;  # Call the 'nixpkgs_search' function
+      home_manager_search) "$@"; exit;;  # Call the 'home_manager_search' function
+      ,*) echo "Unknown function: $1()"; exit 2;;  # Print error message for unknown functions
+  esac
+#+end_src
+
+* Chpaper
+This script handles dowloading a random wallpaper and setting it, with a
+fallback to a backup wallpaper if the internet is not reachable. All the
+wallpapers are from my [[https://github.com/Krizdano/wallpapers][wallpapers]] repo. It uses [[https://github.com/swaywm/swaybg][swaybg]] to change wallpaper.
+
+#+begin_src bash :tangle ../config/scripts/chpaper.sh
+  #!/usr/bin/env bash
+
+  wpname=`shuf -i 1-13 -n 1` # Generate a random number between 1 and 13 to select a wallpaper
+  wallpaper_url='https://raw.githubusercontent.com/Krizdano/wallpapers/main/images/'$wpname'.png'
+  wallpaper='/tmp/wallpaper.png'
+  backup_wallpaper='Pictures/.backup_wallpaper.png'
+
+  # Check if the internet connection is available by pinging a reliable host
+  if ping -q -w 1 -c 1 https://raw.githubusercontent.com > /dev/null; then
+      curl --silent --output $wallpaper $wallpaper_url  # Download the wallpaper from the URL if online
+      cp $wallpaper $backup_wallpaper
+      swaybg -i $wallpaper
+  else
+      # Use the backup wallpaper if offline
+      swaybg -i $backup_wallpaper
+  fi
+#+end_src
+
+* Git Clone
+Because I'm too lazy to type ~git clone $URL~. This script allows for cloning repositories
+from various sources (GitLab, SourceHut, GitHub) based on the provided options.
+
+** Command
+By default it clone a repository from Github using the first argument as the
+repository path and the second argument as the destination directory.
+
+#+begin_src bash
+  clone arg1/arg2
+#+end_src
+
+** Options
+- =-l= - *clones from [[https://gitlab.com][GitLab]]*
+- =-s= - *clones from [[https://sourcehut.org][SourceHut]]*
+- =-q= - *Search for repositories on [[https://github.com][GitHub]] using [[https://cli.github.com][gh]], select one with [[https://github.com/junegunn/fzf][fzf]], and extract the repository name*
+- =-o= - *clones from github using ~https~ (by default uses ~git@github.com~)*
+
+** Source
+
+#+begin_src bash :tangle ../config/scripts/clone.sh
+  #!/usr/bin/env sh
+
+  # Process command-line options
+  while getopts 'lsqo' option; do
+      case "$option" in
+          l)
+              git clone "https://gitlab.com/$2" $3
+              exit
+              ;;
+          s)
+              git clone "https://sourcehut.org/$2" $3
+              exit
+              ;;
+          q)
+              query="$2"
+              echo "searching for repo $2..."
+              repo=`gh search repos $query | fzf --sync | awk '{print $1}'`
+              git clone "git@github.com:$repo" $3
+              exit
+              ;;
+          o)
+              git clone "https://github.com/$2" $3
+              exit
+              ;;
+      esac
+  done
+
+  # Default action if no options are provided
+  git clone "git@github.com:$1" $2
+ #+end_src
+
+** Dependencies
+- [[https://git-scm.com][git]]
+- [[https://cli.github.com][gh]]
+- [[https://github.com/junegunn/fzf][fzf]]
+* Copy Url
+A small script for w3m to copy urls. It uses [[https://github.com/bugaevc/wl-clipboard][wl-clipboard]]
+and only works in [[https://en.wikipedia.org/wiki/Wayland_(protocol)][wayland]].
+
+#+begin_src bash :tangle ../config/scripts/copy-url.sh
+  printf "%s" "$1" | wl-copy
+#+end_src
+
+* Organize Files
+This script monitors and organize files in the Downloads directory
+by moving them to appropriate directories based on their file types, and it handles
+errors for unknown file types by notifying the user.
+
+#+begin_src bash :tangle ../config/scripts/organize_files.sh
+  #!usr/bin/env sh
+
+  # Create a file to store the timestamp of the last processed file
+  touch  $HOME/.local/share/lastwatch
+  cd $HOME
+  while true
+  do
+      sleep 3
+
+      # Replace spaces with underscores in filenames within the Downloads directory
+      find Downloads/ -name "* *" -type f | rename 's/ /_/g'
+
+      # Find files in the Downloads directory that have been created or modified since the last run
+      file=$(find -L $HOME/Downloads/ -type f -cnewer $HOME/.local/share/lastwatch | awk '{print $1}')
+
+      # Extract the file path from the result (in case there's more than one result)
+      file=$(echo $file | awk '{print $1}')
+
+      if [[ $file =~ .*\.(sh|md|txt|pdf|html) ]]; then
+          if [[ $file == *.pdf ]]; then
+              mv $file $HOME/Documents/pdfs/
+
+          else
+              mv $file $HOME/Documents/
+
+          fi
+
+      elif [[ $file =~ .*\.(mkv|mp4)  ]]; then
+          mv $file $HOME/Videos/
+
+      elif [[ $file =~ .*\.(jpg|webp|jpeg|png) ]]; then
+          mv $file $HOME/Pictures/
+
+      elif [[ $file =~ .*\.(ipynb) ]]; then
+          mv $file $HOME/projects/python/jupyter/
+
+      elif [[ $file =~ .*\.(iso) ]]; then
+          mv $file $HOME/Other/iso
+
+      # Handle files with unknown or unhandled extensions
+      elif [[ $(echo $file | awk -F '/' '{print $4}') == "Downloads" || $file == *"."* ]]; then
+          notify-send -u critical "Error: Unknown file extension for file '$(echo $file | awk -F '/' '{print $5}')'. Don't know where to move"
+          sleep 20
+      fi
+  done
+#+end_src
+
+* Neovim Client
+This setup is useful for connecting Neovim in to an already running Neovim server for remote interaction and then opening a UI
+that connects to this server.
+
+#+begin_src bash :tangle ../config/scripts/nvim-client.sh
+  #!/usr/bin/env sh
+
+  # neovim as a client
+  nvim --server /tmp/neovim.pipe --remote-silent $(realpath ${1:-.}) & nvim --server /tmp/neovim.pipe --remote-ui;
+  clear
+#+end_src
+
+* Nix Shell
+Because I am too lazy to type ~nix shell nixpkgs#pkgname~.
+
+** Command
+By default it installs packages from Nixpkgs repository.
+
+#+begin_src bash
+  shell pkgname
+#+end_src
+
+Intall multiple packages by providing them as command line arguments.
+
+#+begin_src bash
+  shell pkg1 pkg2 pkg3...
+#+end_src
+
+** Options
+- =-i= - *allows installation of unfree packages*
+- =-g= - *install packages from [[https://github.com][GitHub]]*
+
+
+** source
+#+begin_src bash :tangle ../config/scripts/shell.sh
+  #!/usr/bin/env sh
+
+  args=$*
+  counter=1
+
+  total_args=$(echo "$args" | wc -w)
+  flake_url="nixpkgs#"
+
+  while getopts 'gi' options; do
+      case "$options" in
+          g)
+              nix shell "github:$2"
+              exit
+              ;;
+          i)
+              export NIXPKGS_ALLOW_UNFREE=1;
+              nix shell "flake_url$2" --impure;
+              export NIXPKGS_ALLOW_UNFREE=0;
+              exit
+              ;;
+
+      esac
+  done
+
+  packages=$(while (( counter <= total_args )); do
+                 echo -n "$flake_url""$(echo $args | awk '{print $'$counter'}') "
+                 ((counter++));
+             done)
+
+  nix shell $packages
+#+end_src
+
+* System Utilities
+
+This Bash script provides several utility functions for managing system settings and personal bookmarks,
+handling Bluetooth devices, controlling video playback and monitoring battery levels. Each function can
+be invoked by passing its name as the first argument to the script.
+
+- All the menus are shown using [[https://github.com/lbonn/rofi][wayland version]] of [[https://github.com/davatorium/rofi][rofi]].
+- [[https://github.com/davatorium/rofi][rofi]] can [[https://github.com/davatorium/rofi/blob/next/doc/rofi-dmenu.5.markdown][emulate dmenu]]
+
+** Functions
+*** Connect Bluetooth
+Connects to a selected Bluetooth device from a list of paired devices.
+
+#+begin_src bash :tangle ../config/scripts/utilities.sh
+  #!/usr/bin/env bash
+
+  # Variables for various settings and files
+  menu='dmenu -sync -i -p'
+  bookmark_file='/persist/home/nixconfig/config/scripts/bookmarks'
+  screen='hyprctl dispatch dpms'
+  monitor='eDP-1'
+
+  # Connect to already paired bluetooth devices
+  connect_bluetooth() {
+      device="$(bluetoothctl devices | $menu "Select Device" | awk -F ' ' '{print $2}')"
+      notify-send "$(bluetoothctl connect $device | grep -i -m3 'connect' | tail -n1)"
+  }
+#+end_src
+
+*** Bookmarks
+Manages my bookmarks.
+
+#+begin_src bash :tangle ../config/scripts/utilities.sh
+  # Opens a bookmarked URL from the bookmarks file
+  my_bookmarks() {
+      bookmark_menu=$(awk -F' ' '{print $1}' "$bookmark_file" | $menu "Bookmarks")
+      wtype $(grep $bookmark_menu "$bookmark_file" | awk -F' ' '{print $2}')
+  }
+
+  # Adds a new bookmark with a URL and name to the bookmarks file and commits it to a Git repository.
+  add_bookmark () {
+      url=$(dmenu -l 0 -p "Enter url")
+      name=$(dmenu -l 0 -p "Enter name")
+
+      if [[ "d" != "d$url" ]] && [[ "d" != "d$name" ]]; then
+          echo "$name   $url" >> ~/nixconfig/config/scripts/bookmarks
+          pushd ~/nixconfig;
+          git add ~/nixconfig/config/scripts/bookmarks
+          git commit -m "added a new bookmark"
+          git push
+          popd
+      fi
+  }
+#+end_src
+
+*** Change Default Sink
+Changes the default audio sink.
+
+#+begin_src bash :tangle ../config/scripts/utilities.sh
+  change_default_sink() {
+      wpctl set-default "$(wpctl status | grep -A 3 Sinks | $menu "Sinks" | awk -F ' ' '{print $2}')"
+  }
+#+end_src
+
+*** Toggle on/off Screen
+Toggles the laptop screen on or off.
+
+#+begin_src bash :tangle ../config/scripts/utilities.sh
+  # Toggle on/off laptop screen
+  toggle_screen() {
+      on_off_menu() {
+          case "$1" in
+              "") ;;
+              Screenoff)
+                  $screen off $monitor
+                  ;;
+              Screenon)
+                  $screen on $monitor
+                  ;;
+          esac
+      }
+      options="Screenoff\nScreenon"
+      on_off_menu "$(printf "%b" "$options" | sort | $menu "Screen")"
+  }
+#+end_src
+
+*** Video Player
+Opens and plays a video file from the `~/Videos` directory using [[https://mpv.io/][mpv]].
+
+#+begin_src bash :tangle ../config/scripts/utilities.sh
+  play_videos() {
+      find Videos/ -type f -printf "%f\n" | $menu "Videos" |
+          xargs -I '{}' find ~/Videos/ -name {} | xargs mpv
+  }
+#+end_src
+
+*** Power Menu
+Provides a menu with options to power off, reboot, suspend, hibernate, or lock the system.
+
+#+begin_src bash :tangle ../config/scripts/utilities.sh
+  power_menu() {
+      chpower() {
+          case "$1" in
+              "")
+              ;;
+              Poweroff)
+                  exec systemctl poweroff
+                  ;;
+              Reboot)
+                  exec systemctl reboot
+                  ;;
+              Suspend)
+                  exec systemctl suspend
+                  ;;
+              Hibernate)
+                  exec systemctl hibernate
+                  ;;
+              lock)
+                  exec swaylock -c 000000
+                  ;;
+          esac
+      }
+
+      options="Poweroff\nReboot\nHibernate\nSuspend\nlock"
+      chpower "$(printf "%b" "$options" | sort | $menu "Power Menu")"
+  }
+#+end_src
+
+*** Battery Status
+Monitors battery level and status, and sends notifications based on battery conditions.
+
+#+begin_src bash :tangle ../config/scripts/utilities.sh
+  bat_level() {
+      while true; do
+          bat_lvl=$(cat /sys/class/power_supply/BAT1/capacity)
+          bat_stat=$(cat /sys/class/power_supply/BAT1/status)
+
+          # Notify if battery level is low and discharging
+          if [[ $bat_lvl -le 30 && $bat_stat == "Discharging" ]]; then
+              notify-send --urgency=CRITICAL "Battery Low" "Level: ${bat_lvl}%"
+              sleep 300
+
+          # Notify if battery level is high and charging
+          elif [[ $bat_lvl -ge 80 && $bat_stat == "Charging" ]]; then
+              notify-send --urgency=CRITICAL "Unplug Your Charger" "Battery Level: ${bat_lvl}%"
+              sleep 300
+          else
+              sleep 120
+          fi
+      done
+  }
+#+end_src
+
+*** Flip Monitor
+Inverts display in [[https://hyprland.org/][Hyprland]].
+: Just for fun not really usable.
+
+#+begin_src bash :tangle ../config/scripts/utilities.sh
+  flip_monitor () {
+      monitor_state=`hyprctl monitors | grep transform | tail -n 1 | awk '{print $2}'`
+
+      if [ $monitor_state -eq 0 ]; then
+          hyprctl keyword monitor HDMI-A-1,transform,4
+          hyprctl keyword monitor eDP-1,transform,4
+      else
+          hyprctl keyword monitor HDMI-A-1,preferred,auto,1,transform,0
+          hyprctl keyword monitor eDP-1,preferred,auto,1,transform,0
+      fi
+  }
+#+end_src
+
+** Main Logic
+Main script logic to handle different function calls
+
+#+begin_src bash :tangle ../config/scripts/utilities.sh
+  case "$1" in
+      "") ;;
+      connect_bluetooth)
+          "$@"
+          exit
+          ;;
+      my_bookmarks)
+          "$@"
+          exit
+          ;;
+      add_bookmark)
+          "$@"
+          ;;
+      change_default_sink)
+          "$@"
+          exit
+          ;;
+      toggle_screen)
+          "$@"
+          exit
+          ;;
+      play_videos)
+          "$@"
+          exit
+          ;;
+      my_playlist)
+          "$@"
+          exit
+          ;;
+      power_menu)
+          "$@"
+          exit
+          ;;
+      youtube_mpv)
+          "$@"
+          exit
+          ;;
+      bat_level)
+          "$@"
+          exit
+          ;;
+      flip_monitor)
+          "$@"
+          exit
+          ;;
+      ,*)
+          echo "Unkown function: $1()"
+          exit 2
+          ;;
+  esac
+#+end_src
+
+* Volume
+This is a script that I stole from [[https://gitlab.com/Nmoleo/i3-volume-brightness-indicator][here]] that provides a way to control audio volume and show notifications about the volume status using `wpctl`
+for audio management and `dunstify` for notifications.
+
+#+begin_quote
+This is a modified version of the original script that only handles volume control.
+The original script uses pulseaudio this is using pipewire
+Since pipewire uses floating number and bash doesn't really support floating numbers this script uses zsh
+The original script also handles brightness control.
+#+end_quote
+
+- ~dunstify~ is used for notifications, so this script assumes you have [[https://dunst-project.org/][dunst]] installed and configured for notifications.
+
+** Functions
+*** Get Volume
+  - Uses ~wpctl~ to get the current volume level of the default audio sink.
+  - Extracts the volume percentage from the output, converting it to an integer format (multiplying by 100 and removing the decimal point).
+  - Returns the volume as an integer.
+
+#+begin_src bash :tangle ../config/scripts/volume.sh
+  #!/usr/bin/env zsh
+
+  bar_color="#b3cfa7"
+  volume_step=1
+
+  # Uses regex to get volume from wpctl
+  function get_volume {
+      float=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk -F': ' '{print $2}' | sed 's/\[MUTED\]//')
+      echo $((float*100)) | sed 's/\.//'
+  }
+#+end_src
+
+*** Get Mute
+  - Uses ~wpctl~ to check if the audio sink is muted or not.
+  - Returns the mute status.
+
+#+begin_src bash :tangle ../config/scripts/volume.sh
+  # Uses regex to get mute status from wpctl
+  function get_mute {
+      wpctl get-mute @DEFAULT_AUDIO_SINK@
+  }
+#+end_src
+
+*** Get Volume Icon
+- Calls ~get_volume~ to get the current volume level and `get_mute` to check the mute status.
+- Sets ~volume_icon~ based on the volume level:
+  - If the volume is ~0~, it uses a ~mute~ icon.
+  - If the volume is ~below 50~, it uses a ~low volume~ icon.
+  - If the volume is ~50 or higher~, it uses a ~high volume~ icon.
+
+#+begin_src bash :tangle ../config/scripts/volume.sh
+  # Returns a mute icon, a volume-low icon, or a volume-high icon, depending on the volume
+  function get_volume_icon {
+      volume=`get_volume`
+      echo $volume
+      mute=`get_mute`
+      if [ $volume -eq 0 ] ; then
+          volume_icon=""
+      elif [ $volume -lt 50 ]; then
+          volume_icon=""
+      else
+          volume_icon=""
+      fi
+  }
+#+end_src
+
+*** Show Volume Notif
+- Retrieves the current volume level and the appropriate icon using ~get_volume_icon~ function.
+- Displays a notification with ~dunstify~ showing the volume level and the icon.
+- It also sets the notification's color and volume value.
+
+#+begin_src bash :tangle ../config/scripts/volume.sh
+  # Displays a volume notification using dunstify
+  function show_volume_notif {
+      volume=`get_volume`
+      get_volume_icon
+      dunstify -i audio-volume-muted-blocking -t 1000 -r 2593 -u normal "$volume_icon $volume%" -h int:value:$volume -h string:hlcolor:$bar_color
+  }
+#+end_src
+
+** Main Logic
+   Takes user input, ~volume_up~, ~volume_down~, ~brightness_up~, or ~brightness_down~ and handles them.
+
+#+begin_src bash :tangle ../config/scripts/volume.sh
+  case $1 in
+      volume_up)
+          # Unmutes and increases volume, then displays the notification
+          wpctl set-mute @DEFAULT_AUDIO_SINK@ 0
+          wpctl set-volume @DEFAULT_AUDIO_SINK@ $volume_step%+
+          show_volume_notif
+          ;;
+
+      volume_down)
+          # Raises volume and displays the notification
+          wpctl set-volume @DEFAULT_AUDIO_SINK@ $volume_step%-
+          show_volume_notif
+          ;;
+
+      volume_mute)
+          # Toggles mute and displays the notification
+          wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+          show_volume_notif
+          ;;
+  esac
+#+end_src

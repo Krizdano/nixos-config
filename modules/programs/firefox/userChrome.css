@@ -1,0 +1,249 @@
+#urlbar[open="true"] #urlbar-background {
+    outline: none !important;
+}
+
+#urlbar[focused=true] {
+    border: 2px solid !important;
+    border-radius: 6px;
+}
+
+#urlbar #urlbar-background {
+    outline: none !important;
+    border: none !important;
+    background-color: #0b0a10 !important;
+}
+
+#urlbar-container {
+    position: relative;
+    top: 18px;
+}
+
+:root[inFullscreen] #nav-bar{
+    border-inline: none !important;
+}
+
+.browserStack>browser{
+    border-radius: 10px !important;
+    outline-offset: 1px !important;
+}
+
+
+#nav-bar{
+    margin-left: 300px !important;
+    margin-right: 300px !important;
+    border-radius: 8px !important;
+    padding-top: 0px !important;
+    background-color: #100e1b !important;
+}
+
+#TabsToolbar{ visibility: collapse !important }
+
+
+#toolbar-menubar:not([inactive]){ z-index: 2 }
+#toolbar-menubar[inactive] > #menubar-items {
+    opacity: 0;
+    pointer-events: none;
+}
+
+
+#urlbar[breakout][breakout-extend] {
+    top: -16px !important;
+    left: 0 !important;
+    width: 100% !important;
+}
+#urlbar[breakout][breakout-extend] > #urlbar-background {
+    animation-name: none !important;
+    box-shadow: none !important;
+}
+#urlbar[breakout][breakout-extend] > #urlbar-input-container {
+    height: 28px !important;
+    width: 100% !important;
+    padding-block: 0 !important;
+    padding-inline: 0 !important;
+    transition: none !important;
+}
+.urlbarView {
+    margin-inline: 0 !important;
+    width: 100% !important;
+}
+.urlbarView-row {
+    padding-block: 0 !important;
+}
+.urlbarView-type-icon {
+    min-width: 16px !important;
+    height: 16px !important;
+    margin-bottom: 0 !important;
+    margin-inline-start: 0 !important;
+}
+.urlbarView-favicon {
+    margin-inline-start: 25px !important;
+}
+
+
+/** Changes in TST **/
+
+:root {
+    --sidebar-width: 250px;
+    /* initial width of the sidebar.
+          	advised not to change since tst css relies on this value*/
+    --sidebar-collapsed-width: 50px;
+    --dividers: 2px;
+}
+
+
+:root {
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --transition-time: 0.4s !important;
+}
+
+
+/* Container identity colors */
+.identity-color-pink {
+    --identity-tab-color: #ED64A6 !important;
+    --identity-icon-color: #ED64A6 !important;
+}
+
+.identity-color-blue {
+    --identity-tab-color: #4299E1 !important;
+    --identity-icon-color: #4299E1 !important;
+}
+
+.identity-color-green {
+    --identity-tab-color: #48BB78 !important;
+    --identity-icon-color: #48BB78 !important;
+}
+
+.identity-color-orange {
+    --identity-tab-color: #ED8936 !important;
+    --identity-icon-color: #ED8936 !important;
+}
+
+#sidebar-box {
+    z-index: 1000 !important;
+    position: relative !important;
+    min-width: var(--sidebar-collapsed-width) !important;
+    max-width: var(--sidebar-collapsed-width) !important;
+    padding-left: 6px !important;
+    background-color: #2b2a33 !important;
+}
+
+#sidebar-header,
+#sidebar-splitter {
+    display: none !important;
+}
+
+/* inner width = expanded width & move inner to only show initial-width long section */
+#sidebar-box #sidebar {
+    position: absolute !important;
+    min-width: var(--sidebar-width) !important;
+    max-width: var(--sidebar-width) !important;
+    width: var(--sidebar-width) !important;
+    transform: translateX(calc(var(--sidebar-collapsed-width) - var(--sidebar-width)));
+    transition: all var(--transition-time) var(--ease-out);
+}
+
+/* move inner to show entire sidebar */
+#sidebar-box #sidebar:hover {
+    transform: translateX(0) !important;
+    /* box-shadow: 2px 0 33px -3px; */
+}
+
+#sidebar-box[sidebarcommand="viewBookmarksSidebar"] #sidebar {
+    transform: translateX(0) !important;
+    /* box-shadow: 2px 0 33px -3px; */
+}
+/* hide sidebar header for tree style tabs sidebar */
+#sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"] #sidebar-header {
+    display: none;
+}
+
+#sidebar {
+    /* border-right: solid var(--dividers) #11111b !important; */
+    border-radius: 10px !important;
+    margin-top: 6px !important;
+    margin-bottom: 6px !important;
+    border-top-width: 12px !important;
+    /* background-color: #111019 !important; */
+}
+
+
+toolbar {
+    border: none !important;
+}
+
+/* Hide splitter, when using Tree Style Tab. */
+#sidebar-splitter {
+    display: none !important;
+}
+
+/* hide tabs */
+.tabbrowser-tab {
+    display: none;
+}
+
+#tabs-newtab-button {
+    display: none;
+}
+
+.titlebar-spacer {
+    display: none !important;
+}
+
+/*for hiding bookmarks bar*/
+#PersonalToolbar{
+    --uc-bm-height: 20px; /* Might need to adjust if the toolbar has other buttons */
+    --uc-bm-padding: 4px; /* Vertical padding to be applied to bookmarks */
+    --uc-autohide-toolbar-delay: 250ms; /* The toolbar is hidden after 0.6s */
+
+    /* 0deg = "show" ; 90deg = "hide" ;  Set the following to control when bookmarks are shown */
+    --uc-autohide-toolbar-focus-rotation: 0deg; /* urlbar is focused */
+    --uc-autohide-toolbar-hover-rotation: 0deg; /* cursor is over the toolbar area */
+}
+
+:root[uidensity="compact"] #PersonalToolbar{ --uc-bm-padding: 1px }
+:root[uidensity="touch"] #PersonalToolbar{ --uc-bm-padding: 7px }
+
+#PersonalToolbar:not([customizing]){
+    position: relative;
+    margin-bottom: calc(0px - var(--uc-bm-height) - 2 * var(--uc-bm-padding));
+    transform: rotateX(90deg);
+    transform-origin: top;
+    transition: transform 135ms linear var(--uc-autohide-toolbar-delay) !important;
+    z-index: 1;
+}
+
+#PlacesToolbarItems > .bookmark-item{ padding-block: var(--uc-bm-padding) !important; }
+
+#nav-bar:focus-within + #PersonalToolbar{
+    margin-top: 61px;
+    margin-bottom: -61px;
+    transform: rotateX(var(--uc-autohide-toolbar-focus-rotation,0));
+}
+
+#navigator-toolbox:hover > #PersonalToolbar{
+    margin-top: 61px;
+    margin-bottom: -61px;
+    transform: rotateX(var(--uc-autohide-toolbar-hover-rotation,0));
+}
+
+#navigator-toolbox:hover > #nav-bar:focus-within + #PersonalToolbar {
+    margin-top: 61px;
+    margin-bottom: -61px;
+}
+
+#nav-bar:not([customizing="true"]):not([inFullscreen]) {
+    min-height: 0px !important;
+    max-height: 0px !important;
+    margin-top: 0px !important;
+    margin-bottom: -1px !important;
+    z-index: -5 !important;
+}
+
+#navigator-toolbox:hover:not([inFullscreen]) :-moz-any(#nav-bar),
+#navigator-toolbox:focus-within :-moz-any(#nav-bar) {
+    min-height: 38px !important;
+    max-height: 38px !important;
+    margin-top: 0px !important;
+    margin-bottom: -39px !important;
+    z-index: 5 !important;
+}

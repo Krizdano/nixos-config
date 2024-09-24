@@ -1,0 +1,203 @@
+#+TITLE:Nyxt browser configuration
+#+AUTHOR: Krizdano
+#+PROPERTY: header-args :tangle ~/.config/nyxt/config.lisp
+#+auto_tangle: t
+#+DESCRIPTION: My personal emacs configuration
+#+STARTUP: overview
+
+
+* Settings
+** Keybindings
+set vi as default keybindings
+#+begin_src common-lisp
+  (define-configuration (input-buffer)
+    ((default-modes (pushnew 'nyxt/mode/vi:vi-normal-mode %slot-value%))))
+
+  (define-configuration (prompt-buffer)
+    ((default-modes (pushnew 'nyxt/mode/vi:vi-insert-mode %slot-value%))))
+#+end_src
+
+** Overrides for colemak-dh
+these are overrides for vi-mode because i use colemak-dh layout
+#+begin_src common-lisp
+  (define-configuration :vi-normal-mode
+    ((keyscheme-map
+      (define-keyscheme-map "my-base" (list :import %slot-value%)
+        nyxt/keyscheme:vi-normal
+        (list
+         "n" 'nyxt/mode/document:scroll-down
+         "e" 'nyxt/mode/document:scroll-up
+         "m" 'nyxt/mode/document:scroll-left
+         "i" 'nyxt/mode/document:scroll-right
+         "u" 'nyxt/mode/vi:vi-insert-mode
+         "M" 'nyxt/mode/history:history-backwards
+         "I" 'nyxt/mode/history:history-forwards
+         "O" 'execute-command
+         "S" 'delete-current-buffer
+         "y" 'set-url
+         "Y" 'set-url-new-buffer
+         ";" 'nyxt/mode/document:paste
+         "t" 'nyxt/mode/hint:follow-hint
+         "p" 'reload-current-buffer
+         "k" 'nyxt/mode/document:next-heading
+         "j t" 'nyxt/mode/hint:copy-hint-url
+         "j j" 'copy-url
+         "g u" 'nyxt/mode/document:focus-first-input-field
+         )))))
+
+  (define-configuration :visual-mode
+    ((keyscheme-map
+      (define-keyscheme-map "my-base" (list :import %slot-value%)
+        nyxt/keyscheme:vi-normal
+        (list
+         "n" 'nyxt/mode/visual:forward-line
+         "e" 'nyxt/mode/visual:backward-line
+         "m" 'nyxt/mode/visual:backward-char
+         "i" 'nyxt/mode/visual:forward-char
+         "j" 'nyxt/mode/document:copy
+         )))))
+#+end_src
+
+** Emacs defaults
+#+begin_src common-lisp
+  (define-configuration :document-mode
+    ((keyscheme-map
+      (define-keyscheme-map "my-base" (list :import %slot-value%)
+        nyxt/keyscheme:vi-normal
+        (list
+         "space space" 'execute-command
+         "space n" 'switch-buffer-next
+         "space e" 'switch-buffer-previous
+         "space i" 'load-config-file
+         "space s" 'dark-mode
+         )))))
+
+  (define-configuration input-buffer
+    ((override-map
+      (let ((map (make-keymap "override-map")))
+        (define-key map "M-x" 'execute-command)))))
+#+end_src
+
+** status-buffer
+#+begin_src common-lisp
+  ;; display modes as short glyphs
+  (define-configuration :status-buffer
+      ((glyph-mode-presentation-p t)))
+
+  (define-configuration :force-https-mode ((glyph "ϕ")))
+  (define-configuration :user-script-mode ((glyph "u")))
+  (define-configuration :blocker-mode ((glyph "β")))
+  (define-configuration :proxy-mode ((glyph "π")))
+  (define-configuration :reduce-tracking-mode ((glyph "τ")))
+  (define-configuration :certificate-exception-mode ((glyph "χ")))
+  (define-configuration :style-mode ((glyph "ϕ")))
+  (define-configuration :cruise-control-mode ((glyph "σ")))
+#+end_src
+
+** privacy
+*** increase privacy
+#+begin_src common-lisp
+  (define-configuration :web-buffer
+    ((default-modes (append (list
+                             :reduce-tracking-mode
+                             :blocker-mode
+                             :force-https-mode
+                             )))))
+#+end_src
+
+*** reduce tracking mode
+#+begin_src common-lisp
+  (define-configuration :reduce-tracking-mode
+    ((query-tracking-parameters
+      (append '("utm_source" "utm_medium" "utm_campaign" "utm_term" "utm_content")
+              %slot-value%)
+      :doc "This is to strip UTM-parameters off all the links.
+  Upstream Nyxt doesn't have it because it may break some websites.")
+     (preferred-user-agent
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36"
+      :doc "Mimic Chrome on MacOS.")))
+#+end_src
+
+* Theme
+** Catppuccin
+#+begin_src common-lisp
+  (defvar catppuccin-mocha
+    (make-instance 'theme:theme
+                   :font-family "SauceCodePro Nerd Font 14"
+                   :dark-p t
+                   :background-color- "#1e1e2e"
+                   :background-color "#1e1e2e"
+                   :background-color+ "#11111b"
+                   :on-background-color "rgb(205, 214, 244)"
+                   :primary-color- "rgb(198, 161, 242)"
+                   :primary-color "#6c7086"
+                   :primary-color+ "rgb(208, 171, 252)"
+                   :on-primarycolor "#1e1e2e"
+                   :secondary-color- "#cba6f7"
+                   :secondary-color "#181825"
+                   :secondary-color+ "rgb(193, 155, 241)"
+                   :on-secondary-color "#b4befe"
+                   :action-color- "#45475a"
+                   :action-color "#313244"
+                   :action-color+ "#585b70"
+                   :highlight-color- "rgb(198, 161, 242)"
+                   :highlight-color "rgb(203, 166, 247)"
+                   :highlight-color+ "rgb(208, 171, 252)"
+                   :success-color- "#a6e3a1"
+                   :success-color "#94e2d5"
+                   :success-color+ "#89dceb"
+                   :warning-color- "#fab387"
+                   :warning-color "#eba0ac"
+                   :warning-color+ "#f9e2af"
+                   :codeblock-color- "#221a2d"
+                   :codeblock-color "#181825"
+                   :codeblock-color+ "#44355a"
+                   :text-color- "rgb(186, 194, 222)"
+                   :text-color "#cdd6f4"
+                   :text-color+ "rgb(255, 255, 255)"
+                   :contrast-text-color "#0c0c0d"))
+#+end_src
+
+** Default theme
+#+begin_src common-lisp
+  (define-configuration browser
+      ((theme catppuccin-mocha)))
+
+  (define-configuration (web-buffer)
+      ((theme catppuccin-mocha)))
+
+  (define-configuration status-buffer
+      ((style (str:concat %slot-value%
+                          (theme:themed-css (theme *browser*))))))
+  #+end_src
+
+
+** Dark-mode
+#+begin_src common-lisp
+  ;; This automatically darkens WebKit-native interfaces and sends the
+  ;; "prefers-color-scheme: dark" to all the supporting websites.
+  (setf (uiop:getenv "GTK_THEME") "Adwaita:dark")
+
+  (define-configuration :dark-mode
+    ((style
+      (theme:themed-css (theme *browser*)
+        `(*
+          :background-color ,(if (theme:dark-p theme:theme)
+                                 theme:background
+                                 theme:on-background)
+          "!important"
+          :background-image none "!important"
+          :color ,(if (theme:dark-p theme:theme)
+                      theme:on-background
+                      theme:background)
+          "!important")
+        `(a
+          :background-color ,(if (theme:dark-p theme:theme)
+                                 theme:background
+                                 theme:on-background)
+          "!important"
+          :background-image none "!important"
+          :color ,theme:primary "!important")))))
+  #+end_src
+
+

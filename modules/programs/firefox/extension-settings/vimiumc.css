@@ -1,0 +1,91 @@
+/* find-host, not working write to the find-host section, so I put it outside */
+.R.HM.D>.LH {
+    background: #31748fcc;
+    border: none;
+    border-radius: 1px;
+    backdrop-filter: blur(1.5px);
+    color: #e0def4;
+}
+
+/* #ui */
+.HUD,
+.TEE {
+    padding: 0;
+    bottom: 1px;
+}
+
+@media screen and (min-width: 1260px) {
+    .Omnibar {
+       left: calc(20vw - 12px);
+       width: calc(60vw + 24px); 
+    }
+}
+@media screen and (min-width: 1760px) {
+    .Omnibar {
+       left: calc(30vw - 12px);
+       width: calc(40vw + 24px); 
+    }
+}
+
+/* #omni */
+#bar {
+    background: #100e1b;
+
+    border-bottom: none;
+}
+
+#list {
+    background: #100e1b;
+}
+
+#input {
+    background: #0b0a10;
+    border: none;
+    border-radius: 8px;
+    box-shadow: none;
+}
+
+body::after {
+    border-color: #FFFFFF;
+}
+
+.item {
+    border-bottom: none;
+    padding-top: 0px;
+    cursor: pointer;
+
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.item.s,
+.item:hover {
+    background-color: #201d2f;
+}
+
+#toolbar {
+    display: none;
+}
+
+/* #find */
+
+.r.D {
+    background: #100e1b;
+    color: #e0def4;
+}
+
+.r {
+    box-shadow: inset 0 0 1px 0.5px #c4a7e7;
+}
+
+/* #find:host */
+
+
+
+/* #find:selection */
+::selection {
+    background: #ea9d34 !important;
+    color: #e0def4;
+}

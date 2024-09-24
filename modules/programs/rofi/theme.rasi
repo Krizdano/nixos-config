@@ -1,0 +1,118 @@
+configuration {
+    timeout {
+	delay: 10;
+	action: "kb-cancel";
+    }
+
+    drun {
+	display-name: "Apps";
+	fixed-height: false;
+    }
+
+    window {
+	display-name: "Windows";
+    }
+
+    drun-display-format: "{name}";
+}
+
+
+* {
+    font:   "Roboto 12";
+    background-color:   @bg;
+    text-color:         @fg;
+    border: 0;
+    margin:     0px;
+    padding:    0px;
+    spacing:    0px;
+    bg: #151515;
+    bg-alt: #232323;
+    fg: #FFFFFF;
+    fg-alt: #424242;
+}
+
+
+window {
+    border: 2px;
+    border-color: @fg;
+    width:          480;
+    border-radius:  24px;
+    background-color:   @bg;
+    text-color: @fg;
+}
+
+mainbox {
+    padding:    12px;
+    children: [inputbar, listview];
+}
+
+inputbar {
+    background-color:   @bg;
+    border-color:       @fg;
+
+    border:         2px;
+    border-radius:  16px;
+
+    padding:    8px 16px;
+    spacing:    8px;
+    children:   [ prompt, entry ];
+}
+
+prompt {
+    text-color: @fg;
+}
+
+entry {
+    placeholder:        "Search";
+    placeholder-color:  @fg-alt;
+}
+
+message {
+    margin:             12px 0 0;
+    border-radius:      16px;
+    border-color:       @bg;
+    background-color:   @bg;
+}
+
+textbox {
+    padding:    8px 24px;
+}
+
+listview {
+    background-color:   transparent;
+    margin:     12px 0 0;
+    lines:      8;
+    columns:    1;
+    fixed-height: false;
+    dynamic: false;
+}
+
+element {
+    padding:        8px 16px;
+    spacing:        8px;
+    border-radius:  16px;
+    children: [element-text];
+}
+
+element normal active {
+    text-color: @bg;
+}
+
+element selected normal, element selected active {
+    background-color:   @fg;
+    text-color: @bg;
+}
+
+element-icon {
+    size:           1em;
+    vertical-align: 0.5;
+}
+
+element-text {
+    text-color: @fg;
+}
+
+element-text selected {
+  background-color: @fg;
+  text-color: @bg;
+}

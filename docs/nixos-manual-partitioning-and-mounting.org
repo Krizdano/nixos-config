@@ -1,0 +1,112 @@
+#+TITLE: NixOS Manual Partitioning and Mounting
+#+AUTHOR: krizdano
+#+startup: overview
+
+This is an install guide for manual disk partitioning and mounting for NixOS using Btrfs, LUKS and LVM.
+
+* Table of Contents :toc:
+- [[#create-partition][Create Partition]]
+  - [[#disclaimer-for-disk-partitioning][Disclaimer for Disk Partitioning]]
+- [[#format-the-efi-partition][Format the EFI Partition]]
+- [[#encrypt-the-second-drive][Encrypt the Second Drive]]
+- [[#create-the-swap-and-root-partition-inside-the-encrypted-partition][Create the Swap and Root Partition Inside the Encrypted Partition]]
+- [[#format-drives][Format Drives]]
+- [[#enable-swap][Enable Swap]]
+- [[#create-subvolumes][Create Subvolumes]]
+- [[#mount-the-directories][Mount the Directories]]
+- [[#mount-boot][Mount Boot]]
+
+* Create Partition
+We need to create two partitions.
+
+- EFI patition
+- Rest of the disk for LUKS LVM
+
+LVM contains
+- Swap partition
+- Root partition
+
+I use [[https://wiki.archlinux.org/title/Fdisk][fdisk]] for creating partitions.
+
+#+begin_src bash
+  fdisk /dev/diskname
+#+end_src
+
+** Disclaimer for Disk Partitioning
+
+Since we are manually partitioning disks, it’s super important to create
+specific partition labels for the partitions. These labels are what NixOS
+expects to identify the partitons. You’ll need to set these labels yourself
+to avoid any headaches later on.
+
+*Required Partition Labels*
+
+- *LUKS LVM*: ~disk-main-luks~
+- *Boot Partition*: ~boot~
+
+You can set these labels by heading to the advanced menu in ~fdisk~.
+Normally, ~disko~ takes care of this automatically when it partitions your disks, but because we are
+doing it manually, it’s up to you to get it right for everything to mount and initialize properly.
+
+#+begin_warning
+Warning: If the labels don’t match the ones mentioned above, you will end up with an unbootable system.
+#+end_warning
+
+* Format the EFI Partition
+#+begin_src bash
+  mkfs.vfat -F 32 -n boot /dev/disk/by-partlabel/boot
+#+end_src
+
+* Encrypt the Second Drive
+#+begin_src bash
+  cryptsetup luksFormat /dev/disk/by-partlabel/disk-main-luks
+  cryptsetup open /dev/disk/by-partlabel/disk-main-luks nixos
+#+end_src
+
+* Create the Swap and Root Partition Inside the Encrypted Partition
+#+begin_src bash
+  pvcreate /dev/mapper/nixos
+  vgcreate vg0 /dev/mapper/nixos
+
+  lvcreate --size SWAPSIZE --name swap vg0
+  lvcreate --extents 100%FREE --name system vg0
+#+end_src
+
+* Format Drives
+#+begin_src bash
+  mkswap /dev/vg0/swap
+  mkfs.btrfs /dev/vg0/system
+#+end_src
+
+* Enable Swap
+#+begin_src bash
+  swapon /dev/vg0/swap
+#+end_src
+
+* Create Subvolumes
+#+begin_src bash
+  mount -t btrfs /dev/vg0/system /mnt
+
+  btrfs subvolume create /mnt/root
+  btrfs subvolume create /mnt/nix
+  btrfs subvolume create /mnt/persist
+#+end_src
+
+* Mount the Directories
+#+begin_src bash
+  mount -o subvol=root,compress=zstd,noatime /dev/vg0/system /mnt
+
+  # nixstore
+  mkdir /mnt/nix
+  mount -o subvol=nix,compress=zstd,noatime /dev/vg0/system /mnt/nix
+
+  #persist
+  mkdir /mnt/persist
+  mount -o subvol=persist,compress=zstd,noatime /dev/vg0/system /mnt/persist
+#+end_src
+
+* Mount Boot
+#+begin_src bash
+  mkdir /mnt/boot
+  mount /dev/disk/by-label/boot /mnt/boot
+#+end_src

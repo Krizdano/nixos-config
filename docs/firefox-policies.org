@@ -1,0 +1,144 @@
+#+TITLE: Firefox browser policies
+#+AUTHOR: Krizdano
+#+DESCRIPTION: list of all the browser policies that I use and the preferences they affect.
+#+STARTUP: overview
+
+This contains all the firefox browser [[https://support.mozilla.org/en-US/kb/customizing-firefox-using-policiesjson][policies]] that I have enabled and the list of
+browser [[https://support.mozilla.org/en-US/kb/about-config-editor-firefox][preferences]] that are affected by those policies, so I don't have to touch those
+preferences again. Full list of brower policies can be found [[https://mozilla.github.io/policy-templates/][here]].
+
+* Table of Contents :toc:
+- [[#dontcheckdefaultbrowser][DontcheckDefaultBrowser]]
+- [[#disablefirefoxaccounts][DisableFirefoxAccounts]]
+- [[#disablepocket][DisablePocket]]
+- [[#disabletelemetry][DisableTelemetry]]
+- [[#displaybookmarkstoolbar][DisplayBookmarksToolbar]]
+- [[#httpsonlymode][HttpsOnlyMode]]
+- [[#enabletrackingprotection][EnableTrackingProtection]]
+- [[#firefoxhome][FirefoxHome]]
+- [[#firefoxsuggest][FirefoxSuggest]]
+- [[#usermessaging][UserMessaging]]
+- [[#cookies][Cookies]]
+- [[#sanitizeonshutdown][SanitizeOnShutdown]]
+- [[#nodefaultbookmarks][NoDefaultBookmarks]]
+- [[#offertosavelogins][OfferToSaveLogins]]
+- [[#searchsuggestenabled][SearchSuggestEnabled]]
+- [[#startdownloadsintempdirectory][StartDownloadsInTempDirectory]]
+- [[#hardwareacceleration][HardwareAcceleration]]
+- [[#overridefirstrunpage][OverrideFirstRunPage]]
+- [[#overridepostupdatepage][OverridePostUpdatePage]]
+- [[#networkprediction][NetworkPrediction]]
+- [[#passwordmanagerenabled][PasswordManagerEnabled]]
+- [[#promptfordownloadlocation][PromptForDownloadLocation]]
+- [[#homepage][Homepage]]
+- [[#containers][Containers]]
+- [[#3rdparty][3rdparty]]
+
+* DontcheckDefaultBrowser
+- browser.shell.checkDefaultBrowser
+
+* DisableFirefoxAccounts
+- identity.fxaccounts.enabled
+
+* DisablePocket
+- extensions.pocket.enabled
+
+* DisableTelemetry
+- datareporting.healthreport.uploadEnabled
+- datareporting.policy.dataSubmissionEnabled
+- toolkit.telemetry.archive.enabled
+
+* DisplayBookmarksToolbar
+ - none
+
+* HttpsOnlyMode
+- dom.security.https_only_mode
+
+* EnableTrackingProtection
+- privacy.trackingprotection.enabled
+- privacy.trackingprotection.pbmode.enabled
+- privacy.trackingprotection.cryptomining.enabled
+- privacy.trackingprotection.fingerprinting.enabled
+
+* FirefoxHome
+- browser.newtabpage.activity-stream.showSearch
+- browser.newtabpage.activity-stream.feeds.topsites
+- browser.newtabpage.activity-stream.feeds.section.highlights
+- browser.newtabpage.activity-stream.feeds.section.topstories
+- browser.newtabpage.activity-stream.feeds.snippets
+- browser.newtabpage.activity-stream.showSponsoredTopSites
+- browser.newtabpage.activity-stream.showSponsored
+
+* FirefoxSuggest
+- browser.urlbar.suggest.quicksuggest.nonsponsored
+- browser.urlbar.suggest.quicksuggest.sponsored
+- browser.urlbar.quicksuggest.dataCollection.enabled
+
+* UserMessaging
+- browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons
+- browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features
+- browser.aboutwelcome.enabled
+- browser.preferences.moreFromMozilla
+
+* Cookies
+- network.cookie.cookieBehavior
+- network.cookie.cookieBehavior.pbmode
+- network.cookie.lifetimePolicy
+
+* SanitizeOnShutdown
+- privacy.sanitize.sanitizeOnShutdown
+- privacy.clearOnShutdown.cache
+- privacy.clearOnShutdown.cookies
+- privacy.clearOnShutdown.downloads
+- privacy.clearOnShutdown.formdata
+- privacy.clearOnShutdown.history
+- privacy.clearOnShutdown.sessions
+- privacy.clearOnShutdown.siteSettings
+- privacy.clearOnShutdown.offlineApps
+- privacy.clearOnShutdown_v2.historyFormDataAndDownloads ~(Firefox 128)~
+- privacy.clearOnShutdown_v2.cookiesAndStorage ~(Firefox 128)~
+- privacy.clearOnShutdown_v2.cache ~(Firefox 128)~
+- privacy.clearOnShutdown_v2.siteSettings ~(Firefox 128)~
+
+* NoDefaultBookmarks
+- none
+
+* OfferToSaveLogins
+- signon.rememberSignons
+
+* SearchSuggestEnabled
+- browser.urlbar.suggest.searches
+- browser.search.suggest.enabled
+
+* StartDownloadsInTempDirectory
+- browser.download.start_downloads_in_tmp_dir
+
+* HardwareAcceleration
+- layers.acceleration.disabled
+
+* OverrideFirstRunPage
+- startup.homepage_welcome_url
+
+* OverridePostUpdatePage
+- startup.homepage_override_url
+
+* NetworkPrediction
+- network.dns.disablePrefetch
+- network.dns.disablePrefetchFromHTTPS
+
+* PasswordManagerEnabled
+- pref.privacy.disable_button.view_passwords
+- signon.rememberSignons
+
+* PromptForDownloadLocation
+- browser.download.useDownloadDir
+
+* Homepage
+- browser.startup.homepage
+- browser.startup.page
+
+* Containers
+- none
+
+* 3rdparty
+- none
