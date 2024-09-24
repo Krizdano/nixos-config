@@ -118,6 +118,16 @@ flip_monitor () {
     fi
 }
 
+toggle_auto_suspend () {
+    if systemctl --user is-active --quiet hypridle.service; then
+        systemctl --user stop hypridle.service
+        notify-send "Disabled auto suspend"
+    else
+        systemctl --user start hypridle.service
+        notify-send "Enabled auto suspend"
+    fi
+}
+
 case "$1" in
     "") ;;
     connect_bluetooth)
@@ -160,6 +170,10 @@ case "$1" in
         exit
         ;;
     flip_monitor)
+        "$@"
+        exit
+        ;;
+    toggle_auto_suspend)
         "$@"
         exit
         ;;

@@ -517,6 +517,22 @@ Inverts display in [[https://hyprland.org/][Hyprland]].
   }
 #+end_src
 
+*** Disable Auto Suspend
+This script allows me to disable or enable automatic suspending on my machine. It checks if ~hypridle.service~ is "*active*" or "*inactive*"
+using ~systemctl~ and toggles its state.
+
+#+begin_src bash :tangle ../config/scripts/utilities.sh
+  toggle_auto_suspend () {
+      if systemctl --user is-active --quiet hypridle.service; then
+          systemctl --user stop hypridle.service
+          notify-send "Disabled auto suspend"
+      else
+          systemctl --user start hypridle.service
+          notify-send "Enabled auto suspend"
+      fi
+  }
+#+end_src
+
 ** Main Logic
 Main script logic to handle different function calls
 
@@ -563,6 +579,10 @@ Main script logic to handle different function calls
           exit
           ;;
       flip_monitor)
+          "$@"
+          exit
+          ;;
+      toggle_auto_suspend)
           "$@"
           exit
           ;;

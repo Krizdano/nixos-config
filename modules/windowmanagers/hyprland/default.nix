@@ -221,6 +221,7 @@ in
         "$mainModSHIFT, S, exec, ${ut} change_default_sink" # changes default audio sink
         "$mainModSHIFT, D, exec, ${ut} connect_bluetooth"
         "$mainMod, M, exec, ${ut} play_videos" # Select and play videos from Videos directory
+        "$mainMod, A, exec, ${ut} toggle_auto_suspend" # Toggles automatic suspending
 
         # kitty in floating window
         "$mainModSHIFT, RETURN, exec, kitty -1 zellij"
