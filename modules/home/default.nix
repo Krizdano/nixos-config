@@ -5,9 +5,8 @@ let
   emacs = ''${config.programs.emacs.package}/bin/emacs --batch --eval "(require 'org)" --eval'';
 in
 {
-  imports = [ ]
-  ++ (import ../programs)
-  ++ (import ../shell);
+  imports = (import ../programs)
+            ++ (import ../shell);
 
   # fzf
   programs.fzf = {
