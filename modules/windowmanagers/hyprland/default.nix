@@ -222,7 +222,7 @@ in
         "$mainModSHIFT, D, exec, ${ut} connect_bluetooth"
         "$mainMod, M, exec, ${ut} play_videos" # Select and play videos from Videos directory
         "$mainMod, A, exec, ${ut} toggle_auto_suspend" # Toggles automatic suspending
-        "$mainMod, A, exec, ${ut} connect_to_wifi" # connect to wifi using dmenu
+        "$mainMod, W, exec, ${ut} connect_to_wifi" # connect to wifi using dmenu
 
         # kitty in floating window
         "$mainModSHIFT, RETURN, exec, kitty -1 zellij"
