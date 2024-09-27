@@ -30,7 +30,7 @@
       dired-open
       org-auto-tangle
       org-modern
-      nix-mode
+      nix-ts-mode
       markdown-mode
       lua-mode
       company
