@@ -64,7 +64,9 @@
 Tell emacs to pull all the backups that it creates in ==emacs-backup== directory.
 
 #+begin_src emacs-lisp
-  (setq backup-directory-alist '((".*" . "~/.local/share/emacs-backup")))
+  (setq
+   backup-directory-alist '((".*" . "~/.local/share/emacs-backup"))
+   auto-save-file-name-transforms '((".*" "~/.local/share/emacs-backup" t)))
 #+end_src
 
 ** Cleanup UI
@@ -84,7 +86,6 @@ Tell emacs to pull all the backups that it creates in ==emacs-backup== directory
 ** Sane defaults
 
 #+begin_src emacs-lisp
-  (auto-save-mode 0)                 ;; disable autosave
   (electric-indent-mode -1)          ;; disable electric-indent
   (visual-line-mode -1)              ;; enables text wrapping
   (electric-pair-mode 1)             ;; enables autopairing
