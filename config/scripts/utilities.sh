@@ -128,6 +128,27 @@ toggle_auto_suspend () {
     fi
 }
 
+#!/usr/bin/env bash
+connect_to_wifi () {
+    SSID=$(nmcli -f SSID device wifi list --rescan yes | tail -n +2 | dmenu -i)
+
+    if [[ ! -z $SSID ]]; then
+        nmcli device wifi connect $SSID
+    fi
+
+    while [ $? -eq 4 ]; # nmcli returns 4 if password is not provided or if the password is wrong
+    do
+        PASSWORD=$(dmenu -l 0 -p "Enter password")
+        nmcli device wifi connect $SSID password $PASSWORD
+    done
+
+    if [ $? -eq 0 ]; then
+        notify-send "connected to wifi"
+    else
+        notify-send "error: not connected to wifi"
+    fi
+}
+
 case "$1" in
     "") ;;
     connect_bluetooth)
@@ -174,6 +195,10 @@ case "$1" in
         exit
         ;;
     toggle_auto_suspend)
+        "$@"
+        exit
+        ;;
+    connect_to_wifi)
         "$@"
         exit
         ;;
