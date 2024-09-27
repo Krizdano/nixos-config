@@ -238,7 +238,7 @@ All the settings related to different languages
 Enable support for nix lang
 
 #+begin_src emacs-lisp
-  (use-package nix-mode
+  (use-package nix-ts-mode
     :ensure t
     :mode "\\.nix\\'")
 #+end_src
@@ -253,7 +253,7 @@ user eglot as lsp
     ((python-ts-mode . eglot-ensure)
      (c-ts-mode . eglot-ensure)
      (rust-ts-mode . eglot-ensure)
-     (nix-mode . eglot-ensure)))
+     (nix-ts-mode . eglot-ensure)))
 #+end_src
 
 ** Markdown-mode
