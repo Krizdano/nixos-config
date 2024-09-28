@@ -68,7 +68,7 @@ in
 
       load-emacs-config = config.lib.dag.entryAfter ["writeBoundary"] ''
             ${emacs} '(org-babel-tangle-file
-              "${sourceDir}/config/emacs/config.org")'
+              "${sourceDir}/docs/emacs-config.org")'
             '';
 
       load-nyxt-config = config.lib.dag.entryAfter ["writeBoundary"] ''
