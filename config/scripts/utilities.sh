@@ -134,18 +134,22 @@ connect_to_wifi () {
 
     if [[ ! -z $SSID ]]; then
         nmcli device wifi connect $SSID
-    fi
+        while [ $? -eq 4 ]; # nmcli returns 4 if password is not provided or if the password is wrong
+        do
+            PASSWORD=$(dmenu -l 0 -p "Enter password")
+            nmcli device wifi connect $SSID password $PASSWORD
+        done
 
-    while [ $? -eq 4 ]; # nmcli returns 4 if password is not provided or if the password is wrong
-    do
-        PASSWORD=$(dmenu -l 0 -p "Enter password")
-        nmcli device wifi connect $SSID password $PASSWORD
-    done
-
-    if [ $? -eq 0 ]; then
-        notify-send "connected to wifi"
+        if [ $? -eq 0 ]; then
+            notify-send "connected to wifi"
+            exit
+        else
+            notify-send "error: not connected to wifi"
+            exit
+        fi
     else
-        notify-send "error: not connected to wifi"
+        notify-send "SSID not provided"
+        exit
     fi
 }
 
