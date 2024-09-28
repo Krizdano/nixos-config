@@ -2,66 +2,67 @@
 #+AUTHOR: Krizdano
 #+PROPERTY: header-args :tangle ~/.config/emacs/init.el
 #+auto_tangle: t
-#+DESCRIPTION: My personal emacs configuration
+#+DESCRIPTION: My personal Emacs configuration
 #+STARTUP: overview
 
 * Table of Contents :toc:
 - [[#settings][Settings]]
   - [[#backup][Backup]]
+  - [[#change-default-file-for-custom-set-variables][Change Default File for Custom-Set-Variables]]
   - [[#cleanup-ui][Cleanup UI]]
-  - [[#sane-defaults][Sane defaults]]
   - [[#eldoc][Eldoc]]
-  - [[#minibuffer-escape][Minibuffer Escape]]
+  - [[#enable-melpa][Enable MELPA]]
   - [[#font-settings][Font settings]]
   - [[#line-numbers][Line numbers]]
-  - [[#enable-melpa][Enable MELPA]]
-  - [[#change-default-file-for-custom-set-variables][Change Default file for custom-set-variables]]
-  - [[#speed-up-emacs][Speed up emacs]]
+  - [[#minibuffer-escape][Minibuffer Escape]]
+  - [[#sane-defaults][Sane Defaults]]
+  - [[#speed-up-emacs][Speed up Emacs]]
   - [[#whitespace][Whitespace]]
   - [[#zoom][Zoom]]
 - [[#languages][Languages]]
-  - [[#treesitter][Treesitter]]
-  - [[#nix][nix]]
-  - [[#lsp][Lsp]]
-  - [[#markdown-mode][Markdown-mode]]
-  - [[#lua-mode][Lua-mode]]
+  - [[#lua-mode][Lua-Mode]]
+  - [[#markdown-mode][Markdown-Mode]]
+  - [[#lsp][LSP]]
+  - [[#tree-sitter][Tree-Sitter]]
   - [[#company][Company]]
 - [[#ediff][EDIFF]]
 - [[#org-mode][Org-mode]]
-  - [[#org-auto-tangle][Org-auto-tangle]]
-  - [[#enable-org-mode][Enable org-mode]]
-  - [[#org-modern][Org-modern]]
-  - [[#org-agenda][org-agenda]]
-  - [[#org-capture][Org-capture]]
-  - [[#extra-config][extra-config]]
+  - [[#enable-org-mode][Enable Org-Mode]]
+  - [[#org-agenda][Org-Agenda]]
+  - [[#org-auto-tangle][Org-Auto-Tangle]]
+  - [[#org-capture][Org-Capture]]
+  - [[#org-modern][Org-Modern]]
+  - [[#org-tempo][Org-Tempo]]
+  - [[#org-todo][Org TODO]]
+  - [[#extra-config][Extra-Config]]
 - [[#dired][Dired]]
 - [[#theme][Theme]]
-  - [[#doom-theme][Doom-theme]]
-  - [[#catppuccin-theme][catppuccin-theme]]
+  - [[#catppuccin-theme][Catppuccin-Theme]]
+  - [[#doom-theme][Doom-Theme]]
   - [[#modeline][Modeline]]
 - [[#packages][Packages]]
-  - [[#evil-mode][Evil mode]]
-  - [[#general][General]]
-  - [[#drag-stuff][Drag stuff]]
-  - [[#undo-tree][Undo tree]]
-  - [[#rainbow-mode][Rainbow-mode]]
-  - [[#rainbow-delimiters][Rainbow delimiters]]
-  - [[#eat][Eat]]
-  - [[#vterm][Vterm]]
   - [[#direnv][Direnv]]
-  - [[#perspective][Perspective]]
+  - [[#drag-stuff][Drag Stuff]]
+  - [[#eat][Eat]]
+  - [[#evil-mc][Evil-Mc]]
+  - [[#evil-mode][Evil Mode]]
+  - [[#general][General]]
   - [[#pdf][PDF]]
-  - [[#tldr][TLDR]]
-  - [[#toc-org][TOC-org]]
-  - [[#sideline][Sideline]]
-  - [[#evil-mc][Evil-mc]]
+  - [[#perspective][Perspective]]
   - [[#popper][Popper]]
-  - [[#treemacs][treemacs]]
-  - [[#sly][sly]]
+  - [[#rainbow-delimiters][Rainbow Delimiters]]
+  - [[#rainbow-mode][Rainbow-Mode]]
+  - [[#sideline][Sideline]]
+  - [[#sly][SLY]]
+  - [[#tldr][TLDR]]
+  - [[#toc-org][TOC-Org]]
+  - [[#treemacs][Treemacs]]
+  - [[#undo-tree][Undo Tree]]
+  - [[#vterm][Vterm]]
 
 * Settings
 ** Backup
-Tell emacs to pull all the backups that it creates in ==emacs-backup== directory.
+Instruct Emacs to store all the backups that it creates in the custom =~/.local/share/emacs-backup= directory.
 
 #+begin_src emacs-lisp
   (setq
@@ -69,53 +70,54 @@ Tell emacs to pull all the backups that it creates in ==emacs-backup== directory
    auto-save-file-name-transforms '((".*" "~/.local/share/emacs-backup" t)))
 #+end_src
 
-** Cleanup UI
+** Change Default File for Custom-Set-Variables
+Specify a custom file for =custom-set-variables= to keep the main config clean.
 
 #+begin_src emacs-lisp
-  (setq inhibit-startup-screen t)   ;; disable startup screen
-  (setq use-file-dialog nil)        ;; disable file dialog
-  (setq use-dialog-box nil)         ;; disable dialog box
-  (setq pop-up-windows nil)         ;; disable pop up windows
-  (setq ring-bell-function 'ignore) ;; disable annoying bell sound
-  (scroll-bar-mode 0)               ;; disable scrollbar
-  (menu-bar-mode 0)                 ;; disable menubar
-  (tool-bar-mode 0)                 ;; disable toolbar
-  (blink-cursor-mode 0)             ;; disable cursor blinking
+(setq custom-file (locate-user-emacs-file "custom.el"))
+(load custom-file 'noerror 'nomessage)
 #+end_src
 
-** Sane defaults
+** Cleanup UI
+Adjust UI settings to create a cleaner interface by disabling unnecessary elements.
 
 #+begin_src emacs-lisp
-  (electric-indent-mode -1)          ;; disable electric-indent
-  (visual-line-mode -1)              ;; enables text wrapping
-  (electric-pair-mode 1)             ;; enables autopairing
-  (ido-mode 1)                       ;; enables ido mode
-  (recentf-mode 1)                   ;; enables recent files
-  (indent-tabs-mode 0)                ;; disable indent using tabs
-  (setq use-package-always-ensure t) ;; don't have to specify ensure everytime using use-package
-  ;; (setq use-package-verbose t)       ;; shows reports about loading and configuration details.
+  (setq inhibit-startup-screen t)   ;; Disable startup screen
+  (setq use-file-dialog nil)        ;; Disable file dialog
+  (setq use-dialog-box nil)         ;; Disable dialog box
+  (setq pop-up-windows nil)         ;; Disable pop up windows
+  (setq ring-bell-function 'ignore) ;; Disable annoying bell sound
+  (scroll-bar-mode 0)               ;; Disable scrollbar
+  (menu-bar-mode 0)                 ;; Disable menubar
+  (tool-bar-mode 0)                 ;; Disable toolbar
+  (blink-cursor-mode 0)             ;; Disable cursor blinking
 #+end_src
 
 ** Eldoc
+Configure Eldoc to display documentation in a separate window rather than the minibuffer.
 
 #+begin_src emacs-lisp
   ;; disable showing eldoc in minibuffer
   (setq eldoc-display-functions '(eldoc-display-in-buffer))
 
-  ;; to show information providied by eldoc in a pop-up window
+  ;; to show information provided by eldoc in a pop-up window
   (use-package eldoc-box
     :ensure t
     :hook
     (eldoc-mode-hook . eldoc-box-hover-mode))
 #+end_src
 
-** Minibuffer Escape
+** Enable MELPA
 
+Add MELPA to the list of package archives for easier package management.
 #+begin_src emacs-lisp
-  (global-set-key [escape] 'keyboard-escape-quit)
+  (require 'package)
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+  (package-initialize)
 #+end_src
 
 ** Font settings
+Specify font preferences for Emacs.
 
 #+begin_src emacs-lisp
   ;; set font to SauceCodePro
@@ -125,11 +127,13 @@ Tell emacs to pull all the backups that it creates in ==emacs-backup== directory
                       :slant 'italic)
   (set-face-attribute 'font-lock-keyword-face nil
                       :slant 'italic)
-  ;;This set default font for emacsclient
+
+  ;; This sets the default font for emacsclient
   (add-to-list 'default-frame-alist '(font . "SauceCodePro Nerd Font-14"))
 #+end_src
 
 ** Line numbers
+Configure line numbers to display in specific modes and set them to relative.
 
 #+begin_src emacs-lisp
   ;; only show numbers in these modes
@@ -141,60 +145,99 @@ Tell emacs to pull all the backups that it creates in ==emacs-backup== directory
   ;; set relative numbers
   (setq display-line-numbers-type 'relative)
 
-  ;;show column numbers in mode line
+  ;; Show column numbers in the mode line.
   (column-number-mode)
 #+end_src
 
-** Enable MELPA
+** Minibuffer Escape
+By default, Emacs requires you to press =ESC= three times to escape quit the minibuffer. This changes it to require only one press.
 
 #+begin_src emacs-lisp
-  (require 'package)
-  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-  (package-initialize)
+  (global-set-key [escape] 'keyboard-escape-quit)
 #+end_src
 
-** Change Default file for custom-set-variables
+** Sane Defaults
+Set commonly preferred defaults for better usability.
 
 #+begin_src emacs-lisp
-(setq custom-file (locate-user-emacs-file "custom.el"))
-(load custom-file 'noerror 'nomessage)
+  (electric-indent-mode -1)          ;; Disable electric-indent
+  (global-visual-line-mode -1)       ;; Disables truncated lines
+  (electric-pair-mode 1)             ;; Enables autopairing
+  (ido-mode 1)                       ;; Enables ido mode
+  (recentf-mode 1)                   ;; Enables recent files
+  (indent-tabs-mode 0)               ;; Disable indent using tabs
+  (setq use-package-always-ensure t) ;; No need to specify 'ensure' every time when using use-package.
+  ;; (setq use-package-verbose t)    ;; Displays reports on loading and configuration details.
 #+end_src
 
-** Speed up emacs
-
-Change garbage-collection-threshold to reduce the interval garbage
-collection is called
+** Speed up Emacs
+Increase garbage collection threshold for better performance.
 
 #+begin_src emacs-lisp
   (setq gc-cons-threshold (* 100 1000 1000))
 #+end_src
 
 ** Whitespace
-
-enable whitespace mode only for tailing lines and tabs
+Enable Whitespace mode to highlight trailing spaces and tabs.
 
 #+begin_src emacs-lisp
   (setq
    whitespace-style '(face tabs tab-mark trailing)
    whitespace-display-mappings '(
                                  (tab-mark     ?\t    [?\u00BB   ?\t] [?\\ ?\t])))
-  ;; (dolist (mode '(prog-mode-hook))
-  ;;   (add-hook mode (lambda () (whitespace-mode 1))))
 
-  (global-whitespace-mode 1)
+  (global-whitespace-mode 1) ;; Enable Whitespace mode globally
 #+end_src
 
 ** Zoom
+Define keybindings for zooming in and out of text. You can use =CTRL= plus +/- for zooming in/out.
 
-keybindings for zooming
 #+begin_src emacs-lisp
   (global-set-key (kbd "C-+") 'text-scale-increase)
   (global-set-key (kbd "C--") 'text-scale-decrease)
 #+end_src
 
 * Languages
-All the settings related to different languages
-** Treesitter
+Emacs has built-in programming language modes for Lisp, Scheme, DSSSL, Ada, ASM, AWK, C, C++, Fortran, Icon, IDL (CORBA),
+IDLWAVE, Java, Javascript, M4, Makefiles, Metafont, Modula2, Object Pascal, Objective-C, Octave, Pascal, Perl, Pike, PostScript,
+Prolog, Python, Ruby, Simula, SQL, Tcl, Verilog, and VHDL. Other languages will require you to install additional modes.
+
+** Lua-Mode
+Enable Lua mode.
+
+#+begin_src emacs-lisp
+  (use-package lua-mode
+    :ensure t
+    :mode "\\.lua\\'")
+#+end_src
+
+** Markdown-Mode
+Enable Markdown mode.
+
+#+begin_src emacs-lisp
+  (use-package markdown-mode
+    :ensure t
+    :mode "\\.md\\'")
+
+#+end_src
+
+** LSP
+*** Eglot
+[[https://github.com/joaotavora/eglot][Eglot]] is a built-in Emacs client for LSP servers.
+
+#+begin_src emacs-lisp
+  (use-package eglot
+    :ensure t
+    :hook
+    ((python-ts-mode . eglot-ensure)
+     (c-ts-mode . eglot-ensure)
+     (rust-ts-mode . eglot-ensure)
+     (nix-ts-mode . eglot-ensure)))
+#+end_src
+
+
+** Tree-Sitter
+Configure Tree-sitter for improved syntax highlighting.
 
 #+begin_src emacs-lisp
   ;; define sources
@@ -210,15 +253,9 @@ All the settings related to different languages
           (sh-mode . bash-ts-mode)
           (python-mode . python-ts-mode)))
 #+end_src
-*** rust
 
-#+begin_src emacs-lisp
-  (use-package rust-ts-mode
-    :ensure t
-    :mode "\\.rs\\'")
-#+end_src
-
-*** c
+*** C
+Enable Tree-sitter support for C.
 
 #+begin_src emacs-lisp
   (use-package c-ts-mode
@@ -226,16 +263,8 @@ All the settings related to different languages
     :mode "\\.c\\'")
 #+end_src
 
-*** yaml
-
-#+begin_src emacs-lisp
-  (use-package yaml-ts-mode
-    :ensure t
-    :mode "\\.yaml\\'")
-#+end_src
-
-** nix
-Enable support for nix lang
+*** Nix
+Enable Tree-sitter support for Nix.
 
 #+begin_src emacs-lisp
   (use-package nix-ts-mode
@@ -243,39 +272,26 @@ Enable support for nix lang
     :mode "\\.nix\\'")
 #+end_src
 
-** Lsp
-*** eglot
-user eglot as lsp
+*** Rust
+Enable Tree-sitter support for Rust.
+
 #+begin_src emacs-lisp
-  (use-package eglot
+  (use-package rust-ts-mode
     :ensure t
-    :hook
-    ((python-ts-mode . eglot-ensure)
-     (c-ts-mode . eglot-ensure)
-     (rust-ts-mode . eglot-ensure)
-     (nix-ts-mode . eglot-ensure)))
+    :mode "\\.rs\\'")
 #+end_src
 
-** Markdown-mode
+*** YAML
+Enable Tree-sitter support for YAML.
 
 #+begin_src emacs-lisp
-  (use-package markdown-mode
+  (use-package yaml-ts-mode
     :ensure t
-    :mode "\\.md\\'")
-
-#+end_src
-
-** Lua-mode
-
-#+begin_src emacs-lisp
-  (use-package lua-mode
-    :ensure t
-    :mode "\\.lua\\'")
+    :mode "\\.yaml\\'")
 #+end_src
 
 ** Company
-
-Autocomplete for emacs
+[[https://github.com/company-mode/company-mode][Company]] is a text-completion framework for Emacs.
 
 #+begin_src emacs-lisp
   (use-package company
@@ -294,6 +310,14 @@ Autocomplete for emacs
 #+end_src
 
 * EDIFF
+=ediff= is a diff program that is built into Emacs. By default, =ediff= splits files vertically and places the =help= frame in its own window.
+This configuration changes this so the two files are splithorizontally and the =help= frame appears as a lower split within the existing window.
+Also, the function =my-ediff-hook= sets keys =n= and =e= (vim keys for ~colemak-dh~) for moving to =next= and =prev= diffs. By default, this is set
+to =n= and =p=.
+
+#+begin_quote
+code stolen from [[https://gitlab.com/dwt1/dotfiles/-/blob/master/.config/emacs/config.org][distrotube's repo]]
+#+end_quote
 
 #+begin_src emacs-lisp
   (setq ediff-split-window-function 'split-window-horizontally
@@ -308,37 +332,81 @@ Autocomplete for emacs
 #+end_src
 
 * Org-mode
-** Org-auto-tangle
+Settings related to Org mode.
+** Enable Org-Mode
+Enable Org-mode features and configuration.
+
+#+begin_src emacs-lisp
+  (use-package org
+    :defer 0
+    :config
+    (setq org-list-allow-alphabetical t
+          org-return-follows-link t
+          org-fold-catch-invisible-edits 'show-and-error
+
+          ;; set directories
+          org-directory "~/Documents/Org"
+          org-journal-dir "~/Documents/Org/journal/")
+
+    ;; indent based on heading level
+    (add-hook 'org-mode-hook 'org-indent-mode)
+    (org-mode))
+#+end_src
+
+** Org-Agenda
+Configure org-agenda for managing tasks and schedules.
+
+#+begin_src emacs-lisp
+  (use-package org-agenda
+    :ensure nil
+    :commands org-agenda
+    :config
+    (setq  org-agenda-files (list "journal/todo.org")
+           org-agenda-start-with-log-mode t
+           org-log-done 'time
+           org-log-into-drawer t))
+#+end_src
+
+** Org-Auto-Tangle
+[[https://github.com/yilkalargaw/org-auto-tangle][Org-auto-tangle]] is a simple Emacs package that allows you to automatically tangle Org files on save by adding the option =#+auto_tangle:= t in your Org file.
 
 #+begin_src emacs-lisp
   (use-package org-auto-tangle
     :hook (org-mode . org-auto-tangle-mode))
 #+end_src
 
-** Enable org-mode
+** Org-Capture
+Set up org-capture for quick note-taking.
 
 #+begin_src emacs-lisp
-  ;; (org-mode)
-  (use-package org
-    :defer 0
+  (use-package org-capture
+    :ensure nil
+    :commands org-capture
     :config
-    (setq org-list-allow-alphabetical t
-          org-return-follows-link t ;; Tab key follow link
-          org-fold-catch-invisible-edits 'show-and-error
+    (setq org-capture-templates
+          `(("t" "Tasks/Projects")
+            ("tt" "TASK" entry (file+olp "journal/todo.org" "Inbox")
+             "* TODO %?\n %U\n %a\n %i" :empty-lines 1)
 
-          ;; set directories
-          org-directory "~/Documents/Org"
-          org-journal-dir "~/Documents/Org/journal/")
-    (require 'org-tempo)
-    (org-mode)
-    )
+            ("tp" "PROJECTS" entry (file+olp "journal/todo.org" "Inbox")
+             "* PROJECT %?\n %U\n %a\n %i" :empty-lines 1)
+
+            ("ts" "STUDIES" entry (file+olp "journal/todo.org" "Inbox")
+             "* STUDIES %?\n %U\n %a\n %i" :empty-lines 1)
+
+            ("tr" "RESOURCES" item (file+olp "journal/resources.org" "Other Stuff")
+             "- [[%^{link}][%^{description}]] - *%?*\n %i" :append t)
+
+            ("td" "Cash" table-line (file+headline "journal/invoice.org" "Invoice")
+             "| %U | %^{Category} | %^{Amount} | %^{Account} | %^{items} |" :kill-buffer t))))
 #+end_src
 
-** Org-modern
+** Org-Modern
+[[https://github.com/minad/org-modern][Org-modern]] implements a modern style for your Org buffers using font locking and text properties.
+The package styles headlines, keywords, tables and source blocks. The styling is configurable, you can
+enable, disable or modify the style of each syntax element individually via the =org-modern= customization group.
 
 #+begin_src emacs-lisp
-  ;; indent based on heading level
-  (add-hook 'org-mode-hook 'org-indent-mode)
 
   (use-package org-modern
     :hook
@@ -352,63 +420,62 @@ Autocomplete for emacs
 #+end_src
 
 
-** org-agenda
+** Org-Tempo
+[[https://github.com/dangom/org-mode/blob/master/lisp/org-tempo.el][Org-tempo]] is a module within Org that is disabled by default. =Org-tempo= allows for =<s= followed by =TAB= to expand to a =begin_src= tag.
+Other expansions available include:
+
+| Typing the below + TAB | Expands to …                        |
+|------------------------+-------------------------------------|
+| <a                     | =#+BEGIN_EXPORT ascii= … =#+END_EXPORT= |
+| <C                     | =#+BEGIN_COMMENT= … =#+END_COMMENT=     |
+| <e                     | =#+BEGIN_EXAMPLE= … =#+END_EXAMPLE=     |
+| <E                     | =#+BEGIN_EXPORT= … =#+END_EXPORT=       |
+| <h                     | =#+BEGIN_EXPORT html= … =#+END_EXPORT=  |
+| <l                     | =#+BEGIN_EXPORT latex= … =#+END_EXPORT= |
+| <q                     | =#+BEGIN_QUOTE= … =#+END_QUOTE=         |
+| <s                     | =#+BEGIN_SRC= … =#+END_SRC=             |
+| <v                     | =#+BEGIN_VERSE= … =#+END_VERSE=         |
+
 
 #+begin_src emacs-lisp
-  (use-package org-agenda
-    :ensure nil
-    :commands org-agenda
-    :config
-    (setq  org-agenda-files (list "journal/todo.org")
-           org-agenda-start-with-log-mode t
-           org-log-done 'time
-           org-log-into-drawer t
-           org-todo-keywords
-           '((sequence
-              "TODO(t)"          ; day to day tasks
-              "PROJECT(p)"       ; Personal projects
-              "INPROGRESS(i)"    ; Tasks that are in progress
-              "STUDIES(s)"       ; study related
-              "|"                ; The pipe necessary to separate "active" states and "inactive" states
-              "DONE(d)"          ; Task has been completed
-              "CANCELLED(c)")))) ; Task has been cancelled
-
+    (require 'org-tempo)
 #+end_src
 
-** Org-capture
+** Org TODO
+Define additional TODO words for Org mode.
 
 #+begin_src emacs-lisp
-  (use-package org-capture
-    :ensure nil
-    :commands org-capture
-    :config
-    (setq org-capture-templates
-          `(("t" "Tasks/Projects")
-            ("tt" "TASK" entry (file+olp "journal/todo.org" "Inbox")
-             "* TODO %?\n %U\n %a\n %i" :empty-lines 1)
-            ("tp" "PROJECTS" entry (file+olp "journal/todo.org" "Inbox")
-             "* PROJECT %?\n %U\n %a\n %i" :empty-lines 1)
-            ("ts" "STUDIES" entry (file+olp "journal/todo.org" "Inbox")
-             "* STUDIES %?\n %U\n %a\n %i" :empty-lines 1)
-            ("tr" "RESOURCES" item (file+olp "journal/resources.org" "Other Stuff")
-             "- [[%^{link}][%^{description}]] - *%?*\n %i" :append t)
-            ("td" "Cash" table-line (file+headline "journal/invoice.org" "Invoice")
-             "| %U | %^{Category} | %^{Amount} | %^{Account} | %^{items} |" :kill-buffer t))))
+  (setq
+   org-todo-keywords
+   '((sequence
+      "TODO(t)"          ; day to day tasks
+      "PROJECT(p)"       ; Personal projects
+      "INPROGRESS(i)"    ; Tasks that are in progress
+      "STUDIES(s)"       ; study related
+      "|"                ; The pipe necessary to separate "active" states and "inactive" states
+      "DONE(d)"          ; Task has been completed
+      "CANCELLED(c)")))  ; Task has been cancelled
 #+end_src
 
-** extra-config
+
+** Extra-Config
+Add extra configurations for Org mode.
 
 #+begin_src emacs-lisp
-  ;; disable autopairs for <s TAB
+  ;; The following prevents <> from auto-pairing when electric-pair-mode is on.
+  ;; Otherwise, org-tempo is broken when you try to <s TAB...
   (add-hook 'org-mode-hook (lambda ()
                              (setq-local electric-pair-inhibit-predicate
                                          `(lambda (c)
                                             (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
 
+  (custom-set-faces
+   '(org-code ((t (:foreground "#89dceb" :background: nil :slant italic :weight bold))))
+   '(org-verbatim ((t (:foreground "#f38ba8" :background: nil :slant italic :weight bold)))))
 #+end_src
 
 * Dired
-
+Configure =dired=, a built-in file manager for Emacs.
 
 #+begin_src emacs-lisp
   (use-package dired
@@ -416,7 +483,7 @@ Autocomplete for emacs
     :commands (dired dired-jump)
     )
 
-  ;; install dired open to open files in default applications
+  ;; Install dired open to open files in default applications
   (use-package dired-open
     :after dired
     :config
@@ -434,15 +501,26 @@ Autocomplete for emacs
                                   ("pdf" . "firefox"))))
 #+end_src
 
-automatically refresh dired buffers when files get adde or deleted from the directory
-you are browsing
+Automatically refresh =dired= buffers when files get added or deleted from the directory currently browsing.
 
 #+begin_src emacs-lisp
   (setq global-auto-revert-non-file-buffers t)
 #+end_src
 
 * Theme
-** Doom-theme
+Settings related to visual themes.
+
+** Catppuccin-Theme
+Set the =Catppuccin theme= as the default theme.
+
+#+begin_src emacs-lisp
+  (use-package catppuccin-theme
+    :config
+    (load-theme 'catppuccin t))
+#+end_src
+
+** Doom-Theme
+Install the =Doom themes= packages.
 
 #+begin_src emacs-lisp
   (use-package doom-themes
@@ -459,48 +537,79 @@ you are browsing
 
 #+end_src
 
-** catppuccin-theme
-
-#+begin_src emacs-lisp
-  (use-package catppuccin-theme
-    :config
-    (load-theme 'catppuccin t)
-    )
-#+end_src
-
 ** Modeline
+Replace the default modeline with [[https://github.com/seagle0128/doom-modeline][Doom Modeline]].
 
 #+begin_src emacs-lisp
   (use-package doom-modeline
     :ensure t
     :init (doom-modeline-mode 1)
     :config
-    (setq doom-modeline-height 30
-          doom-modeline-bar-width 5
-          doom-modeline-persp-name t
-          doom-mode-line-persp-icon t))
+    (setq doom-modeline-height 30       ;; sets modeline height
+          doom-modeline-bar-width 5     ;; sets right bar width
+          doom-modeline-persp-name t    ;; sets perspective name to modeline
+          doom-mode-line-persp-icon t)) ;; adds folder icon next to perspective name
 #+end_src
 
 * Packages
-** Evil mode
+List of external packages for enhanced functionality.
+
+** Direnv
+This package provides [[https://direnv.net/][direnv]] integration for Emacs.
+
+#+begin_src emacs-lisp
+  (use-package direnv
+    :config
+    (setq direnv-always-show-summary nil)
+    (direnv-mode))
+#+end_src
+
+** Drag Stuff
+The [[https://github.com/rejeep/drag-stuff.el][Drag Stuff]] minor mode allows dragging text (words, regions, lines) with M-up, M-down, M-left, and M-right."
+
+#+begin_src emacs-lisp
+  (use-package drag-stuff
+    :init
+    (drag-stuff-global-mode)
+    (drag-stuff-define-keys))
+#+end_src
+
+
+** Eat
+[[https://codeberg.org/akib/emacs-eat][Eat]] (Emulate A Terminal) is a terminal emulator. It can run most (if not all) full-screen terminal programs, including Emacs.
+
+#+begin_src emacs-lisp
+  (use-package eat
+    :commands eat)
+#+end_src
+
+** Evil-Mc
+[[https://github.com/gabesoft/evil-mc][Evil-mc]] is a multiple cursors implementation for Evil mode.
+
+#+begin_src emacs-lisp
+  (use-package evil-mc)
+#+end_src
+
+** Evil Mode
+[[https://github.com/emacs-evil/evil][Evil]] is an extensible vim layer for Emacs.
 
 #+begin_src emacs-lisp
   (use-package evil
     :init
-    (setq evil-want-keybinding nil) ;; for evil-collection
+    (setq evil-want-keybinding nil) ;; For evil-collection
     (setq evil-want-vsplit-window-right t)
     (setq evil-want-split-window-below t)
 
     (evil-mode)
 
-    ;; change q and wq to kill buffers instead of emacs
+    ;; Change q and wq to kill buffers instead of emacs
     (evil-ex-define-cmd "q" 'kill-current-buffer)
     (evil-ex-define-cmd "wq" 'save-and-kill-this-buffer)
     (defun save-and-kill-this-buffer()(interactive)(save-buffer)(kill-current-buffer))
 
     (evil-set-undo-system 'undo-tree)
 
-    ;; default to insert mode on these buffers
+    ;; Default to insert mode on these buffers
     (evil-set-initial-state 'eat-mode 'insert)
     (evil-set-initial-state 'vterm-mode 'insert))
 
@@ -522,14 +631,17 @@ you are browsing
         "l" "u"
         "u" "i"))
 
-    ;; called after evil-collection makes its keybindings
+    ;; Called after evil-collection makes its keybindings
     (add-hook 'evil-collection-setup-hook #'my-hjkl-rotation)
-    (setq evil-collection-mode-list '(dashboard dired vterm ibuffer agenda))
+    (setq evil-collection-mode-list '(dashboard dired vterm ibuffer agenda help))
     (evil-collection-init))
     #+end_src
 
 *** keybindings for colemak-dh
-**** All modes
+I have configured Evil keybindings to support =Colemak-DH=.
+
+**** All Modes
+Keybindngs specific to all =vim= modes.
 
 #+begin_src emacs-lisp
   (evil-define-key '(motion normal visual) 'global "n" 'evil-next-visual-line)
@@ -545,7 +657,8 @@ you are browsing
   (evil-define-key '(motion normal) 'global "K" 'evil-search-previous)
 #+end_src
 
-**** Normal-mode
+**** Normal-Mode
+Keybindings specific to =vim= Normal mode.
 
 #+begin_src emacs-lisp
   (define-key evil-normal-state-map "U" 'evil-insert-line)
@@ -567,18 +680,8 @@ you are browsing
   (define-key evil-normal-state-map "\C-p" 'evil-redo)
 #+end_src
 
-**** Window management
-
-#+begin_src emacs-lisp
-  (define-key evil-normal-state-map "M" 'evil-window-left)
-  (define-key evil-normal-state-map "I" 'evil-window-right)
-  (define-key evil-normal-state-map "N" 'evil-window-down)
-  (define-key evil-normal-state-map "E" 'evil-window-up)
-  (define-key evil-normal-state-map "H" 'evil-window-split)
-  (define-key evil-normal-state-map "R" 'evil-window-vsplit)
-#+end_src
-
-**** Visual-mode
+**** Visual-Mode
+Keybindings specific to =vim= Visual mode.
 
 #+begin_src emacs-lisp
   (define-key evil-visual-state-map (kbd "l") 'evil-downcase)
@@ -587,14 +690,8 @@ you are browsing
   (define-key evil-visual-state-map (kbd "u")  evil-inner-text-objects-map)
 #+end_src
 
-**** Comment or Uncomment
-
-#+begin_src emacs-lisp
-  (define-key evil-visual-state-map "gd" 'comment-or-uncomment-region)
-  (define-key evil-normal-state-map "gd" 'comment-line)
-#+end_src
-
 **** Motion
+Keybindings specific to =vim= motions.
 
 #+begin_src emacs-lisp
   (define-key evil-motion-state-map "z" 'evil-backward-word-begin)
@@ -605,14 +702,35 @@ you are browsing
   (define-key evil-motion-state-map "T" 'evil-find-char-backward)
 #+end_src
 
-**** operator-pending-state
+**** Window Management
+Keybindings for window management.
+
+#+begin_src emacs-lisp
+  (define-key evil-normal-state-map "M" 'evil-window-left)
+  (define-key evil-normal-state-map "I" 'evil-window-right)
+  (define-key evil-normal-state-map "N" 'evil-window-down)
+  (define-key evil-normal-state-map "E" 'evil-window-up)
+  (define-key evil-normal-state-map "H" 'evil-window-split)
+  (define-key evil-normal-state-map "R" 'evil-window-vsplit)
+#+end_src
+
+**** Comment or Uncomment
+Keybinding for commenting/uncommenting lines.
+
+#+begin_src emacs-lisp
+  (define-key evil-visual-state-map "gd" 'comment-or-uncomment-region)
+  (define-key evil-normal-state-map "gd" 'comment-line)
+#+end_src
+
+**** Operator-Pending-State
+Keybindings specific to operator-pending-state.
 
 #+begin_src emacs-lisp
   (define-key evil-operator-state-map "i" nil)
   (define-key evil-operator-state-map "u" evil-inner-text-objects-map)
 #+end_src
 
-**** Disable some key
+**** Disable specific keybindigs.
 
 #+begin_src emacs-lisp
   (define-key evil-normal-state-map "z" nil)
@@ -624,6 +742,7 @@ you are browsing
 #+end_src
 
 ** General
+[[https://github.com/noctuid/general.el][General]] simplifies keybinding in Emacs for both evil and non-evil users.
 
 #+begin_src emacs-lisp
   (use-package general
@@ -669,74 +788,31 @@ you are browsing
       "5" '(lambda () (interactive) (persp-switch-by-number 5))
       "6" '(lambda () (interactive) (persp-switch-by-number 6))
       "SPC" 'execute-extended-command))
-
-
 #+end_src
 
-** Drag stuff
+** PDF
+[[https://github.com/vedang/pdf-tools][pdf-tools]] allows viewing PDF files within Emacs using the [[https://poppler.freedesktop.org/][Poppler]] library, enabling modifications as well.
 
 #+begin_src emacs-lisp
-  (use-package drag-stuff
+  (use-package pdf-tools
+    :defer t
+    :mode "\\.pdf\\'"
+    :bind (:map pdf-view-mode-map
+                ("n" . pdf-view-next-line-or-next-page)
+                ("e" . pdf-view-previous-line-or-previous-page)
+                ("C-=" . pdf-view-enlarge)
+                ("C--" . pdf-view-shrink))
     :init
-    (drag-stuff-global-mode)
-    (drag-stuff-define-keys))
-#+end_src
-
-** Undo tree
-
-#+begin_src emacs-lisp
-  (use-package undo-tree
-    :config
-    (global-undo-tree-mode)
-    (setq undo-tree-autosave-history nil)
-    (setq undo-tree-history-directory-alist '(("." . "~/.local/share/emacs-backup/undo"))))
-#+end_src
-
-** Rainbow-mode
-
-#+begin_src emacs-lisp
-  (use-package rainbow-mode
-    :hook org-mode prog-mode
-    :config
-    (rainbow-mode)
-    )
-#+end_src
-
-** Rainbow delimiters
-
-Adding rainbow colouring to parantheses.
-
-#+begin_src emacs-lisp
-  (use-package rainbow-delimiters
-    :hook ((prog-mode . rainbow-delimiters-mode)))
-#+end_src
-
-** Eat
-
-#+begin_src emacs-lisp
-  (use-package eat
-    :commands eat)
-#+end_src
-
-** Vterm
-
-#+begin_src emacs-lisp
-  (use-package vterm
-    :commands vterm)
-#+end_src
-
-** Direnv
-
-#+begin_src emacs-lisp
-  (use-package direnv
-    :config
-    (setq direnv-always-show-summary nil)
-    (direnv-mode))
+    (pdf-loader-install)
+    :config (add-to-list 'revert-without-query ".pdf"))
 #+end_src
 
 ** Perspective
+[[https://github.com/nex3/perspective-el][Perspective]] enables multiple named workspaces in Emacs, akin to multiple desktops in window managers.
 
-workspace for emacs
+#+begin_quote
+Code stolen from [[https://gitlab.com/dwt1/dotfiles/-/blob/master/.config/emacs/config.org][distrotube's repo]].
+#+end_quote
 
 #+begin_src emacs-lisp
   (use-package perspective
@@ -756,64 +832,8 @@ workspace for emacs
                 (ibuffer-do-sort-by-alphabetic))))
 #+end_src
 
-** PDF
-
-#+begin_src emacs-lisp
-  (use-package pdf-tools
-    :defer t
-    :mode "\\.pdf\\'"
-    :bind (:map pdf-view-mode-map
-                ("j" . pdf-view-next-line-or-next-page)
-                ("k" . pdf-view-previous-line-or-previous-page))
-    :init
-    (pdf-loader-install)
-    :config (add-to-list 'revert-without-query ".pdf"))
-#+end_src
-
-** TLDR
-
-#+begin_src emacs-lisp
-  (use-package tldr
-    :commands tldr)
-#+end_src
-
-** TOC-org
-
-#+begin_src emacs-lisp
-  (use-package toc-org
-    :commands toc-org-enable
-    :hook (org-mode . toc-org-mode))
-#+end_src
-
-** Sideline
-
-#+begin_src emacs-lisp
-  (use-package sideline
-    :hook (eglot-managed-mode . sideline-mode))
-
-  ;;shows errors like vs code using sideline
-  (use-package sideline-flymake
-    :after sideline)
-  (setq sideline-backends-skip-current-line t
-        sideline-order-left 'down
-        sideline-order-right 'up
-        sideline-format-left "%s   "
-        sideline-format-right "   %s"
-        sideline-priority 100
-        sideline-display-backend-name t
-        sideline-backends-right '((sideline-flymake)
-                                  (sideline-blame . down)))
-
-  ;; show git logs using sideline
-  (use-package sideline-blame
-    :after sideline)
-#+end_src
-
-** Evil-mc
-#+begin_src emacs-lisp
-  (use-package evil-mc)
-#+end_src
 ** Popper
+[[https://github.com/karthink/popper][Popper]] is an Emacs minor-mode to summon and dismiss buffers easily.
 
 #+begin_src emacs-lisp
   (use-package popper
@@ -827,20 +847,109 @@ workspace for emacs
     (popper-echo-mode +1))                ; For echo area hints
 #+end_src
 
+** Rainbow Delimiters
+Adds rainbow colors to parentheses and brackets.
 
+#+begin_src emacs-lisp
+  (use-package rainbow-delimiters
+    :hook ((prog-mode . rainbow-delimiters-mode)))
+#+end_src
 
+** Rainbow-Mode
+Displays the actual color as a background for any hex color value. This code block enables rainbow-mode
+in all programming modes (prog-mode) as well as org-mode.
 
+#+begin_src emacs-lisp
+  (use-package rainbow-mode
+    :hook org-mode prog-mode
+    :config
+    (rainbow-mode)
+    )
+#+end_src
 
+** Sideline
+[[https://github.com/emacs-sideline/sideline][Sideline]] is a library that provides the frontend UI to display information either on the left/right side of the buffer window.
 
+#+begin_src emacs-lisp
+  (use-package sideline
+    :hook (eglot-managed-mode . sideline-mode))
 
+#+end_src
 
+*** Sideline-Flymake
+[[https://github.com/emacs-sideline/sideline-flymake][Sideline-flymake]] displays error messages similarly to how VS Code does, using [[https://github.com/emacs-sideline/sideline][Sideline]].
 
-** treemacs
+#+begin_src emacs-lisp
+  ;;shows errors like vs code using sideline
+  (use-package sideline-flymake
+    :after sideline)
+  (setq sideline-backends-skip-current-line t
+        sideline-order-left 'down
+        sideline-order-right 'up
+        sideline-format-left "%s   "
+        sideline-format-right "   %s"
+        sideline-priority 100
+        sideline-display-backend-name t
+        sideline-backends-right '((sideline-flymake)
+                                  (sideline-blame . down)))
+#+end_src
+
+*** Sideline-Blame
+[[https://github.com/emacs-sideline/sideline-blame][Sideline-blame]] shows git blame messages alongside your code using [[https://github.com/emacs-sideline/sideline][Sideline]].
+
+#+begin_src emacs-lisp
+  ;; show git logs using sideline
+  (use-package sideline-blame
+    :after sideline)
+#+end_src
+
+** SLY
+[[https://github.com/joaotavora/sly][SLY]] is a Common Lisp IDE for Emacs.
+
+#+begin_src emacs-lisp
+  (use-package sly)
+#+end_src
+
+** TLDR
+[[https://github.com/tldr-pages/tldr][tldr]] client for accessing TLDR pages directly within Emacs.
+
+#+begin_src emacs-lisp
+  (use-package tldr
+    :commands tldr)
+#+end_src
+
+** TOC-Org
+[[https://github.com/snosov1/toc-org][Toc-org]] is an Emacs utility that maintains an up-to-date table of contents in org files without the need for exporting, useful primarily for README files.
+
+#+begin_src emacs-lisp
+  (use-package toc-org
+    :commands toc-org-enable
+    :hook (org-mode . toc-org-mode))
+#+end_src
+
+** Treemacs
+[[https://github.com/Alexander-Miller/treemacs][Treemacs]] is a tree layout file explorer for Emacs.
+
 #+begin_src emacs-lisp
   (use-package treemacs)
 #+end_src
 
-** sly
+** Undo Tree
+[[https://gitlab.com/tsc25/undo-tree][Undo tree]] replaces Emacs undo system with a system that treats undo history as a branching tree of changes.
+
 #+begin_src emacs-lisp
-  (use-package sly)
+  (use-package undo-tree
+    :config
+    (global-undo-tree-mode)
+    (setq undo-tree-autosave-history nil)
+    (setq undo-tree-history-directory-alist '(("." . "~/.local/share/emacs-backup/undo"))))
 #+end_src
+
+** Vterm
+[[https://github.com/akermu/emacs-libvterm][Vterm]] is a terminal emulator inside Emacs based on [[https://github.com/neovim/libvterm][libvterm]], a C library.
+
+#+begin_src emacs-lisp
+  (use-package vterm
+    :commands vterm)
+#+end_src
+
