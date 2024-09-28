@@ -771,7 +771,7 @@ Keybindings specific to operator-pending-state.
       "t" 'compile
       "s" '(lambda () (interactive) (dired "."))
       "i" '(lambda () (interactive) (load-file "~/.config/emacs/init.el"))
-      "d" '(lambda () (interactive) (find-file "~/.config/nixconfig/config/emacs/config.org"))
+      "d" '(lambda () (interactive) (find-file "~/.config/nixconfig/docs/emacs-config.org"))
       "k" '(lambda () (interactive) (find-file "~/Documents/Org/journal/index.org"))
 
       ;; org
