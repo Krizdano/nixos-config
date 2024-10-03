@@ -1,89 +1,107 @@
-#+TITLE:Nyxt browser configuration
+#+TITLE:Nyxt Browser Configuration
 #+AUTHOR: Krizdano
 #+PROPERTY: header-args :tangle ~/.config/nyxt/config.lisp
 #+auto_tangle: t
-#+DESCRIPTION: My personal emacs configuration
+#+DESCRIPTION: My personal configuration for Nyxt Browser
 #+STARTUP: overview
-
 
 * Settings
 ** Keybindings
-set vi as default keybindings
+This sets vi-mode as the default mode.
+
 #+begin_src common-lisp
   (define-configuration (input-buffer)
-    ((default-modes (pushnew 'nyxt/mode/vi:vi-normal-mode %slot-value%))))
+                        ((default-modes (pushnew 'nyxt/mode/vi:vi-normal-mode %slot-value%))))
 
   (define-configuration (prompt-buffer)
-    ((default-modes (pushnew 'nyxt/mode/vi:vi-insert-mode %slot-value%))))
+                        ((default-modes (pushnew 'nyxt/mode/vi:vi-insert-mode %slot-value%))))
 #+end_src
 
-** Overrides for colemak-dh
-these are overrides for vi-mode because i use colemak-dh layout
+*** Overrides for Colemak-DH
+These are overrides for vi-mode because I use [[https://colemakmods.github.io/mod-dh/][Colemak-DH]] layout.
+
+**** Normal Mode
+Overrides specific to normal mode.
+
 #+begin_src common-lisp
   (define-configuration :vi-normal-mode
-    ((keyscheme-map
-      (define-keyscheme-map "my-base" (list :import %slot-value%)
-        nyxt/keyscheme:vi-normal
-        (list
-         "n" 'nyxt/mode/document:scroll-down
-         "e" 'nyxt/mode/document:scroll-up
-         "m" 'nyxt/mode/document:scroll-left
-         "i" 'nyxt/mode/document:scroll-right
-         "u" 'nyxt/mode/vi:vi-insert-mode
-         "M" 'nyxt/mode/history:history-backwards
-         "I" 'nyxt/mode/history:history-forwards
-         "O" 'execute-command
-         "S" 'delete-current-buffer
-         "y" 'set-url
-         "Y" 'set-url-new-buffer
-         ";" 'nyxt/mode/document:paste
-         "t" 'nyxt/mode/hint:follow-hint
-         "p" 'reload-current-buffer
-         "k" 'nyxt/mode/document:next-heading
-         "j t" 'nyxt/mode/hint:copy-hint-url
-         "j j" 'copy-url
-         "g u" 'nyxt/mode/document:focus-first-input-field
-         )))))
-
-  (define-configuration :visual-mode
-    ((keyscheme-map
-      (define-keyscheme-map "my-base" (list :import %slot-value%)
-        nyxt/keyscheme:vi-normal
-        (list
-         "n" 'nyxt/mode/visual:forward-line
-         "e" 'nyxt/mode/visual:backward-line
-         "m" 'nyxt/mode/visual:backward-char
-         "i" 'nyxt/mode/visual:forward-char
-         "j" 'nyxt/mode/document:copy
-         )))))
+                        ((keyscheme-map
+                        (define-keyscheme-map "my-base" (list :import %slot-value%)
+                                                nyxt/keyscheme:vi-normal
+                                                (list
+                                                 "n" 'nyxt/mode/document:scroll-down
+                                                 "e" 'nyxt/mode/document:scroll-up
+                                                 "m" 'nyxt/mode/document:scroll-left
+                                                 "i" 'nyxt/mode/document:scroll-right
+                                                 "u" 'nyxt/mode/vi:vi-insert-mode
+                                                 "M" 'nyxt/mode/history:history-backwards
+                                                 "I" 'nyxt/mode/history:history-forwards
+                                                 "O" 'execute-command
+                                                 "S" 'delete-current-buffer
+                                                 "y" 'set-url
+                                                 "Y" 'set-url-new-buffer
+                                                 ";" 'nyxt/mode/document:paste
+                                                 "t" 'nyxt/mode/hint:follow-hint
+                                                 "p" 'reload-current-buffer
+                                                 "k" 'nyxt/mode/document:next-heading
+                                                 "j t" 'nyxt/mode/hint:copy-hint-url
+                                                 "j j" 'copy-url
+                                                 "g u" 'nyxt/mode/document:focus-first-input-field
+                                                 )))))
 #+end_src
 
-** Emacs defaults
+
+**** Visual Mode
+Overrides specific to visual mode.
+
+#+begin_src common-lisp
+  (define-configuration :visual-mode
+                        ((keyscheme-map
+                        (define-keyscheme-map "my-base" (list :import %slot-value%)
+                                                nyxt/keyscheme:vi-normal
+                                                (list
+                                                 "n" 'nyxt/mode/visual:forward-line
+                                                 "e" 'nyxt/mode/visual:backward-line
+                                                 "m" 'nyxt/mode/visual:backward-char
+                                                 "i" 'nyxt/mode/visual:forward-char
+                                                 "j" 'nyxt/mode/document:copy
+                                                 )))))
+#+end_src
+
+*** Emacs Defaults
+These are keybindings that are similar to my Emacs keybindings for my own convenience.
+
 #+begin_src common-lisp
   (define-configuration :document-mode
-    ((keyscheme-map
-      (define-keyscheme-map "my-base" (list :import %slot-value%)
-        nyxt/keyscheme:vi-normal
-        (list
-         "space space" 'execute-command
-         "space n" 'switch-buffer-next
-         "space e" 'switch-buffer-previous
-         "space i" 'load-config-file
-         "space s" 'dark-mode
-         )))))
+                        ((keyscheme-map
+                          (define-keyscheme-map "my-base" (list :import %slot-value%)
+                                                nyxt/keyscheme:vi-normal
+                                                (list
+                                                 "space space" 'execute-command
+                                                 "space n" 'switch-buffer-next
+                                                 "space e" 'switch-buffer-previous
+                                                 "space i" 'load-config-file
+                                                 "space s" 'dark-mode
+                                                 )))))
 
   (define-configuration input-buffer
-    ((override-map
-      (let ((map (make-keymap "override-map")))
-        (define-key map "M-x" 'execute-command)))))
-#+end_src
+                        ((override-map
+                          (let ((map (make-keymap "override-map")))
+                            (define-key map "M-x" 'execute-command)))))
+  #+end_src
 
-** status-buffer
+** Status-Buffer
+Configuration related to status buffer.
+
+*** Display Modes as Short Glyphs
+This section configures the status buffer to display modes using short glyphs.
+
 #+begin_src common-lisp
   ;; display modes as short glyphs
   (define-configuration :status-buffer
-      ((glyph-mode-presentation-p t)))
+                        ((glyph-mode-presentation-p t)))
 
+  ;; defining glyphs for various modes to be displayed in the status buffer.
   (define-configuration :force-https-mode ((glyph "ϕ")))
   (define-configuration :user-script-mode ((glyph "u")))
   (define-configuration :blocker-mode ((glyph "β")))
@@ -94,8 +112,9 @@ these are overrides for vi-mode because i use colemak-dh layout
   (define-configuration :cruise-control-mode ((glyph "σ")))
 #+end_src
 
-** privacy
-*** increase privacy
+** Privacy Settings
+This configuration ensures that privacy-related modes are active by default when browsing.
+
 #+begin_src common-lisp
   (define-configuration :web-buffer
     ((default-modes (append (list
@@ -105,7 +124,9 @@ these are overrides for vi-mode because i use colemak-dh layout
                              )))))
 #+end_src
 
-*** reduce tracking mode
+*** Reduce Tracking Mode
+Configure Reduced Tracking Mode to customize the user agent and strip UTM parameters from URLs to enhance privacy.
+
 #+begin_src common-lisp
   (define-configuration :reduce-tracking-mode
     ((query-tracking-parameters
@@ -120,6 +141,8 @@ these are overrides for vi-mode because i use colemak-dh layout
 
 * Theme
 ** Catppuccin
+Define a custom theme based on the [[https://github.com/catppuccin/catppuccin][Catppuccin]] color scheme.
+
 #+begin_src common-lisp
   (defvar catppuccin-mocha
     (make-instance 'theme:theme
@@ -158,7 +181,9 @@ these are overrides for vi-mode because i use colemak-dh layout
                    :contrast-text-color "#0c0c0d"))
 #+end_src
 
-** Default theme
+** Default Theme
+sets the default theme.
+
 #+begin_src common-lisp
   (define-configuration browser
       ((theme catppuccin-mocha)))
@@ -172,7 +197,9 @@ these are overrides for vi-mode because i use colemak-dh layout
   #+end_src
 
 
-** Dark-mode
+** Dark-Mode
+Define a custom dark theme.
+
 #+begin_src common-lisp
   ;; This automatically darkens WebKit-native interfaces and sends the
   ;; "prefers-color-scheme: dark" to all the supporting websites.
@@ -199,5 +226,3 @@ these are overrides for vi-mode because i use colemak-dh layout
           :background-image none "!important"
           :color ,theme:primary "!important")))))
   #+end_src
-
-
