@@ -73,7 +73,7 @@ in
 
       load-nyxt-config = config.lib.dag.entryAfter ["writeBoundary"] ''
             ${emacs} '(org-babel-tangle-file
-              "${sourceDir}/config/nyxt/config.org")'
+              "${sourceDir}/docs/nyxt-config.org")'
             '';
     };
     stateVersion = "23.11";
