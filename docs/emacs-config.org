@@ -102,7 +102,6 @@ Configure Eldoc to display documentation in a separate window rather than the mi
 
   ;; to show information provided by eldoc in a pop-up window
   (use-package eldoc-box
-    :ensure t
     :hook
     (eldoc-mode-hook . eldoc-box-hover-mode))
 #+end_src
@@ -168,7 +167,6 @@ Set commonly preferred defaults for better usability.
   (indent-tabs-mode 0)               ;; Disable indent using tabs
   (setq use-package-always-ensure t) ;; No need to specify 'ensure' every time when using use-package.
   ;; (setq use-package-verbose t)    ;; Displays reports on loading and configuration details.
-  ;; (setq tab-width 2)
 #+end_src
 
 ** Speed up Emacs
@@ -208,7 +206,6 @@ Enable Lua mode.
 
 #+begin_src emacs-lisp
   (use-package lua-mode
-    :ensure t
     :mode "\\.lua\\'")
 #+end_src
 
@@ -217,7 +214,6 @@ Enable Markdown mode.
 
 #+begin_src emacs-lisp
   (use-package markdown-mode
-    :ensure t
     :mode "\\.md\\'")
 
 #+end_src
@@ -228,7 +224,6 @@ Enable Markdown mode.
 
 #+begin_src emacs-lisp
   (use-package eglot
-    :ensure t
     :hook
     ((python-ts-mode . eglot-ensure)
      (c-ts-mode . eglot-ensure)
@@ -260,7 +255,6 @@ Enable Tree-sitter support for C.
 
 #+begin_src emacs-lisp
   (use-package c-ts-mode
-    :ensure t
     :mode "\\.c\\'")
 #+end_src
 
@@ -269,7 +263,6 @@ Enable Tree-sitter support for Nix.
 
 #+begin_src emacs-lisp
   (use-package nix-ts-mode
-    :ensure t
     :mode "\\.nix\\'")
 #+end_src
 
@@ -278,7 +271,6 @@ Enable Tree-sitter support for Rust.
 
 #+begin_src emacs-lisp
   (use-package rust-ts-mode
-    :ensure t
     :mode "\\.rs\\'")
 #+end_src
 
@@ -287,7 +279,6 @@ Enable Tree-sitter support for YAML.
 
 #+begin_src emacs-lisp
   (use-package yaml-ts-mode
-    :ensure t
     :mode "\\.yaml\\'")
 #+end_src
 
@@ -305,7 +296,6 @@ Enable Tree-sitter support for YAML.
     (global-company-mode t))
 
    (use-package company-box
-     :ensure t
      :after company
      :hook (company-mode . company-box-mode))
 #+end_src
@@ -525,7 +515,6 @@ Install the =Doom themes= packages.
 
 #+begin_src emacs-lisp
   (use-package doom-themes
-    :ensure t
     :config
     ;; Global settings (defaults)
     ;;   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
@@ -543,7 +532,6 @@ Replace the default modeline with [[https://github.com/seagle0128/doom-modeline]
 
 #+begin_src emacs-lisp
   (use-package doom-modeline
-    :ensure t
     :init (doom-modeline-mode 1)
     :config
     (setq doom-modeline-height 30       ;; sets modeline height
