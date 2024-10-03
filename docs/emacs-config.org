@@ -476,7 +476,7 @@ Configure =dired=, a built-in file manager for Emacs.
 
   ;; Install dired open to open files in default applications
   (use-package dired-open
-    :after dired
+    :after dired evil-collection
     :config
     (evil-collection-define-key 'normal 'dired-mode-map
       "h" 'dired-up-directory
@@ -576,7 +576,8 @@ The [[https://github.com/rejeep/drag-stuff.el][Drag Stuff]] minor mode allows dr
 [[https://github.com/gabesoft/evil-mc][Evil-mc]] is a multiple cursors implementation for Evil mode.
 
 #+begin_src emacs-lisp
-  (use-package evil-mc)
+  (use-package evil-mc
+    :after evil)
 #+end_src
 
 ** Evil Mode
@@ -589,8 +590,7 @@ The [[https://github.com/rejeep/drag-stuff.el][Drag Stuff]] minor mode allows dr
     (setq evil-want-vsplit-window-right t)
     (setq evil-want-split-window-below t)
 
-    (evil-mode)
-
+    :config
     ;; Change q and wq to kill buffers instead of emacs
     (evil-ex-define-cmd "q" 'kill-current-buffer)
     (evil-ex-define-cmd "wq" 'save-and-kill-this-buffer)
@@ -600,7 +600,9 @@ The [[https://github.com/rejeep/drag-stuff.el][Drag Stuff]] minor mode allows dr
 
     ;; Default to insert mode on these buffers
     (evil-set-initial-state 'eat-mode 'insert)
-    (evil-set-initial-state 'vterm-mode 'insert))
+    (evil-set-initial-state 'vterm-mode 'insert)
+
+    (evil-mode))
 
 
   (use-package evil-collection
@@ -833,6 +835,7 @@ Code stolen from [[https://gitlab.com/dwt1/dotfiles/-/blob/master/.config/emacs/
             "Output\\*$"
             "\\*Async Shell Command\\*"
             help-mode))
+    :config
     (popper-mode +1)
     (popper-echo-mode +1))                ; For echo area hints
 #+end_src
