@@ -88,7 +88,7 @@ These are keybindings that are similar to my Emacs keybindings for my own conven
                         ((override-map
                           (let ((map (make-keymap "override-map")))
                             (define-key map "M-x" 'execute-command)))))
-  #+end_src
+#+end_src
 
 ** Status-Buffer
 Configuration related to status buffer.
@@ -117,11 +117,11 @@ This configuration ensures that privacy-related modes are active by default when
 
 #+begin_src common-lisp
   (define-configuration :web-buffer
-    ((default-modes (append (list
-                             :reduce-tracking-mode
-                             :blocker-mode
-                             :force-https-mode
-                             )))))
+                        ((default-modes (append (list
+                                                 :reduce-tracking-mode
+                                                 :blocker-mode
+                                                 :force-https-mode
+                                                 )))))
 #+end_src
 
 *** Reduce Tracking Mode
@@ -129,14 +129,14 @@ Configure Reduced Tracking Mode to customize the user agent and strip UTM parame
 
 #+begin_src common-lisp
   (define-configuration :reduce-tracking-mode
-    ((query-tracking-parameters
-      (append '("utm_source" "utm_medium" "utm_campaign" "utm_term" "utm_content")
-              %slot-value%)
-      :doc "This is to strip UTM-parameters off all the links.
+                        ((query-tracking-parameters
+                          (append '("utm_source" "utm_medium" "utm_campaign" "utm_term" "utm_content")
+                                  %slot-value%)
+                          :doc "This is to strip UTM-parameters off all the links.
   Upstream Nyxt doesn't have it because it may break some websites.")
-     (preferred-user-agent
-      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36"
-      :doc "Mimic Chrome on MacOS.")))
+                         (preferred-user-agent
+                          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36"
+                          :doc "Mimic Chrome on MacOS.")))
 #+end_src
 
 * Theme
@@ -186,14 +186,14 @@ sets the default theme.
 
 #+begin_src common-lisp
   (define-configuration browser
-      ((theme catppuccin-mocha)))
+                        ((theme catppuccin-mocha)))
 
   (define-configuration (web-buffer)
-      ((theme catppuccin-mocha)))
+                        ((theme catppuccin-mocha)))
 
   (define-configuration status-buffer
-      ((style (str:concat %slot-value%
-                          (theme:themed-css (theme *browser*))))))
+                        ((style (str:concat %slot-value%
+                                            (theme:themed-css (theme *browser*))))))
   #+end_src
 
 
@@ -206,23 +206,23 @@ Define a custom dark theme.
   (setf (uiop:getenv "GTK_THEME") "Adwaita:dark")
 
   (define-configuration :dark-mode
-    ((style
-      (theme:themed-css (theme *browser*)
-        `(*
-          :background-color ,(if (theme:dark-p theme:theme)
-                                 theme:background
-                                 theme:on-background)
-          "!important"
-          :background-image none "!important"
-          :color ,(if (theme:dark-p theme:theme)
-                      theme:on-background
-                      theme:background)
-          "!important")
-        `(a
-          :background-color ,(if (theme:dark-p theme:theme)
-                                 theme:background
-                                 theme:on-background)
-          "!important"
-          :background-image none "!important"
-          :color ,theme:primary "!important")))))
+                        ((style
+                          (theme:themed-css (theme *browser*)
+                                            `(*
+                                              :background-color ,(if (theme:dark-p theme:theme)
+                                                                     theme:background
+                                                                   theme:on-background)
+                                              "!important"
+                                              :background-image none "!important"
+                                              :color ,(if (theme:dark-p theme:theme)
+                                                          theme:on-background
+                                                        theme:background)
+                                              "!important")
+                                            `(a
+                                              :background-color ,(if (theme:dark-p theme:theme)
+                                                                     theme:background
+                                                                   theme:on-background)
+                                              "!important"
+                                              :background-image none "!important"
+                                              :color ,theme:primary "!important")))))
   #+end_src
