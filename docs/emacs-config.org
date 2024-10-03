@@ -1,4 +1,4 @@
-#+TITLE: My Emacs config
+#+TITLE: My Emacs Config
 #+AUTHOR: Krizdano
 #+PROPERTY: header-args :tangle ~/.config/emacs/init.el
 #+auto_tangle: t
@@ -168,6 +168,7 @@ Set commonly preferred defaults for better usability.
   (indent-tabs-mode 0)               ;; Disable indent using tabs
   (setq use-package-always-ensure t) ;; No need to specify 'ensure' every time when using use-package.
   ;; (setq use-package-verbose t)    ;; Displays reports on loading and configuration details.
+  ;; (setq tab-width 2)
 #+end_src
 
 ** Speed up Emacs
