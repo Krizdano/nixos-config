@@ -36,6 +36,7 @@
       company
       company-box
       eldoc-box
+      multi-vterm
     ];
   };
 

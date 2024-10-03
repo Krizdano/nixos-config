@@ -764,7 +764,8 @@ Keybindings specific to operator-pending-state.
       "a" 'async-shell-command
       "q" 'evil-quit
       "w" 'kill-buffer
-      "x" 'vterm
+      "x" 'multi-vterm-dedicated-toggle
+      "b" 'vterm
       "RET" 'evil-toggle-fold
       "p" 'recentf-open-files
       "m" 'eldoc-box-help-at-point
@@ -953,3 +954,11 @@ in all programming modes (prog-mode) as well as org-mode.
     :commands vterm)
 #+end_src
 
+*** Multi-Vterm
+[[https://github.com/suonlight/multi-vterm][Multi-vterm]] helps to manage multiple =vterm= buffers inside Emacs.
+
+#+begin_src emacs-lisp
+  (use-package multi-vterm
+    :config
+    (setq multi-vterm-dedicated-window-height-percent 50))
+#+end_src
