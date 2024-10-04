@@ -54,6 +54,7 @@
   - [[#rainbow-mode][Rainbow-Mode]]
   - [[#sideline][Sideline]]
   - [[#sly][SLY]]
+  - [[#smex][Smex]]
   - [[#tldr][TLDR]]
   - [[#toc-org][TOC-Org]]
   - [[#treemacs][Treemacs]]
@@ -779,7 +780,7 @@ Keybindings specific to operator-pending-state.
       "4" '(lambda () (interactive) (persp-switch-by-number 4))
       "5" '(lambda () (interactive) (persp-switch-by-number 5))
       "6" '(lambda () (interactive) (persp-switch-by-number 6))
-      "SPC" 'execute-extended-command))
+      "SPC" 'smex))
 #+end_src
 
 ** PDF
@@ -901,6 +902,14 @@ in all programming modes (prog-mode) as well as org-mode.
 
 #+begin_src emacs-lisp
   (use-package sly)
+#+end_src
+
+** Smex
+[[https://github.com/nonsequitur/smex][Smex]] is a M-x enhancement for Emacs. Built on top of Ido, it provides a convenient interface to your recently
+and most frequently used commands. And to all the other commands, too.
+
+#+begin_src emacs-lisp
+  (use-package smex)
 #+end_src
 
 ** TLDR

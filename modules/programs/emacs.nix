@@ -37,6 +37,7 @@
       company-box
       eldoc-box
       multi-vterm
+      smex
     ];
   };
 
