@@ -249,6 +249,9 @@ Configure Tree-sitter for improved syntax highlighting.
         '(;(c-mode . c-ts-mode)
           (sh-mode . bash-ts-mode)
           (python-mode . python-ts-mode)))
+
+  ;; Set treesit-font-lock-level to 4
+  (setq treesit-font-lock-level 4)
 #+end_src
 
 *** C
