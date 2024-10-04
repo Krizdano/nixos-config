@@ -762,6 +762,7 @@ Keybindings specific to operator-pending-state.
       "p" 'recentf-open-files
       "m" 'eldoc-box-help-at-point
       "t" 'compile
+      "r" 'maximize-window
       "s" '(lambda () (interactive) (dired "."))
       "i" '(lambda () (interactive) (load-file "~/.config/emacs/init.el"))
       "d" '(lambda () (interactive) (find-file "~/.config/nixconfig/docs/emacs-config.org"))
