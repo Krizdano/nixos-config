@@ -88,10 +88,12 @@ Adjust UI settings to create a cleaner interface by disabling unnecessary elemen
   (setq use-dialog-box nil)         ;; Disable dialog box
   (setq pop-up-windows nil)         ;; Disable pop up windows
   (setq ring-bell-function 'ignore) ;; Disable annoying bell sound
-  (scroll-bar-mode 0)               ;; Disable scrollbar
   (menu-bar-mode 0)                 ;; Disable menubar
   (tool-bar-mode 0)                 ;; Disable toolbar
   (blink-cursor-mode 0)             ;; Disable cursor blinking
+
+  (if (display-graphic-p)
+      (scroll-bar-mode 0))          ;; Disable scrollbar
 #+end_src
 
 ** Eldoc
