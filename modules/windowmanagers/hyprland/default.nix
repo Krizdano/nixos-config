@@ -17,8 +17,8 @@ in
         "${pkgs.scripts}/bin/sortfiles"
         "${ut} bat_level"
         "nohup nvim --listen /tmp/neovim.pipe --headless > /dev/null 2>&1 0< /dev/null &!" # start nvim server
-        "[workspace special:terminal silent]  kitty --title=main --class=main zellij -s main"
-        ''[workspace special:terminal silent]  emacsclient -c -e "(vterm)"''
+	"[workspace special:terminal silent]  alacritty --title=terminal-main --class=terminal-main -e zellij -s main"
+	''[workspace special:terminal silent]  emacsclient -c -e "(vterm)"''
       ];
 
       monitor = [
@@ -131,8 +131,8 @@ in
         "move 90.8% 2.3%, class:^(mpv)$,title:^(playlist)$"
         "noinitialfocus, class:^(mpv)$,title:^(playlist)$"
 
-        # kitty main
-        "workspace special:terminal, class:^(main)$"
+        # terminal main
+        "workspace special:terminal, class:^(terminal-main)$"
 
         # emacs
         "workspace special:terminal, fullscreen, class:^(emacs)$"
@@ -224,8 +224,8 @@ in
         "$mainMod, A, exec, ${ut} toggle_auto_suspend" # Toggles automatic suspending
         "$mainMod, W, exec, ${ut} connect_to_wifi" # connect to wifi using dmenu
 
-        # kitty in floating window
-        "$mainModSHIFT, RETURN, exec, kitty -1 zellij"
+        # terminal in floating window
+        "$mainModSHIFT, RETURN, exec, alacritty -e zellij"
 
         ",XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle" # mute
 

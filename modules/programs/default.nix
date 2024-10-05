@@ -1,12 +1,13 @@
 [
   ./gh.nix
   ./git.nix
-  ./kitty.nix
+  # ./kitty.nix
   ./lf.nix
   ./mpv.nix
   ./htop.nix
   ./starship.nix
   ./waybar.nix
+  ./alacritty.nix
   ./direnv.nix
   #./wofi.nix
   ./emacs.nix
