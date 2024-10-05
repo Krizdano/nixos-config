@@ -38,6 +38,7 @@
       eldoc-box
       multi-vterm
       smex
+      nerd-icons
     ];
   };
 

@@ -47,6 +47,7 @@
   - [[#evil-mc][Evil-Mc]]
   - [[#evil-mode][Evil Mode]]
   - [[#general][General]]
+  - [[#nerd-icons][Nerd Icons]]
   - [[#pdf][PDF]]
   - [[#perspective][Perspective]]
   - [[#popper][Popper]]
@@ -787,6 +788,15 @@ Keybindings specific to operator-pending-state.
       "5" '(lambda () (interactive) (persp-switch-by-number 5))
       "6" '(lambda () (interactive) (persp-switch-by-number 6))
       "SPC" 'smex))
+#+end_src
+
+** Nerd Icons
+[[https://github.com/rainstormstudio/nerd-icons.el][Nerd-icons]] is a library for easily using [[https://github.com/ryanoasis/nerd-fonts][Nerd Font]] icons inside Emacs. It works on both GUI and terminal.
+
+#+begin_src emacs-lisp
+  (use-package nerd-icons
+    :config
+    (setq nerd-icons-font-family "Iosevka Nerd Font"))
 #+end_src
 
 ** PDF
