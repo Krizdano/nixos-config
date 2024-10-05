@@ -146,7 +146,7 @@ Define a custom theme based on the [[https://github.com/catppuccin/catppuccin][C
 #+begin_src common-lisp
   (defvar catppuccin-mocha
     (make-instance 'theme:theme
-                   :font-family "SauceCodePro Nerd Font 14"
+                   :font-family "Iosevka Nerd Font 14"
                    :dark-p t
                    :background-color- "#1e1e2e"
                    :background-color "#1e1e2e"

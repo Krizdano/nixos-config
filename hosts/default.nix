@@ -79,7 +79,7 @@
     fontconfig.enable = true;
     packages = with pkgs; [
       noto-fonts
-      (nerdfonts.override { fonts = [ "Ubuntu" "SourceCodePro" ]; })
+      (nerdfonts.override { fonts = [ "Ubuntu" "Iosevka" ]; })
     ];
   };
 
