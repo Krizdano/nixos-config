@@ -14,7 +14,7 @@
     '';
     file.".config/wofi/style.css".text = ''
              * {
-                 font-family:  FiraCode Nerd Font;
+                 font-family:  Iosevka Nerd Font;
                  font-size: 16px;
                  font-weight: 400;
              }

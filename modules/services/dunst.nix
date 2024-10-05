@@ -7,7 +7,7 @@
         follow = "mouse";
         width = "(0, 300)";
         height = 300;
-        font = "Firacode Nerd Font 11";
+        font = "Iosevka Nerd Font 11";
         indicate_hidden = "yes";
         shrink = "no";
         transparency = 0;

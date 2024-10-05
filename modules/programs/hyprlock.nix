@@ -25,8 +25,8 @@ _: {
         rounding = 10;
         halign = "center";
         valign = "bottom";
-        placeholder_text = ''<span font_family="Fira Code">password</span>'';
-        fail_text = ''<span font_family="Fira Code">Wrong password</span>'';
+        placeholder_text = ''<span font_family="FiraCode Nerd Font">password</span>'';
+        fail_text = ''<span font_family="FiraCode Nerd Font">Wrong password</span>'';
       };
     };
     extraConfig = ''
