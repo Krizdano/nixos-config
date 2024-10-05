@@ -423,7 +423,7 @@ enable, disable or modify the style of each syntax element individually via the 
 Other expansions available include:
 
 | Typing the below + TAB | Expands to …                        |
-|------------------------+-------------------------------------|
+|------------------------+--------------------------------------|
 | <a                     | =#+BEGIN_EXPORT ascii= … =#+END_EXPORT= |
 | <C                     | =#+BEGIN_COMMENT= … =#+END_COMMENT=     |
 | <e                     | =#+BEGIN_EXAMPLE= … =#+END_EXAMPLE=     |
