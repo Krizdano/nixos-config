@@ -488,6 +488,8 @@ Configure =dired=, a built-in file manager for Emacs.
     (evil-collection-define-key 'normal 'dired-mode-map
       "h" 'dired-up-directory
       "l" 'dired-open-file
+      "S" 'dired-do-delete
+      "p" 'dired-do-rename
       "o" 'dired-open-xdg)
     (setq dired-open-extensions '(("gif" . "imv")
                                   ("jpg" . "imv")
