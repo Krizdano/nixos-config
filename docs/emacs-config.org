@@ -485,10 +485,13 @@ Configure =dired=, a built-in file manager for Emacs.
   (use-package dired-open
     :after dired evil-collection
     :config
+    ;; Because evil collection will automatically translates 'Colemak-DH'
+    ;; keybindngs to 'QWERTY' These keybindings are defined in
+    ;; 'QWERTY' layout. Do not define them in 'Colemak-DH' layout.
     (evil-collection-define-key 'normal 'dired-mode-map
       "h" 'dired-up-directory
       "l" 'dired-open-file
-      "S" 'dired-do-delete
+      "D" 'dired-do-delete
       "p" 'dired-do-rename
       "o" 'dired-open-xdg)
     (setq dired-open-extensions '(("gif" . "imv")
@@ -617,9 +620,12 @@ The [[https://github.com/rejeep/drag-stuff.el][Drag Stuff]] minor mode allows dr
   (use-package evil-collection
     :after evil
     :config
+    ;; This function will automatically translates 'Colemak-DH' keys
+    ;; to 'QWERTY' layout.
     (defun my-hjkl-rotation (_mode mode-keymaps &rest _rest)
       (evil-collection-translate-key 'normal mode-keymaps
         "m" "h"
+        "h" "m"
         "n" "j"
         "e" "k"
         "i" "l"
