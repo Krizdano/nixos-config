@@ -479,6 +479,8 @@ Configure =dired=, a built-in file manager for Emacs.
   (use-package dired
     :ensure nil
     :commands (dired dired-jump)
+    :config
+    (setq wdired-allow-to-change-permissions 'advanced)
     )
 
   ;; Install dired open to open files in default applications
@@ -493,6 +495,9 @@ Configure =dired=, a built-in file manager for Emacs.
       "l" 'dired-open-file
       "D" 'dired-do-delete
       "p" 'dired-do-rename
+      "m" 'dired-mark
+      "u" 'dired-undo
+      "i" 'dired-toggle-read-only
       "o" 'dired-open-xdg)
     (setq dired-open-extensions '(("gif" . "imv")
                                   ("jpg" . "imv")
