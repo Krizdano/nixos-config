@@ -17,16 +17,17 @@
 - [[#copy-url][Copy Url]]
 - [[#organize-files][Organize Files]]
 - [[#neovim-client][Neovim Client]]
-- [[#nix-shell][Nix Shell]]
-  - [[#command-1][Command]]
+- [[#nix-helpers][Nix Helpers]]
+  - [[#nix-shell][Nix Shell]]
+  - [[#nix-run][Nix Run]]
   - [[#options-1][Options]]
-  - [[#source-1][source]]
+  - [[#main-logic-1][Main Logic]]
 - [[#system-utilities][System Utilities]]
   - [[#functions-1][Functions]]
-  - [[#main-logic-1][Main Logic]]
+  - [[#main-logic-2][Main Logic]]
 - [[#volume][Volume]]
   - [[#functions-2][Functions]]
-  - [[#main-logic-2][Main Logic]]
+  - [[#main-logic-3][Main Logic]]
 
 * Check for Existing Windows
 A bash script that helps to manage my terminal and browser workspaces.
@@ -291,59 +292,148 @@ that connects to this server.
   clear
 #+end_src
 
-* Nix Shell
-Because I am too lazy to type ~nix shell nixpkgs#pkgname~.
+* Nix Helpers
+This is a simple script to simplify the usage of various nix commands. This script currently
+provides a convenient way to run various nix commands with a shorter syntax.
 
-** Command
+#+begin_quote
+Currently only supports =nix shell= and =nix run=
+#+end_quote
+
+** Nix Shell
 By default it installs packages from Nixpkgs repository.
 
 #+begin_src bash
   shell pkgname
 #+end_src
 
-Intall multiple packages by providing them as command line arguments.
+Intall multiple packages by providing them as command line arguments:
 
 #+begin_src bash
   shell pkg1 pkg2 pkg3...
 #+end_src
 
+*** Source
+
+#+begin_src bash :tangle ../config/scripts/nix-helpers/shell.sh
+  #!/usr/bin/env bash
+  script_path=${0%/*}
+  source $script_path/include/main.sh
+  nix_shell
+#+end_src
+
+** Nix Run
+By default it runs packages from Nixpkgs repository.
+
+#+begin_src bash
+  run pkgname
+#+end_src
+
+Run packages with arguments:
+
+#+begin_src bash
+run pkgname -- --help
+#+end_src
+
+*** Source
+
+#+begin_src bash :tangle ../config/scripts/nix-helpers/run.sh
+  #!/usr/bin/env bash
+  script_path=${0%/*}
+  source $script_path/include/main.sh
+  nix_run
+#+end_src
+
 ** Options
-- =-i= - *allows installation of unfree packages*
-- =-g= - *install packages from [[https://github.com][GitHub]]*
+- =-i= - *Allows installation of unfree packages*.
+- =-g= - *Install packages from [[https://github.com][GitHub]]*.
+- -=o= - *Pass optional arguments to underlying Nix command*.
 
+** Main Logic
 
-** source
-#+begin_src bash :tangle ../config/scripts/shell.sh
-  #!/usr/bin/env sh
-
-  args=$*
-  counter=1
-
-  total_args=$(echo "$args" | wc -w)
+#+begin_src bash :tangle ../config/scripts/nix-helpers/include/main.sh
+  #!/usr/bin/env bash
+  args=($@)
+  impure_flag=0
+  run_flag=0
+  options_flag=0
   flake_url="nixpkgs#"
+  delimiter="--"
 
-  while getopts 'gi' options; do
+  get_options() {
+      delimiter_index=$((${#args[@]} - 1))
+      for element in "${!args[@]}"; do
+          if [[ "${args[element]}" == $delimiter ]]; then
+              delimiter_index=$i
+          fi
+      done
+
+      options=("${args[@]:$((delimiter_index+1))}")
+
+      if [ $options_flag -eq 1 ]; then
+          echo "${options[@]}"
+      else
+          echo "-- ${options[@]}"
+      fi
+  }
+
+  get_packages() {
+      packages=()
+      for pkg in "${args[@]}"; do
+          if [[ ! "$i" == -* ]]; then
+              packages+=("$pkg")
+          fi
+      done
+
+      if [ $run_flag -eq 1 ]; then
+          packages[0]="$flake_url${packages[0]}"
+      else
+          for i in "${!packages[@]}"; do
+              packages[i]="$flake_url${packages[pkg]}"
+          done
+      fi
+
+      echo ${packages[@]}
+  }
+
+
+  run_command() {
+      if [ $impure_flag -eq 1 ]; then
+          export NIXPKGS_ALLOW_UNFREE=1;
+          nix $sub_command $(get_packages) --impure $(get_options)
+          export NIXPKGS_ALLOW_UNFREE=0;
+          exit
+      else
+          nix $sub_command $(get_packages) $(get_options)
+          exit
+      fi
+  }
+
+  nix_shell() {
+      sub_command="shell"
+      run_command
+  }
+
+  nix_run() {
+      sub_command="run"
+      run_flag=1
+      run_command
+  }
+
+  while getopts 'g:i:o' options; do
       case "$options" in
           g)
-              nix shell "github:$2"
-              exit
+              flake_url="github:"
               ;;
           i)
-              export NIXPKGS_ALLOW_UNFREE=1;
-              nix shell "flake_url$2" --impure;
-              export NIXPKGS_ALLOW_UNFREE=0;
-              exit
+              impure_flag=1
               ;;
-
+          o)
+              delimiter="-o"
+              options_flag=1
+              ;;
       esac
   done
-
-  packages=$(while (( counter <= total_args )); do
-                 echo -n "$flake_url""$(echo $args | awk '{print $'$counter'}') "
-                 ((counter++));
-             done)
-
-  nix shell $packages
 #+end_src
 
 * System Utilities
