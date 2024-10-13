@@ -387,6 +387,8 @@
         };
       };
 
+      web-devicons.enable = true;
+
       notify = {
         enable = true;
         backgroundColour = "#000000";
@@ -453,7 +455,7 @@
         enable = true;
         servers = {
           # rnix-lsp.enable = true;
-          rust-analyzer = {
+          rust_analyzer = {
             enable = true;
             installCargo = true;
             installRustc = true;
