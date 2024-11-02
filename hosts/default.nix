@@ -10,14 +10,13 @@
 
   # Enable flakes
   nix = {
-    package = pkgs.nixFlakes;
     nixPath = [
       "nixpkgs=${inputs.nixpkgs}"
     ];
     channel.enable = false;
     settings = {
       auto-optimise-store = true;
-      experimental-features = [ "nix-command" "flakes" "repl-flake" ];
+      experimental-features = [ "nix-command" "flakes" ];
       use-xdg-base-directories = true;
     };
     registry.nixpkgs.flake = inputs.nixpkgs;
