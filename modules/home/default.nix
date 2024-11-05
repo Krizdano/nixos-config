@@ -5,7 +5,8 @@ let
   emacs = ''${config.programs.emacs.package}/bin/emacs --batch --eval "(require 'org)" --eval'';
 in
 {
-  imports = (import ../programs)
+  imports = [ ../services/systemd-services.nix ]
+            ++ (import ../programs)
             ++ (import ../shell);
 
   # fzf
