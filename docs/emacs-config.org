@@ -93,8 +93,10 @@ Adjust UI settings to create a cleaner interface by disabling unnecessary elemen
   (tool-bar-mode 0)                 ;; Disable toolbar
   (blink-cursor-mode 0)             ;; Disable cursor blinking
 
-  (if (display-graphic-p)
-      (scroll-bar-mode 0))          ;; Disable scrollbar
+  (when (bound-and-true-p
+         scroll-bar-mode)
+    (scroll-bar-mode 0))            ;; Disable scoll bar
+
 #+end_src
 
 ** Eldoc
@@ -869,8 +871,11 @@ Code stolen from [[https://gitlab.com/dwt1/dotfiles/-/blob/master/.config/emacs/
             help-mode))
     :config
     (popper-mode +1)
-    (popper-echo-mode +1))                ; For echo area hints
-#+end_src
+
+    (when (bound-and-true-p
+           popper-echo-mode)
+      (popper-echo-mode +1))  ; For echo area hints
+    #+end_src
 
 ** Rainbow Delimiters
 Adds rainbow colors to parentheses and brackets.
