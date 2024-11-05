@@ -29,8 +29,8 @@ in
         "${pkgs.scripts}/bin/sortfiles"
         "${ut} bat_level"
         "nohup nvim --listen /tmp/neovim.pipe --headless > /dev/null 2>&1 0< /dev/null &!" # start nvim server
-	"[workspace special:terminal silent]  alacritty --title=terminal-main --class=terminal-main -e zellij -s main"
-	''[workspace special:terminal silent]  emacsclient -c -e "(vterm)"''
+	"[workspace special:Terminal silent]  alacritty --title=terminal-main --class=terminal-main -e zellij -s main"
+	''[workspace special:Terminal silent]  emacsclient -c -e "(vterm)"''
       ];
 
       monitor = [
@@ -127,7 +127,7 @@ in
         "workspace name:video, class:^(mpv)$"
 
         # firefox
-        "workspace name:browser, class:^(firefox)$"
+        "workspace name:Browser, class:^(firefox)$"
 
         #telegram
         "workspace name:telegram, class:^(org.telegram.desktop)$"
@@ -144,10 +144,10 @@ in
         "noinitialfocus, class:^(mpv)$,title:^(playlist)$"
 
         # terminal main
-        "workspace special:terminal, class:^(terminal-main)$"
+        "workspace special:Terminal, class:^(terminal-main)$"
 
         # emacs
-        "workspace special:terminal, fullscreen, class:^(emacs)$"
+        "workspace special:Terminal, fullscreen, class:^(emacs)$"
         "maximize, class:^(emacs)$"
 
         # kitty
@@ -170,7 +170,7 @@ in
         "6, monitor:HDMI-A-1"
         "7, monitor:HDMI-A-1"
         "8, monitor:HDMI-A-1"
-        "name:browser, monitor:HDMI-A-1"
+        "name:Browser, monitor:HDMI-A-1"
         "name:video, monitor:HDMI-A-1, gapsin:0, gapsout:0"
         "name:telegram, monitor:HDMI-A-1"
       ];
@@ -201,7 +201,7 @@ in
 
         # general
         "$mainMod, RETURN, exec, ${cf} terminal"
-        "$mainModALT, RETURN, movetoworkspace, special:terminal "
+        "$mainModALT, RETURN, movetoworkspace, special:Terminal "
         "$mainModSHIFT,Q, killactive,"
         "$mainModSHIFT, E, exit,"
         "$mainMod, D, exec, rofi -show drun"
