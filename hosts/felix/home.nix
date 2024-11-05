@@ -4,6 +4,7 @@
     ../../modules/home/default.nix
     ../../modules/home/persist.nix
     ../../modules/windowmanagers/hyprland/default.nix
+    ../../modules/windowmanagers/niri/default.nix
   ]
   ++ (import ../../modules/services);
 

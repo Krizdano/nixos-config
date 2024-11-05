@@ -37,23 +37,6 @@ change_default_sink() {
     wpctl set-default "$(wpctl status | grep -A 3 Sinks | $menu "Sinks" | awk -F ' ' '{print $2}')"
 }
 
-# Toggle on/off laptop screen
-toggle_screen() {
-    on_off_menu() {
-        case "$1" in
-            "") ;;
-            Screenoff)
-                $screen off $monitor
-                ;;
-            Screenon)
-                $screen on $monitor
-                ;;
-        esac
-    }
-    options="Screenoff\nScreenon"
-    on_off_menu "$(printf "%b" "$options" | sort | $menu "Screen")"
-}
-
 play_videos() {
     find Videos/ -type f -printf "%f\n" | $menu "Videos" |
         xargs -I '{}' find ~/Videos/ -name {} | xargs mpv
@@ -77,7 +60,7 @@ power_menu() {
                 exec systemctl hibernate
                 ;;
             lock)
-                exec swaylock -c 000000
+                exec loginctl lock-session
                 ;;
         esac
     }

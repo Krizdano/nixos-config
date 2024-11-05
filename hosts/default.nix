@@ -92,9 +92,6 @@
         common = {
           default = [ "gtk" ];
         };
-        hyprland = {
-          default = [ "hyprland" "gtk" ];
-        };
       };
     };
   };

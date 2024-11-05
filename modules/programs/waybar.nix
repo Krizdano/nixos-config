@@ -197,7 +197,7 @@ _: {
         "margin-left": 10,
         "exclusive": false,
         "passthrough": false,
-        "modules-center": ["sway/workspaces", "hyprland/workspaces", "network", "pulseaudio", "pulseaudio#percentage", "battery","battery#percentage", "custom/time-icon", "clock#time", "clock", "clock#date", "tray"],
+        "modules-center": ["sway/workspaces", "hyprland/workspaces", "niri/workspaces", "network", "pulseaudio", "pulseaudio#percentage", "battery","battery#percentage", "custom/time-icon", "clock#time", "clock", "clock#date", "tray"],
       "modules-right": ["cpu", "cpu#percentage", "custom/gpu-usage", "custom/gpu-usage#percentage", "memory",  "memory#percentage"],
           // Modules configuration
         "sway/workspaces": {
@@ -208,13 +208,12 @@ _: {
                   "1": "1",
                   "2": "󰻞",
                   "3": "3",
-                  "video": "",
+                  "Video": "",
                   "telegram": "",
                   "6": "6",
                   "7": "7",
                   "8": "8",
-                  "9": "9",
-                  "browser": "󰈹"
+                  "Browser": "󰈹"
                }
            },
         "hyprland/workspaces": {
@@ -225,12 +224,28 @@ _: {
              "1": "1",
              "2": "󰻞",
              "3": "3",
-             "video": "",
+             "Video": "",
              "telegram": "",
-             "6": "",
-             "7": "",
-             "8": "",
-             "browser": "󰈹"
+             "6": "6",
+             "7": "7",
+             "8": "8",
+             "Browser": "󰈹"
+           }
+        },
+        "niri/workspaces": {
+          "format": "{icon}",
+          "on-click": "activate",
+          "sort-by-name": true,
+          "format-icons": {
+             "Terminal": "",
+             "2": "󰻞",
+             "3": "3",
+             "Video": "",
+             "telegram": "",
+             "6": "6",
+             "7": "7",
+             "8": "8",
+             "Browser": "󰈹"
            }
         },
         "network": {

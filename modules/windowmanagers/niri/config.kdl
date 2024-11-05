@@ -1,0 +1,253 @@
+spawn-at-startup "@dbus_update_activation_env_cmd@" "--systemd" "--all"
+spawn-at-startup "@systemctl_cmd@" "--user" "start" "niri-session.target"
+// spawn-at-startup "@xwayland_satellite_cmd@"
+
+// https://github.com/YaLTeR/niri/wiki/Configuration:-Input
+input {
+    keyboard {
+        xkb {
+            layout "us,us"
+            variant "colemak_dh,"
+            options "caps:backspace,shift:both_capslock"
+        }
+    }
+
+    touchpad {
+        tap
+        // dwt
+        // dwtp
+        natural-scroll
+        // accel-speed 0.2
+        // accel-profile "flat"
+        // scroll-method "two-finger"
+        // disabled-on-external-mouse
+    }
+
+    mouse {
+        // off
+        // natural-scroll
+        // accel-speed 0.2
+        // accel-profile "flat"
+        // scroll-method "no-scroll"
+        left-handed
+    }
+
+    disable-power-key-handling
+    workspace-auto-back-and-forth
+    warp-mouse-to-focus
+    focus-follows-mouse max-scroll-amount="0%"
+}
+
+// https://github.com/YaLTeR/niri/wiki/Configuration:-Outputs
+output "eDP-1" {
+    scale 1.2
+    transform "normal"
+}
+
+output "HDMI-A-1" {
+  scale 1
+  transform "normal"
+}
+
+// https://github.com/YaLTeR/niri/wiki/Configuration:-Layout
+layout {
+    gaps 13
+    center-focused-column "on-overflow"
+
+    preset-column-widths {
+        proportion 0.33333
+        proportion 0.5
+        proportion 0.66667
+    }
+
+    default-column-width { proportion 0.5; }
+
+    focus-ring {
+        width 1.5
+        active-color "#ffffff"
+        inactive-color "#505050"
+    }
+
+  //  border {
+        // The settings are the same as for the focus ring.
+        // If you enable the border, you probably want to disable the focus ring.
+   //     off
+
+    //    width 4
+    //    active-color "#ffc87f"
+     //   inactive-color "#505050"
+
+        // active-gradient from="#ffbb66" to="#ffc880" angle=45 relative-to="workspace-view"
+        // inactive-gradient from="#505050" to="#808080" angle=45 relative-to="workspace-view"
+  //  }
+
+    // Struts shrink the area occupied by windows, similarly to layer-shell panels.
+    // You can think of them as a kind of outer gaps. They are set in logical pixels.
+    // Left and right struts will cause the next window to the side to always be visible.
+    // Top and bottom struts will simply add outer gaps in addition to the area occupied by
+    // layer-shell panels and regular gaps.
+   // struts {
+        // left 64
+        // right 64
+        // top 64
+        // bottom 64
+   // }
+}
+
+prefer-no-csd
+screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
+
+// https://github.com/YaLTeR/niri/wiki/Configuration:-Animations
+animations {
+
+}
+
+workspace "Video" {
+  open-on-output "HDMI-A-1"
+}
+
+workspace "Terminal" {
+  open-on-output "HDMI-A-1"
+}
+
+workspace "Browser" {
+  open-on-output "HDMI-A-1"
+}
+
+// https://github.com/YaLTeR/niri/wiki/Configuration:-Window-Rules
+window-rule {
+  geometry-corner-radius 12
+  clip-to-geometry true
+}
+
+window-rule {
+  match app-id="firefox"
+  open-maximized true
+  open-on-workspace "Browser"
+}
+
+window-rule {
+  match app-id="emacs"
+  open-maximized true
+  open-on-workspace "Terminal"
+}
+
+window-rule {
+  match app-id="mpv"
+  open-maximized true
+  open-on-workspace "Video"
+}
+
+hotkey-overlay {
+  skip-at-startup
+}
+
+binds {
+    Mod+Shift+Slash { show-hotkey-overlay; }
+    Mod+Return { spawn "cf" "terminal"; }
+    Mod+Y { spawn "toggle-screen" "-m"; }
+    Mod+Z { spawn "cf" "browser"; }
+    Mod+S { spawn "rofi" "-show" "drun"; }
+    Mod+H { spawn "ut" "play_videos"; }
+    Mod+W { spawn "ut" "connect_to_wifi"; }
+    Mod+A { spawn "ut" "toggle_auto_suspend"; }
+    Mod+P { spawn "ut" "power_menu"; }
+    Super+Alt+L { spawn "hyprlock"; }
+
+    XF86AudioRaiseVolume allow-when-locked=true { spawn "volume" "volume_up"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn "volume" "volume_down"; }
+    XF86AudioMute        allow-when-locked=true { spawn "volume" "volume_mute"; }
+    XF86AudioMicMute     allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"; }
+    XF86MonBrightnessDown allow-when-locked=true { spawn "light" "-U" "10"; }
+    XF86MonBrightnessUP allow-when-locked=true { spawn "light" "-A" "10"; }
+
+    Mod+Shift+Q { close-window; }
+
+    Mod+M     { focus-column-or-monitor-left; }
+    Mod+N     { focus-window-or-workspace-down; }
+    Mod+E     { focus-window-or-workspace-up; }
+    Mod+I     { focus-column-or-monitor-right; }
+
+    Mod+Shift+M  { consume-or-expel-window-left; }
+    Mod+Shift+N     { move-window-down; }
+    Mod+Shift+E     { move-window-up; }
+    Mod+Shift+I { consume-or-expel-window-right; }
+
+    Mod+Ctrl+M     { move-workspace-to-monitor-left; }
+    Mod+Ctrl+I     { move-workspace-to-monitor-right; }
+
+    Super+Alt+N { move-column-to-workspace-down; }
+    Super+Alt+E { move-column-to-workspace-down; }
+
+    Mod+WheelScrollDown      cooldown-ms=150 { focus-workspace-down; }
+    Mod+WheelScrollUp        cooldown-ms=150 { focus-workspace-up; }
+    Mod+Ctrl+WheelScrollDown cooldown-ms=150 { move-column-to-workspace-down; }
+    Mod+Ctrl+WheelScrollUp   cooldown-ms=150 { move-column-to-workspace-up; }
+
+    Mod+WheelScrollRight      { focus-column-right; }
+    Mod+WheelScrollLeft       { focus-column-left; }
+    Mod+Ctrl+WheelScrollRight { move-column-right; }
+    Mod+Ctrl+WheelScrollLeft  { move-column-left; }
+
+    Mod+Shift+WheelScrollDown      { focus-column-right; }
+    Mod+Shift+WheelScrollUp        { focus-column-left; }
+    Mod+Ctrl+Shift+WheelScrollDown { move-column-right; }
+    Mod+Ctrl+Shift+WheelScrollUp   { move-column-left; }
+
+    Mod+TouchpadScrollDown { spawn "volume" "volume_up"; }
+    Mod+TouchpadScrollUp   { spawn "volume" "volume_down"; }
+    Mod+Shift+TouchpadScrollDown { spawn "light" "-U" "10"; }
+    Mod+Shift+TouchpadScrollUp   { spawn "light" "-A" "10"; }
+
+    Mod+1 { focus-workspace 1; }
+    Mod+2 { focus-workspace 2; }
+    Mod+3 { focus-workspace 3; }
+    Mod+4 { focus-workspace "Video"; }
+    Mod+5 { focus-workspace 5; }
+    Mod+6 { focus-workspace 6; }
+    Mod+7 { focus-workspace 7; }
+    Mod+8 { focus-workspace 8; }
+    Mod+9 { focus-workspace 9; }
+    Mod+Shift+1 { move-column-to-workspace 1; }
+    Mod+Shift+2 { move-column-to-workspace 2; }
+    Mod+Shift+3 { move-column-to-workspace 3; }
+    Mod+Shift+4 { move-column-to-workspace "Video"; }
+    Mod+Shift+5 { move-column-to-workspace 5; }
+    Mod+Shift+6 { move-column-to-workspace 6; }
+    Mod+Shift+7 { move-column-to-workspace 7; }
+    Mod+Shift+8 { move-column-to-workspace 8; }
+    Mod+Shift+9 { move-column-to-workspace 9; }
+
+    Mod+Tab { focus-workspace-previous; }
+
+
+    Mod+R { switch-preset-column-width; }
+    Mod+Shift+R { switch-preset-window-height; }
+    Mod+Ctrl+R { reset-window-height; }
+    Mod+F { maximize-column; }
+    Mod+Shift+T { fullscreen-window; }
+    Mod+D { center-column; }
+
+    Mod+Left { set-column-width "-10%"; }
+    Mod+Right { set-column-width "+10%"; }
+    Mod+Up { set-window-height "-10%"; }
+    Mod+Down { set-window-height "+10%"; }
+
+    Alt+Space       { switch-layout "next"; }
+
+    Print { screenshot; }
+    Ctrl+Print { screenshot-screen; }
+    Alt+Print { screenshot-window; }
+
+    Mod+Shift+F { quit; }
+
+    Mod+Shift+p { power-off-monitors; }
+    Super+BackSpace repeat=false { spawn "sh" "-c" "pkill waybar || waybar"; }
+}
+
+
+cursor {
+  xcursor-theme "catppuccin-mocha-dark-cursors"
+    xcursor-size 29
+    //   hide-when-typing
+}

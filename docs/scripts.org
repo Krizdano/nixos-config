@@ -25,15 +25,37 @@
 - [[#system-utilities][System Utilities]]
   - [[#functions-1][Functions]]
   - [[#main-logic-2][Main Logic]]
+- [[#toggle-screen][Toggle Screen]]
 - [[#volume][Volume]]
   - [[#functions-2][Functions]]
   - [[#main-logic-3][Main Logic]]
 
 * Check for Existing Windows
 A bash script that helps to manage my terminal and browser workspaces.
-This script uses hyprctl and only works in [[https://hyprland.org][Hyprland]].
+This script currently works in [[https://hyprland.org][Hyprland]] or [[https://github.com/YaLTeR/niri][Niri]].
 
 ** Functions
+*** Switch Workspace
+This function identifies the current window manager ([[https://hyprland.org][Hyprland]] or [[https://github.com/YaLTeR/niri][Niri]]) and executes the
+appropriate command to switch workspaces.
+
+#+begin_src bash :tangle ../config/scripts/check_for_existing_windows.sh
+  special_flag=0
+
+  switch_workspace() {
+      workspace=$1
+      if [ ! -z $HYPRLAND_INSTANCE_SIGNATURE ]; then # Check if we are on Hyprland
+          if [ $special_flag -eq 1 ]; then
+          hyprctl dispatch togglespecialworkspace $workspace # Toggle special workspaces
+          else
+              hyprctl dispatch workspace name:$workspace # Switch to normal workspaces
+          fi
+      elif [ ! -z $NIRI_SOCKET ]; then # Check if we are on Niri
+          niri msg action focus-workspace $workspace
+      fi
+  }
+#+end_src
+
 *** Browser
 Function to open Firefox if it's not already running or switch to the 'browser' workspace if it is
 already running.
@@ -46,16 +68,14 @@ already running.
   nixpkgs_url='firefox -new-tab https://search.nixos.org/packages'
   hm_url='firefox -new-tab https://home-manager-options.extranix.com'
 
-  # Command to switch to the 'browser' workspace
-  browser_workspace='hyprctl dispatch workspace name:browser'
-
   browser ()
   {
       if pgrep "firefox" > /dev/null
       then
-          $browser_workspace
+          switch_workspace Browser
       else
           firefox & disown
+          switch_workspace Browser
       fi
   }
 #+end_src
@@ -70,7 +90,7 @@ Function to open [[https://youtube.com][YouTube]] in Firefox. It opens [[https:/
       if [[ $(hyprctl activeworkspace | grep "browser" | awk '{print $4}') == "(browser)" ]]; then
           $youtube_url # Open YouTube in a new tab if already in 'browser' workspace
       else
-          $browser_workspace # Switch to 'browser' workspace
+          switch_workspace Browser
           $youtube_url # Open YouTube search in a new tab
       fi
   }
@@ -86,7 +106,7 @@ Function to open [[https://search.nixos.org/packages][Nixpkgs search]] in Firefo
       if [[ $(hyprctl activeworkspace | grep "browser" | awk '{print $4}') == "(browser)" ]]; then
           $nixpkgs_url # Open Nixpkgs search in a new tab if already in 'browser' workspace
       else
-          $browser_workspace # Switch to 'browser' workspace
+          switch_workspace Browser
           $nixpkgs_url # Open Nixpkgs search in a new tab
       fi
   }
@@ -102,7 +122,7 @@ Function to open [[https://home-manager-options.extranix.com][Home Manager searc
       if [[ $(hyprctl activeworkspace | grep "browser" | awk '{print $4}') == "(browser)" ]]; then
           $hm_url # Open Home Manager options in a new tab if already in 'browser' workspace
       else
-          $browser_workspace # Switch to 'browser' workspace
+          switch_workspace Browser
           $hm_url # Open Home Manager options in a new tab
       fi
   }
@@ -114,12 +134,13 @@ Function to open a terminal (vterm) window using Emacs if it's not already open.
 #+begin_src bash :tangle ../config/scripts/check_for_existing_windows.sh
   terminal ()
   {
+      special_flag=1
       if pgrep "emacsclient" > /dev/null # Check if Emacs client is running
       then
-          hyprctl dispatch togglespecialworkspace terminal # Toggle the terminal workspace if Emacs client is running
+          switch_workspace Terminal
       else
           emacsclient -c -e "(vterm)" & disown # Start Emacs client with a terminal and run in the background
-          hyprctl dispatch togglespecialworkspace terminal # Toggle the terminal workspace
+          switch_workspace Terminal
       fi
   }
 #+end_src
@@ -500,28 +521,6 @@ Changes the default audio sink.
   }
 #+end_src
 
-*** Toggle on/off Screen
-Toggles the laptop screen on or off.
-
-#+begin_src bash :tangle ../config/scripts/utilities.sh
-  # Toggle on/off laptop screen
-  toggle_screen() {
-      on_off_menu() {
-          case "$1" in
-              "") ;;
-              Screenoff)
-                  $screen off $monitor
-                  ;;
-              Screenon)
-                  $screen on $monitor
-                  ;;
-          esac
-      }
-      options="Screenoff\nScreenon"
-      on_off_menu "$(printf "%b" "$options" | sort | $menu "Screen")"
-  }
-#+end_src
-
 *** Video Player
 Opens and plays a video file from the `~/Videos` directory using [[https://mpv.io/][mpv]].
 
@@ -554,7 +553,7 @@ Provides a menu with options to power off, reboot, suspend, hibernate, or lock t
                   exec systemctl hibernate
                   ;;
               lock)
-                  exec swaylock -c 000000
+                  exec loginctl lock-session
                   ;;
           esac
       }
@@ -715,6 +714,64 @@ Main script logic to handle different function calls
           exit 2
           ;;
   esac
+#+end_src
+
+* Toggle Screen
+This script toggles the built-in screen of my laptop on or off, or it can turn off all screens
+based on the provided option. I originally created it to disable my laptop's screen when connected
+to an external monitor and not using the built-in display. Since then, I have added an option to turn
+off all monitors. This functionality is utilized by Hypridle to turn off all monitors before going to
+sleep and to turn them back on when waking up. The script currently works with [[https://github.com/YaLTeR/niri][Niri]] and [[https://hyprland.org/][Hyprland]].
+
+#+begin_src bash :tangle ../config/scripts/toggle-screen.sh
+  exec_command() {
+      if [ ! -z $HYPRLAND_INSTANCE_SIGNATURE ]; then # Check if we are on Hyprland
+          if [ $all_monitors -eq 1 ]; then
+              hyprctl dpms $1
+              exit
+          else
+              hyprctl dispatch dpms $1 eDP-1
+          fi
+      elif [ ! -z $NIRI_SOCKET ]; then # Check if we are on Niri
+          if [ $all_monitors -eq 1 ] && [ $1 == "off" ]; then
+              niri msg action power-off-monitors
+              exit
+          elif [ $all_monitors -eq 1 ] && [ $1 == "on" ]; then
+              exit
+          else
+              niri msg output edp-1 $1
+          fi
+      fi
+  }
+
+  action() {
+      case "$1" in
+          "") ;;
+          Screenoff)
+              exec_command off
+              ;;
+          Screenon)
+              exec_command on
+              echo "hello"
+              ;;
+      esac
+  }
+
+  while getopts 'mn' option; do
+      options="Screenoff\nScreenon"
+      case "$option" in
+          m)
+              all_monitors=0
+              action "$(printf "%b" "$options" | sort | dmenu -i -p "Screen")"
+              exit
+              ;;
+          n)
+              all_monitors=1
+              action $2
+              exit
+              ;;
+      esac
+  done
 #+end_src
 
 * Volume

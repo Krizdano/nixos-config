@@ -45,6 +45,9 @@ stdenvNoCC.mkDerivation {
     cp volume.sh $out/bin/volume
     chmod +x $out/bin/volume
 
+    cp toggle-screen.sh $out/bin/toggle-screen
+    chmod +x $out/bin/toggle-screen
+
     runHook postInstall
   '';
 
@@ -52,5 +55,4 @@ stdenvNoCC.mkDerivation {
     wrapProgram $out/bin/chpaper --prefix PATH : ${lib.makeBinPath [imagemagick libnotify swww swaybg]}
     wrapProgram $out/bin/sortfiles --prefix PATH : ${lib.makeBinPath [ rename ]}
   '';
-
 }

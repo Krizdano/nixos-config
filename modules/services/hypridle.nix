@@ -1,6 +1,6 @@
 { config, pkgs, ... }:
 let
-  hyprctl = "${config.wayland.windowManager.hyprland.package}/bin/hyprctl";
+  toggle-screen = "${pkgs.scripts}/bin/toggle-screen";
   lock-session = "${pkgs.systemd}/bin/loginctl lock-session";
 in
 {
@@ -11,7 +11,7 @@ in
         lock_cmd = "${pkgs.procps}/bin/pidof hyprlock || ${pkgs.hyprlock}/bin/hyprlock";
         unlock_cmd = "${pkgs.procps}/bin/pkill -USR1 hyprlock";
         before_sleep_cmd = lock-session;
-        after_sleep_cmd = "${hyprctl} dispatch dpms on";
+        after_sleep_cmd = "${toggle-screen} -n Screenon";
       };
       listener = [
         {
@@ -20,8 +20,8 @@ in
         }
         {
           timeout = 160;
-          on-timeout = "${hyprctl} dispatch dpms off";
-          on-resume = "${hyprctl} dispatch dpms on";
+          on-timeout = "${toggle-screen} -n Screenoff";
+          on-resume = "${toggle-screen} -n Screenon";
         }
         {
           timeout = 200;
