@@ -26,7 +26,7 @@ get_options() {
 get_packages() {
     packages=()
     for pkg in "${args[@]}"; do
-        if [[ ! "$i" == -* ]]; then
+        if [[ ! "$pkg" == -* ]]; then
             packages+=("$pkg")
         fi
     done
