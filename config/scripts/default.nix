@@ -26,13 +26,6 @@ stdenvNoCC.mkDerivation {
     cp clone.sh $out/bin/clone
     chmod +x $out/bin/clone
 
-    # nix helpers
-    cp -r nix-helpers/include $out/bin/include
-    cp nix-helpers/shell.sh $out/bin/shell
-    chmod +x $out/bin/shell
-    cp nix-helpers/run.sh $out/bin/run
-    chmod +x $out/bin/run
-
     cp check_for_existing_windows.sh $out/bin/cf
     chmod +x $out/bin/cf
 

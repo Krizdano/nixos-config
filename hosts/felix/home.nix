@@ -11,6 +11,7 @@
   home.packages = with pkgs; [
     oi # cli program for quick google search
     toki
+    nix-helpers
     redqu # media centric reddit client
     keepassxc
     nitch

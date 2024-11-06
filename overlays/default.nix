@@ -5,4 +5,5 @@ final: prev:
   oi = prev.callPackage ../modules/programs/oi.nix { }; # Cli program for quick google search
   redqu = prev.callPackage ../modules/programs/redqu.nix { }; # Media centric reddit client
   toki = prev.callPackage ../modules/programs/toki.nix { }; # A command-line project manager for c and assembly
+  nix-helpers = prev.callPackage ../modules/programs/nix-helpers.nix {}; # A simple script to simplify the usage of various nix commands
 }
