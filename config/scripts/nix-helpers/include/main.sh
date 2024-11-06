@@ -35,7 +35,7 @@ get_packages() {
         packages[0]="$flake_url${packages[0]}"
     else
         for i in "${!packages[@]}"; do
-            packages[i]="$flake_url${packages[pkg]}"
+            packages[i]="$flake_url${packages[i]}"
         done
     fi
 
