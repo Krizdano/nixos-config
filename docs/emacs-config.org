@@ -874,7 +874,7 @@ Code stolen from [[https://gitlab.com/dwt1/dotfiles/-/blob/master/.config/emacs/
 
     (when (bound-and-true-p
            popper-echo-mode)
-      (popper-echo-mode +1))  ; For echo area hints
+      (popper-echo-mode +1)))  ; For echo area hints
     #+end_src
 
 ** Rainbow Delimiters
