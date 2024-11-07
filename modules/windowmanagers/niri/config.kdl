@@ -67,31 +67,6 @@ layout {
         active-color "#ffffff"
         inactive-color "#505050"
     }
-
-  //  border {
-        // The settings are the same as for the focus ring.
-        // If you enable the border, you probably want to disable the focus ring.
-   //     off
-
-    //    width 4
-    //    active-color "#ffc87f"
-     //   inactive-color "#505050"
-
-        // active-gradient from="#ffbb66" to="#ffc880" angle=45 relative-to="workspace-view"
-        // inactive-gradient from="#505050" to="#808080" angle=45 relative-to="workspace-view"
-  //  }
-
-    // Struts shrink the area occupied by windows, similarly to layer-shell panels.
-    // You can think of them as a kind of outer gaps. They are set in logical pixels.
-    // Left and right struts will cause the next window to the side to always be visible.
-    // Top and bottom struts will simply add outer gaps in addition to the area occupied by
-    // layer-shell panels and regular gaps.
-   // struts {
-        // left 64
-        // right 64
-        // top 64
-        // bottom 64
-   // }
 }
 
 prefer-no-csd
