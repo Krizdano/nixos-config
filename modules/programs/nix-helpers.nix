@@ -14,9 +14,9 @@ pkgs.stdenv.mkDerivation {
   installPhase = ''
     mkdir -p $out/bin/
     cp -r ./src/include $out/bin/include
-    cp ./src/nshell.sh $out/bin/nshell
-    chmod +x $out/bin/nshell
-    cp ./src/nrun.sh $out/bin/nrun
-    chmod +x $out/bin/nrun
+    cp ./src/nshell.sh $out/bin/shell
+    chmod +x $out/bin/shell
+    cp ./src/nrun.sh $out/bin/run
+    chmod +x $out/bin/run
   '';
 }
