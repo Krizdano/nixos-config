@@ -122,11 +122,17 @@ binds {
     Mod+Return { spawn "cf" "terminal"; }
     Mod+Y { spawn "toggle-screen" "-m"; }
     Mod+Z { spawn "cf" "browser"; }
+    Mod+J { spawn "cf" "youtube_in_browser"; }
+    Mod+K { spawn "cf" "nixpkgs_search"; }
+    Mod+Shift+K { spawn "cf" "home_manager_search"; }
     Mod+S { spawn "rofi" "-show" "drun"; }
     Mod+H { spawn "ut" "play_videos"; }
     Mod+W { spawn "ut" "connect_to_wifi"; }
     Mod+A { spawn "ut" "toggle_auto_suspend"; }
     Mod+P { spawn "ut" "power_menu"; }
+    Mod+R { spawn "ut" "change_default_sink"; }
+    Mod+Shift+Z { spawn "ut" "my_bookmarks"; }
+    Mod+Alt+Z { spawn "ut" "add_bookmark"; }
     Mod+Shift+S { spawn "ut" "connect_bluetooth"; }
     Super+Alt+L { spawn "hyprlock"; }
 
@@ -188,8 +194,6 @@ binds {
     Mod+Tab { focus-workspace-previous; }
 
 
-    Mod+R { switch-preset-column-width; }
-    Mod+Shift+R { switch-preset-window-height; }
     Mod+Ctrl+R { reset-window-height; }
     Mod+F { maximize-column; }
     Mod+Shift+T { fullscreen-window; }
@@ -211,7 +215,6 @@ binds {
     Mod+Shift+p { power-off-monitors; }
     Super+BackSpace repeat=false { spawn "sh" "-c" "pkill waybar || waybar"; }
 }
-
 
 cursor {
   xcursor-theme "catppuccin-mocha-dark-cursors"
