@@ -1,24 +1,59 @@
+#!/usr/bin/env bash
+
 special_flag=0
+on_hyprland=0
+on_niri=0
+
+check_wm () {
+    if [ ! -z $HYPRLAND_INSTANCE_SIGNATURE ]; then # Check if we are on Hyprland
+        on_hyprland=1
+    elif [ ! -z $NIRI_SOCKET ]; then # Check if we are on Niri
+        on_niri=1
+    fi
+}
+
+special_flag=0
+on_hyprland=0
+on_niri=0
 
 switch_workspace() {
+    check_wm
     workspace=$1
-    if [ ! -z $HYPRLAND_INSTANCE_SIGNATURE ]; then # Check if we are on Hyprland
+
+    if [ $on_hyprland -eq 1 ]; then # Check if we are on Hyprland
+
         if [ $special_flag -eq 1 ]; then
-        hyprctl dispatch togglespecialworkspace $workspace # Toggle special workspaces
+            hyprctl dispatch togglespecialworkspace $workspace # Toggle special workspaces
         else
             hyprctl dispatch workspace name:$workspace # Switch to normal workspaces
         fi
-    elif [ ! -z $NIRI_SOCKET ]; then # Check if we are on Niri
+
+    elif [ $on_niri -eq 1 ]; then # Check if we are on Niri
         niri msg action focus-workspace $workspace
     fi
 }
 
-#!/usr/bin/env bash
+check_workspace_and_run () {
 
-# urls for different tabs
-youtube_url='firefox -new-tab https://www.youtube.com'
-nixpkgs_url='firefox -new-tab https://search.nixos.org/packages'
-hm_url='firefox -new-tab https://home-manager-options.extranix.com'
+    run_command=$@
+    check_wm
+
+    if [ $on_hyprland -eq 1 ]; then
+        check_workspace=$(hyprctl activeworkspace | grep "browser" | awk '{print $4}')
+        active_workspace="($workspace)"
+    elif [ $on_niri -eq 1 ]; then
+        check_workspace=$(niri msg workspaces | grep "*" | awk '{print $3}')
+        active_workspace="\"$workspace"\"
+    fi
+
+    if [[ $check_workspace == $active_workspace ]]; then
+        $run_command
+    else
+        switch_workspace $workspace
+        $run_command
+    fi
+
+}
 
 browser ()
 {
@@ -26,50 +61,40 @@ browser ()
     then
         switch_workspace Browser
     else
-        firefox & disown
-        switch_workspace Browser
+        workspace="Browser"
+        check_workspace_and_run firefox & disown
     fi
 }
 
-youtube_in_browser ()
-{
-    if [[ $(hyprctl activeworkspace | grep "browser" | awk '{print $4}') == "(browser)" ]]; then
-        $youtube_url # Open YouTube in a new tab if already in 'browser' workspace
-    else
-        switch_workspace Browser
-        $youtube_url # Open YouTube search in a new tab
-    fi
+youtube_in_browser () {
+    youtube_url='firefox -new-tab https://www.youtube.com'
+    workspace="Browser"
+
+    check_workspace_and_run $youtube_url
 }
 
-nixpkgs_search ()
-{
-    if [[ $(hyprctl activeworkspace | grep "browser" | awk '{print $4}') == "(browser)" ]]; then
-        $nixpkgs_url # Open Nixpkgs search in a new tab if already in 'browser' workspace
-    else
-        switch_workspace Browser
-        $nixpkgs_url # Open Nixpkgs search in a new tab
-    fi
+nixpkgs_search () {
+    workspace="Browser"
+    nixpkgs_url='firefox -new-tab https://search.nixos.org/packages'
+
+    check_workspace_and_run $nixpkgs_url
 }
 
-home_manager_search ()
-{
-    if [[ $(hyprctl activeworkspace | grep "browser" | awk '{print $4}') == "(browser)" ]]; then
-        $hm_url # Open Home Manager options in a new tab if already in 'browser' workspace
-    else
-        switch_workspace Browser
-        $hm_url # Open Home Manager options in a new tab
-    fi
+home_manager_search () {
+    hm_url='firefox -new-tab https://home-manager-options.extranix.com'
+    workspace="Browser"
+
+    check_workspace_and_run $hm_url
 }
 
-terminal ()
-{
+terminal () {
     special_flag=1
     if pgrep "emacsclient" > /dev/null # Check if Emacs client is running
     then
         switch_workspace Terminal
     else
-        emacsclient -c -e "(vterm)" & disown # Start Emacs client with a terminal and run in the background
-        switch_workspace Terminal
+        workspace="Terminal"
+        check_workspace_and_run emacsclient -c -e "(vterm)"
     fi
 }
 
