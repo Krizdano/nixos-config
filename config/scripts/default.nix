@@ -20,7 +20,7 @@ stdenvNoCC.mkDerivation {
     cp chpaper.sh $out/bin/chpaper
     chmod +x $out/bin/chpaper
 
-    cp organize_files.sh $out/bin/sortfiles
+    cp sortfiles.sh $out/bin/sortfiles
     chmod +x $out/bin/sortfiles
 
     cp clone.sh $out/bin/clone
