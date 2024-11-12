@@ -90,7 +90,9 @@ Adjust UI settings to create a cleaner interface by disabling unnecessary elemen
   (setq pop-up-windows nil)         ;; Disable pop up windows
   (setq ring-bell-function 'ignore) ;; Disable annoying bell sound
   (menu-bar-mode 0)                 ;; Disable menubar
-  (tool-bar-mode 0)                 ;; Disable toolbar
+  (when (bound-and-true-p
+         tool-bar-mode)
+    (tool-bar-mode 0))                 ;; Disable toolbar
   (blink-cursor-mode 0)             ;; Disable cursor blinking
 
   (when (bound-and-true-p
