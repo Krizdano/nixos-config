@@ -219,5 +219,6 @@ binds {
 cursor {
   xcursor-theme "catppuccin-mocha-dark-cursors"
     xcursor-size 29
-    //   hide-when-typing
+    hide-when-typing
+    hide-after-inactive-ms 120
 }
