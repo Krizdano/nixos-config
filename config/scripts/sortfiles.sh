@@ -39,7 +39,7 @@ do
             *.sh|*.md|*.txt|*.html)
                 mv "$file" "$documents_folder"
                 ;;
-            *.mkv|*.mp4)
+            *.mkv|*.mp4|*.webm)
                 mv "$file" "$video_folder"
                 ;;
             *.jpg|*.webp|*.jpeg|*.png)
