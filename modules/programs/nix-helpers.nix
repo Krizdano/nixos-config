@@ -7,8 +7,8 @@ pkgs.stdenv.mkDerivation {
   src = fetchFromGitHub {
     owner = "Krizdano";
     repo = "nix-helpers";
-    rev = "c27c5443f7234477bee45bb8d218d0ea1ffc09b2";
-    hash = "sha256-pzLYgKqw5MR0jgLgSjHFZ6fsPQJaPfCKdKLZ4pUxc7M=";
+    rev = "7b235335b5e05d2c8cd82279dd08679419a8ca83";
+    hash = "sha256-AUAIim90DokJIFdaP1Nr1FeXOXSN4P/bIzwJKDMtsoQ=";
   };
 
   installPhase = ''
