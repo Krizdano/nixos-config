@@ -47,6 +47,7 @@
   - [[#evil-mc][Evil-Mc]]
   - [[#evil-mode][Evil Mode]]
   - [[#general][General]]
+  - [[#indent-bars][Indent-bars]]
   - [[#nerd-icons][Nerd Icons]]
   - [[#pdf][PDF]]
   - [[#perspective][Perspective]]
@@ -807,6 +808,24 @@ Keybindings specific to operator-pending-state.
       "5" '(lambda () (interactive) (persp-switch-by-number 5))
       "6" '(lambda () (interactive) (persp-switch-by-number 6))
       "SPC" 'smex))
+#+end_src
+
+** Indent-bars
+[[https://github.com/jdtsmith/indent-bars][Indent-bars]] provides indentation guide bars in Emacs, with optional tree-sitter enhancement.
+
+#+begin_src emacs-lisp
+  (use-package indent-bars
+    :hook ((prog-mode) . indent-bars-mode)
+    :config
+    (setq
+     indent-bars-color '(highlight :face-bg t :blend 0.2)
+     indent-bars-pattern "."
+     indent-bars-width-frac 0.1
+     indent-bars-pad-frac 0.1
+     indent-bars-zigzag nil
+     indent-bars-color-by-depth nil
+     indent-bars-highlight-current-depth nil
+     indent-bars-display-on-blank-lines nil))
 #+end_src
 
 ** Nerd Icons
