@@ -17,6 +17,7 @@
       update = "pushd $NIXOS_CONFIG; doas nix flake update; popd";
       gg = "w3m google.com"; # w3m with google
       search = "nix search nixpkgs";
+      connect = "kdeconnect-cli";
     };
 
     completionInit = "autoload -Uz compinit
