@@ -35,7 +35,7 @@ input {
     disable-power-key-handling
     workspace-auto-back-and-forth
     warp-mouse-to-focus
-    focus-follows-mouse max-scroll-amount="0%"
+    focus-follows-mouse
 }
 
 // https://github.com/YaLTeR/niri/wiki/Configuration:-Outputs
@@ -70,7 +70,7 @@ layout {
 }
 
 prefer-no-csd
-screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
+screenshot-path "~/Pictures/Screenshots/Screenshot-from-%Y-%m-%d-%H-%M-%S.png"
 
 // https://github.com/YaLTeR/niri/wiki/Configuration:-Animations
 animations {
@@ -220,5 +220,5 @@ cursor {
   xcursor-theme "catppuccin-mocha-dark-cursors"
     xcursor-size 29
     hide-when-typing
-    hide-after-inactive-ms 120
+    hide-after-inactive-ms 1000
 }
