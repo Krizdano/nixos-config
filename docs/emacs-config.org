@@ -195,6 +195,8 @@ Enable Whitespace mode to highlight trailing spaces and tabs.
                                  (tab-mark     ?\t    [?\u00BB   ?\t] [?\\ ?\t])))
 
   (global-whitespace-mode 1) ;; Enable Whitespace mode globally
+  (add-hook 'dired-mode-hook
+            (lambda () (setq-local whitespace-style nil))) ;; Disable whitespace mode on dired
 #+end_src
 
 ** Zoom
@@ -486,8 +488,12 @@ Configure =dired=, a built-in file manager for Emacs.
     :commands (dired dired-jump)
     :config
     (setq wdired-allow-to-change-permissions 'advanced
-          dired-listing-switches "-aL")
+          dired-listing-switches "-aL"
+          dired-kill-when-opening-new-dired-buffer t
+          )
+    (add-hook 'dired-mode-hook (lambda () (dired-hide-details-mode 1))) ;; hide unnecessary details in dired mode by default
     )
+
 
   ;; Install dired open to open files in default applications
   (use-package dired-open
@@ -835,6 +841,10 @@ Keybindings specific to operator-pending-state.
   (use-package nerd-icons
     :config
     (setq nerd-icons-font-family "Iosevka Nerd Font"))
+
+  (use-package nerd-icons-dired
+    :hook
+    (dired-mode . nerd-icons-dired-mode))
 #+end_src
 
 ** PDF

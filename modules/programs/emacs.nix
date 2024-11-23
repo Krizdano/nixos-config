@@ -3,6 +3,7 @@
     enable = true;
     package = pkgs.emacs30-pgtk;
     extraPackages = epkgs: with epkgs; [
+      nerd-icons-dired
       vterm
       evil
       evil-collection
