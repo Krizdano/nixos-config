@@ -22,6 +22,7 @@
 - [[#languages][Languages]]
   - [[#lua-mode][Lua-Mode]]
   - [[#markdown-mode][Markdown-Mode]]
+  - [[#sml][SML]]
   - [[#lsp][LSP]]
   - [[#tree-sitter][Tree-Sitter]]
   - [[#company][Company]]
@@ -227,6 +228,12 @@ Enable Markdown mode.
   (use-package markdown-mode
     :mode "\\.md\\'")
 
+#+end_src
+** SML
+Enable SML mode
+
+#+begin_src emacs-lisp
+  (use-package sml-mode)
 #+end_src
 
 ** LSP

@@ -5,6 +5,7 @@
     extraPackages = epkgs: with epkgs; [
       nerd-icons-dired
       vterm
+      sml-mode
       evil
       evil-collection
       general
