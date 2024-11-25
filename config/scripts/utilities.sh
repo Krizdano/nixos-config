@@ -39,8 +39,11 @@ change_default_sink() {
 }
 
 play_videos() {
-    find Videos/ -type f -printf "%f\n" | $menu "Videos" |
-        xargs -I '{}' find ~/Videos/ -name {} | xargs mpv
+    video=$(find ~/Videos/ -type f -printf "%f\n" | $menu "Videos")
+
+    if [ ! -z $video ]; then
+        mpv $(find ~/Videos/ -name $video)
+    fi
 }
 
 power_menu() {
