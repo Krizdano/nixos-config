@@ -1,3 +1,4 @@
+dmenu='fuzzel -d'
 exec_command() {
     if [ ! -z $HYPRLAND_INSTANCE_SIGNATURE ]; then # Check if we are on Hyprland
         if [ $all_monitors -eq 1 ]; then
@@ -36,7 +37,7 @@ while getopts 'mn' option; do
     case "$option" in
         m)
             all_monitors=0
-            action "$(printf "%b" "$options" | sort | dmenu -i -p "Screen")"
+            action "$(printf "%b" "$options" | sort | $dmenu -i -p "Screen")"
             exit
             ;;
         n)

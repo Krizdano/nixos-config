@@ -23,5 +23,6 @@
   # ./wezterm.nix
   ./aria2.nix
   ./rofi
+  ./fuzzel.nix
   ./hyprlock.nix
 ]

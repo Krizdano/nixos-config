@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 # Variables for various settings and files
-menu='dmenu -sync -i -p'
+dmenu='fuzzel -d'
+menu="$dmenu -i -p"
 bookmark_file='/persist/home/nixconfig/config/scripts/bookmarks'
 screen='hyprctl dispatch dpms'
 monitor='eDP-1'
@@ -20,8 +21,8 @@ my_bookmarks() {
 
 # Adds a new bookmark with a URL and name to the bookmarks file and commits it to a Git repository.
 add_bookmark () {
-    url=$(dmenu -l 0 -p "Enter url")
-    name=$(dmenu -l 0 -p "Enter name")
+    url=$($dmenu -l 0 -p "Enter url")
+    name=$($dmenu -l 0 -p "Enter name")
 
     if [[ "d" != "d$url" ]] && [[ "d" != "d$name" ]]; then
         echo "$name   $url" >> ~/nixconfig/config/scripts/bookmarks
@@ -113,7 +114,7 @@ toggle_auto_suspend () {
 
 #!/usr/bin/env bash
 connect_to_wifi () {
-    SSID=$(nmcli -f SSID device wifi list --rescan yes | tail -n +2 | dmenu -i)
+    SSID=$(nmcli -f SSID device wifi list --rescan yes | tail -n +2 | $dmenu -i)
 
     if [[ ! -z $SSID ]]; then
         nmcli device wifi connect $SSID

@@ -125,7 +125,7 @@ binds {
     Mod+J { spawn "cf" "youtube_in_browser"; }
     Mod+K { spawn "cf" "nixpkgs_search"; }
     Mod+Shift+K { spawn "cf" "home_manager_search"; }
-    Mod+S { spawn "rofi" "-show" "drun"; }
+    Mod+S { spawn "fuzzel"; }
     Mod+H { spawn "ut" "play_videos"; }
     Mod+W { spawn "ut" "connect_to_wifi"; }
     Mod+A { spawn "ut" "toggle_auto_suspend"; }
