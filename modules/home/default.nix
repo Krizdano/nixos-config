@@ -41,6 +41,8 @@ in
       fastfetch
       disko
       unzip
+      nix-helpers
+      toki
       gdu # disk management
       scripts
       jmtpfs
