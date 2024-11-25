@@ -14,7 +14,7 @@
       ls = "ls --color=always";
       notes = ''glow  $NIXOS_CONFIG/notes'';
       re = "pushd $NIXOS_CONFIG; doas nixos-rebuild switch --flake path:.#$(hostname); popd"; # nixos rebuild
-      update = "pushd $NIXOS_CONFIG; doas nix flake update; popd";
+      update = "pushd $NIXOS_CONFIG; nix flake update; popd";
       gg = "w3m google.com"; # w3m with google
       search = "nix search nixpkgs";
       connect = "kdeconnect-cli";
