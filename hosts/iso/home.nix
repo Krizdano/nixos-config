@@ -2,7 +2,7 @@
 
   imports = [
     ../../modules/home/default.nix
-    ../../modules/windowmanagers/hyprland/default.nix
+    ../../modules/windowmanagers/niri/default.nix
   ]
   ++ (import ../../modules/services);
 
