@@ -9,6 +9,9 @@ _:{
         inner-pad = 10;
         line-height = 28;
         lines = 8;
+        font = "Iosevka Nerd Font:size=14";
+        use-bold = true;
+        dpi-aware = "no";
       };
 
       colors = {
@@ -21,11 +24,13 @@ _:{
         selection-match = "f7b2b2ff";
         match = "ff7575ff";
         border = "ffffffff";
+
       };
 
       border = {
         width = 2;
       };
+
     };
   };
 }
