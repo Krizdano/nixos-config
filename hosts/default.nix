@@ -33,6 +33,7 @@
   services.xserver.xkb = {
     layout = "us";
     variant = "colemak_dh";
+    options = "caps:backspace,shift:both_capslock";
   };
 
   #tty
