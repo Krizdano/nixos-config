@@ -37,7 +37,7 @@ while getopts 'mn' option; do
     case "$option" in
         m)
             all_monitors=0
-            action "$(printf "%b" "$options" | sort | $dmenu -i -p "Screen")"
+            action "$(printf "%b" "$options" | sort | $dmenu -i -p "Screen ")"
             exit
             ;;
         n)

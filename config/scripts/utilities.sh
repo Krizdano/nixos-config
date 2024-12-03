@@ -9,20 +9,20 @@ monitor='eDP-1'
 
 # Connect to already paired bluetooth devices
 connect_bluetooth() {
-    device="$(bluetoothctl devices | $menu "Select Device" | awk -F ' ' '{print $2}')"
+    device="$(bluetoothctl devices | $menu "Select Device " | awk -F ' ' '{print $2}')"
     notify-send "$(bluetoothctl connect $device | grep -i -m3 'connect' | tail -n1)"
 }
 
 # Opens a bookmarked URL from the bookmarks file
 my_bookmarks() {
-    bookmark_menu=$(awk -F' ' '{print $1}' "$bookmark_file" | $menu "Bookmarks")
+    bookmark_menu=$(awk -F' ' '{print $1}' "$bookmark_file" | $menu "Bookmarks ")
     wtype $(grep $bookmark_menu "$bookmark_file" | awk -F' ' '{print $2}')
 }
 
 # Adds a new bookmark with a URL and name to the bookmarks file and commits it to a Git repository.
 add_bookmark () {
-    url=$($dmenu -l 0 -p "Enter url")
-    name=$($dmenu -l 0 -p "Enter name")
+    url=$($dmenu -l 0 -p "Enter url ")
+    name=$($dmenu -l 0 -p "Enter name ")
 
     if [[ "d" != "d$url" ]] && [[ "d" != "d$name" ]]; then
         echo "$name   $url" >> ~/nixconfig/config/scripts/bookmarks
@@ -35,11 +35,11 @@ add_bookmark () {
 }
 
 change_default_sink() {
-    wpctl set-default "$(wpctl status | grep -A 3 Sinks | $menu "Sinks" | awk -F ' ' '{print $2}')"
+    wpctl set-default "$(wpctl status | grep -A 3 Sinks | $menu "Sinks " | awk -F ' ' '{print $2}')"
 }
 
 play_videos() {
-    video=$(find ~/Videos/ -type f -printf "%f\n" | $menu "Videos")
+    video=$(find ~/Videos/ -type f -printf "%f\n" | $menu "Videos ")
 
     if [ ! -z $video ]; then
         mpv $(find ~/Videos/ -name $video)
@@ -70,7 +70,7 @@ power_menu() {
     }
 
     options="Poweroff\nReboot\nHibernate\nSuspend\nlock"
-    chpower "$(printf "%b" "$options" | sort | $menu "Power Menu")"
+    chpower "$(printf "%b" "$options" | sort | $menu "Power Menu ")"
 }
 
 bat_level() {
@@ -117,13 +117,13 @@ toggle_auto_suspend () {
 
 #!/usr/bin/env bash
 connect_to_wifi () {
-    SSID=$(nmcli -f SSID device wifi list --rescan yes | tail -n +2 | $dmenu -i)
+    SSID=$(nmcli -f SSID device wifi list --rescan yes | tail -n +2 | $dmenu -i -p "Select Wifi ")
 
     if [[ ! -z $SSID ]]; then
         nmcli device wifi connect $SSID
         while [ $? -eq 4 ]; # nmcli returns 4 if password is not provided or if the password is wrong
         do
-            PASSWORD=$(dmenu -l 0 -p "Enter password")
+            PASSWORD=$($dmenu -l 0 -p "Enter password ")
             nmcli device wifi connect $SSID password $PASSWORD
         done
 
