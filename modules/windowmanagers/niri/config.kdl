@@ -195,7 +195,7 @@ binds {
 
 
     Mod+Ctrl+R { reset-window-height; }
-    Mod+F { maximize-column; }
+    Mod+T { maximize-column; }
     Mod+Shift+T { fullscreen-window; }
     Mod+D { center-column; }
 
