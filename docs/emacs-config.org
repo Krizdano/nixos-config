@@ -373,7 +373,9 @@ Configure org-agenda for managing tasks and schedules.
     :ensure nil
     :commands org-agenda
     :config
-    (setq  org-agenda-files (list "journal/todo.org")
+    (setq  org-agenda-files (list
+                             "journal/todo.org"
+                             "journal/toki-todo.org")
            org-agenda-start-with-log-mode t
            org-log-done 'time
            org-log-into-drawer t))
