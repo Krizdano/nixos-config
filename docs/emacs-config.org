@@ -375,12 +375,30 @@ Configure org-agenda for managing tasks and schedules.
     :ensure nil
     :commands org-agenda
     :config
-    (setq  org-agenda-files (list
-                             "journal/todo.org"
-                             "journal/toki-todo.org")
+    (setq  org-agenda-files (list org-agenda-directory) ;; Tell emacs where to look for the agenda files
            org-agenda-start-with-log-mode t
-           org-log-done 'time
-           org-log-into-drawer t))
+           org-log-done 'time ;; Log time when a task is completed
+           org-log-into-drawer t
+
+           ;; Custom binding for agenda view
+           org-agenda-custom-commands
+           ;; Custom agenda view for daily tasks. This view displays all tasks scheduled for the current day,
+           ;; with a separate heading for 'High Priority Tasks.'
+           '(("d" "Daily Agenda"
+              ((agenda " " ((org-agenda-span 'day)))
+               (tags-todo "+PRIORITY=\"A\""
+                          ((org-agenda-overriding-header "High Priority Tasks")))))
+             ;; Custom agenda for weekly review. This agenda displays all completed tasks from the current week,
+             ;; as well as any unfinished tasks for review.
+             ("w" "Weekly Review"
+              ((agenda ""
+                       ((org-agenda-overriding-header "Completed Tasks")
+                        (org-agenda-skip-function '(org-agenda-skip-entry-if 'nottodo 'done))
+                        (org-agenda-span 'week)))
+               (agenda ""
+                       ((org-agenda-overriding-header "Unfinished Scheduled Tasks")
+                        (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                        (org-agenda-span 'week)))) ))))
 #+end_src
 
 ** Org-Auto-Tangle
