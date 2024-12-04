@@ -354,11 +354,13 @@ Enable Org-mode features and configuration.
     :config
     (setq org-list-allow-alphabetical t
           org-return-follows-link t
-          org-fold-catch-invisible-edits 'show-and-error
+          org-fold-catch-invisible-edits 'show-and-error)
 
-          ;; set directories
-          org-directory "~/Documents/Org"
-          org-journal-dir "~/Documents/Org/journal/")
+    ;; set directories
+    (let ((default-directory "~/Documents/Org"))
+      (setq org-directory (expand-file-name ".")
+            org-agenda-directory (expand-file-name "Agenda")
+            org-journal-dir (expand-file-name "journal")))
 
     ;; indent based on heading level
     (add-hook 'org-mode-hook 'org-indent-mode)
