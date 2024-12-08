@@ -7,8 +7,8 @@ pkgs.stdenv.mkDerivation {
   src = fetchFromGitHub {
     owner = "Krizdano";
     repo = "toki";
-    rev = "5648ed9022ace3f0092757e8185bf640e2fc2d67";
-    hash = "sha256-LcL3nIXnoo/KbEQ9vPE4r1JyKS716m9N3M2II9GIPDk=";
+    rev = "788bdb161239813fabddcbce20e7a923e42eeeb2";
+    hash = "sha256-99W3dVvbq3HAtpUdKmsHKVgbVaDn8JYyKA1AQWzArLM=";
   };
 
   buildPhase = ''
