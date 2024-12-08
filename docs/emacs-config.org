@@ -385,9 +385,15 @@ Configure org-agenda for managing tasks and schedules.
            ;; Custom agenda view for daily tasks. This view displays all tasks scheduled for the current day,
            ;; with a separate heading for 'High Priority Tasks.'
            '(("d" "Daily Agenda"
-              ((agenda " " ((org-agenda-span 'day)))
-               (tags-todo "+PRIORITY=\"A\""
-                          ((org-agenda-overriding-header "High Priority Tasks")))))
+              ((tags-todo "+PRIORITY=\"A\"+SCHEDULED<=\"<today>\""
+                          ((org-agenda-overriding-header "High Priority Tasks")))
+               (tags-todo "+DEADLINE<=\"<+10d>\""
+                     ((org-agenda-overriding-header "Deadlines")))
+               (todo "WAIT"
+                     ((org-agenda-overriding-header "Tasks On Hold")))
+               (todo "INPROGRESS"
+                     ((org-agenda-overriding-header "Tasks in Progress")))
+               (agenda " " ((org-agenda-span 'day)))))
              ;; Custom agenda for weekly review. This agenda displays all completed tasks from the current week,
              ;; as well as any unfinished tasks for review.
              ("w" "Weekly Review"
@@ -419,14 +425,14 @@ Set up org-capture for quick note-taking.
     :config
     (setq org-capture-templates
           `(("t" "Tasks/Projects")
-            ("tt" "TASK" entry (file+olp "journal/todo.org" "Inbox")
-             "* TODO %?\n %U\n %a\n %i" :empty-lines 1)
+            ("tt" "TASK" entry (file+olp ,(expand-file-name "todo.org" org-agenda-directory) "Inbox")
+             "* TODO %? :%^{Tag}:\n %U\n %a\n %i" :empty-lines 1)
 
-            ("tp" "PROJECTS" entry (file+olp "journal/todo.org" "Inbox")
-             "* PROJECT %?\n %U\n %a\n %i" :empty-lines 1)
+            ("tp" "PROJECTS" entry (file+olp ,(expand-file-name "todo.org" org-agenda-directory) "Inbox")
+             "* PROJECT %? :%^{Tag}:\n %U\n %a\n %i" :empty-lines 1)
 
-            ("ts" "STUDIES" entry (file+olp "journal/todo.org" "Inbox")
-             "* STUDIES %?\n %U\n %a\n %i" :empty-lines 1)
+            ("ts" "STUDIES" entry (file+olp ,(expand-file-name "todo.org" org-agenda-directory) "Inbox")
+             "* STUDIES %? :%^{Tag}:\n %U\n %a\n %i" :empty-lines 1)
 
             ("tr" "RESOURCES" item (file+olp "journal/resources.org" "Other Stuff")
              "- [[%^{link}][%^{description}]] - *%?*\n %i" :append t)
@@ -485,6 +491,7 @@ Define additional TODO words for Org mode.
       "TODO(t)"          ; day to day tasks
       "PROJECT(p)"       ; Personal projects
       "INPROGRESS(i)"    ; Tasks that are in progress
+      "WAIT(w)"          ; Tasks that are currently on hold
       "STUDIES(s)"       ; study related
       "|"                ; The pipe necessary to separate "active" states and "inactive" states
       "DONE(d)"          ; Task has been completed
@@ -505,7 +512,22 @@ Add extra configurations for Org mode.
 
   (custom-set-faces
    '(org-code ((t (:foreground "#89dceb" :background: nil :slant italic :weight bold))))
-   '(org-verbatim ((t (:foreground "#f38ba8" :background: nil :slant italic :weight bold)))))
+   '(org-verbatim ((t (:foreground "#f38ba8" :background: nil :slant italic :weight bold))))
+   '(org-agenda-deadline ((t (:foreground "#f38ba8" :background nil :weight bold))))
+   '(org-agenda-priority ((t (:foreground "#f38ba8" :weight bold)))))
+
+
+  ;; A function to extract all the links inside an org file
+  (defun my/org-extract-links ()
+    "Extract all links from the current Org buffer and copy them to the clipboard."
+    (interactive)
+    (let ((links (org-element-map (org-element-parse-buffer) 'link
+                   (lambda (link) (org-element-property :raw-link link)))))
+      (if links
+          (progn
+            (kill-new (mapconcat 'identity links "\n"))
+            (message "Copied %d links to clipboard." (length links)))
+        (message "No links found."))))
 #+end_src
 
 * Dired
@@ -832,6 +854,7 @@ Keybindings specific to operator-pending-state.
       ;; org
       "y a" 'org-agenda
       "y d" 'org-capture
+      "y j" 'my/org-extract-links
 
       ;;perspective config
       "; r" 'persp-switch
