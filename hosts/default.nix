@@ -79,8 +79,12 @@
     fontconfig.enable = true;
     packages = with pkgs; [
       noto-fonts
-      (nerdfonts.override { fonts = [ "Ubuntu" "Iosevka" "FiraCode" ]; })
-    ];
+    ]
+    ++ (with nerd-fonts; [
+      ubuntu
+      iosevka
+      fira-code
+    ]);
   };
 
   #xdg
