@@ -707,7 +707,7 @@ The [[https://github.com/rejeep/drag-stuff.el][Drag Stuff]] minor mode allows dr
 
     ;; Called after evil-collection makes its keybindings
     (add-hook 'evil-collection-setup-hook #'my-hjkl-rotation)
-    (setq evil-collection-mode-list '(dashboard dired vterm ibuffer agenda help))
+    (setq evil-collection-mode-list '(dashboard eww dired vterm ibuffer agenda help))
     (evil-collection-init))
     #+end_src
 
