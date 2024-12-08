@@ -841,6 +841,7 @@ Keybindings specific to operator-pending-state.
       "w" 'kill-buffer
       "x" 'multi-vterm-dedicated-toggle
       "b" 'vterm
+      "z" 'eww
       "RET" 'evil-toggle-fold
       "p" 'recentf-open-files
       "m" 'eldoc-box-help-at-point
