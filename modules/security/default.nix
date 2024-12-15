@@ -1,8 +1,9 @@
 _: {
 
   imports = [
-    ./doas.nix
+    # ./doas.nix
     ./pam.nix
+    ./sudo.nix
   ];
 
   security.rtkit.enable = true;

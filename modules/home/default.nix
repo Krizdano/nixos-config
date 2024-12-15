@@ -1,11 +1,11 @@
-{ pkgs, config, sourceDir, ... }:
+{ pkgs, gtkTheme, config, osConfig, dirs, ... }:
 let
-  inherit (config.xdg) configHome;
-  inherit (config.xdg) dataHome;
+  inherit (config.xdg) configHome dataHome;
   emacs = ''${config.programs.emacs.package}/bin/emacs --batch --eval "(require 'org)" --eval'';
+  checkHostName = if osConfig.networking.hostName == "Livia" then false else true;
 in
 {
-  imports = [ ../services/systemd-services.nix ]
+  imports = [ (dirs.services + "/systemd-services.nix") ]
             ++ (import ../programs)
             ++ (import ../shell);
 
@@ -71,12 +71,12 @@ in
 
       load-emacs-config = config.lib.dag.entryAfter ["writeBoundary"] ''
             ${emacs} '(org-babel-tangle-file
-              "${sourceDir}/docs/emacs-config.org")'
+              "${dirs.root}/docs/emacs-config.org")'
             '';
 
       load-nyxt-config = config.lib.dag.entryAfter ["writeBoundary"] ''
             ${emacs} '(org-babel-tangle-file
-              "${sourceDir}/docs/nyxt-config.org")'
+              "${dirs.root}/docs/nyxt-config.org")'
             '';
     };
     stateVersion = "23.11";
@@ -110,14 +110,7 @@ in
   gtk = {
     enable = true;
     gtk2.configLocation = "${configHome}/gtk-2.0/gtkrc";
-    theme = {
-      name = "Orchis-Dark";
-      package = pkgs.orchis-theme.override {
-        tweaks = [
-          "black"
-        ];
-      };
-    };
+    theme = gtkTheme;
     cursorTheme = {
       name = "catppuccin-mocha-dark-cursors";
       package = pkgs.catppuccin-cursors.mochaDark;

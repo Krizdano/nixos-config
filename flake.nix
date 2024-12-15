@@ -35,105 +35,136 @@
         inherit system;
         config.allowUnfree = true;
       };
-      sourceDir = ./.;
-      secrets = if builtins.pathExists ("${sourceDir}" + "/secrets.nix")
-                then import ./secrets.nix
-                else lib.warn ''file "secrets.nix" is missing using file "templates/secrets.nix"'' import templates/secrets.nix;
+      dirs = import ./config/directories.nix;
+
+      secrets = if builtins.pathExists (dirs.root + "/secrets.nix") then
+        import ./secrets.nix
+      else
+        (lib.warn ''file "secrets.nix" is missing. Using file "templates/secrets.nix"''
+          import templates/secrets.nix);
+
       inherit (secrets) users;
-      username = users.primary.userName;
+      user = users.primary;
+      gtkTheme = {
+        name = "Orchis-Dark";
+        package = pkgs.orchis-theme.override {
+          tweaks = [
+            "black"
+          ];
+        };
+      };
     in
       {
         nixosConfigurations = {
-          Felix = lib.nixosSystem {
-            inherit system;
-            specialArgs = {
-              inherit sourceDir;
-              inherit secrets;
-              inherit users;
-              inherit username;
-              inherit pkgs;
-              inherit stable-pkgs;
-              inherit inputs;
-            };
-            modules = with inputs; [
-              {
-                nixpkgs.hostPlatform = lib.mkDefault system;
-              }
-              impermanence.nixosModules.impermanence
+          Felix =
+            let
+              hostname = "Felix";
+            in
+              lib.nixosSystem {
+                inherit system;
+                specialArgs = {
+                  inherit
+                   dirs
+                   secrets
+                   users
+                   user
+                   gtkTheme
+                   pkgs
+                   stable-pkgs
+                   inputs;
+                };
+                modules = with inputs; [
+                  {
+                    nixpkgs.hostPlatform = lib.mkDefault system;
+                    networking.hostName = lib.mkDefault hostname;
+                  }
+                  impermanence.nixosModules.impermanence
 
-              disko.nixosModules.default
-              (import ./disko.nix { device = "/dev/nvme0n1"; })
+                  disko.nixosModules.default
+                  (import (dirs.felix + "/disko.nix" ){ device = "/dev/nvme0n1"; })
 
-              home-manager.nixosModules.home-manager
-              ./hosts
-              ./hosts/felix
-              {
-                home-manager = {
-                  useGlobalPkgs = true;
-                  useUserPackages = true;
-                  extraSpecialArgs = {
-                    inherit sourceDir;
-                    inherit secrets;
-                    inherit users;
-                    inherit username;
-                    inherit pkgs;
-                    inherit stable-pkgs;
-                    inherit inputs;
-                  };
-                  users.${username} = {
-                    imports = [
-                      impermanence.nixosModules.home-manager.impermanence
-                      nixvim.homeManagerModules.nixvim
-                      ./hosts/felix/home.nix
-                    ];
-                  };
+                  home-manager.nixosModules.home-manager
+                  dirs.hosts
+                  dirs.felix
+                  {
+                    home-manager = {
+                      useGlobalPkgs = true;
+                      useUserPackages = true;
+                      extraSpecialArgs = {
+                        inherit
+                         dirs
+                         secrets
+                         user
+                         gtkTheme
+                         pkgs
+                         stable-pkgs
+                         inputs;
+                      };
+                      users.${user.userName} = {
+                        imports = [
+                          impermanence.nixosModules.home-manager.impermanence
+                          nixvim.homeManagerModules.nixvim
+                          (dirs.felix + "/home.nix")
+                        ];
+                      };
+                    };
+                  }
+                ];
+              };
+
                 };
               }
             ];
           };
 
-          iso = lib.nixosSystem {
-            inherit system;
-            specialArgs = {
-              inherit sourceDir;
-              inherit secrets;
-              inherit users;
-              inherit username;
-              inherit pkgs;
-              inherit stable-pkgs;
-              inherit inputs;
+
+          iso = let
+            hostname = "ISO";
+          in
+            lib.nixosSystem {
+              inherit system;
+              specialArgs = {
+                inherit
+                 dirs
+                 secrets
+                 users
+                 user
+                 pkgs
+                 stable-pkgs
+                 inputs;
+              };
+              modules = with inputs; [
+                dirs.hosts
+                dirs.iso
+                {
+                  nixpkgs.hostPlatform = lib.mkDefault system;
+                  networking.hostName = lib.mkDefault hostname;
+                }
+                (nixpkgs + "/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix")
+                home-manager.nixosModules.home-manager
+                {
+                  home-manager = {
+                    useGlobalPkgs = true;
+                    useUserPackages = true;
+                    extraSpecialArgs = {
+                      inherit
+                       dirs
+                       users
+                       user
+                       pkgs
+                       stable-pkgs
+                       inputs;
+                    };
+                    users.${user.userName} = {
+                      imports = [
+                        nixvim.homeManagerModules.nixvim
+                        (dirs.iso + "/home.nix")
+                      ];
+                    };
+                  };
+                }
+              ];
             };
-            modules = with inputs; [
-              ./hosts
-              ./hosts/iso
-              {
-                nixpkgs.hostPlatform = lib.mkDefault system;
-              }
-              (nixpkgs + "/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix")
-              home-manager.nixosModules.home-manager
-              {
-                home-manager = {
-                  useGlobalPkgs = true;
-                  useUserPackages = true;
-                  extraSpecialArgs = {
-                    inherit sourceDir;
-                    inherit secrets;
-                    inherit users;
-                    inherit username;
-                    inherit pkgs;
-                    inherit stable-pkgs;
-                    inherit inputs;
-                  };
-                  users.${username} = {
-                    imports = [
-                      nixvim.homeManagerModules.nixvim
-                      ./hosts/iso/home.nix
-                    ];
-                  };
-                };
-              }
-            ];
-          };
         };
       };
 }

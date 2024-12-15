@@ -1,5 +1,4 @@
-{ pkgs, users, ... }:
-{
+{ pkgs, user, ... }: {
   programs.git = {
     enable = true;
     diff-so-fancy = {
@@ -10,8 +9,8 @@
       signByDefault = true;
     };
 
-    userName = users.primary.GitUserName;
-    userEmail = users.primary.GitUserEmail;
+    userName = user.GitUserName;
+    userEmail = user.GitUserEmail;
   };
 
   home.packages = with pkgs; [ git-crypt ];

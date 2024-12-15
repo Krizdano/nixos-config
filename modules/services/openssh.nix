@@ -3,7 +3,7 @@
     enable = true;
     ports = [ 22 ];
     settings = {
-      PermitRootLogin = lib.mkDefault "no";
+      PermitRootLogin = lib.mkForce "no";
     };
     hostKeys = [
       {

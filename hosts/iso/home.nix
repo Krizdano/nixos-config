@@ -1,10 +1,9 @@
-{ pkgs, config, ... }: {
+{ pkgs, dirs, config, ... }: {
 
   imports = [
-    ../../modules/home/default.nix
-    ../../modules/windowmanagers/niri/default.nix
-  ]
-  ++ (import ../../modules/services);
+    (dirs.home + "/default.nix")
+    (dirs.wms + "/niri/default.nix")
+  ] ++ (import dirs.services);
 
   home = {
     packages = with pkgs; [
