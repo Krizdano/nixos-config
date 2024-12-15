@@ -19,6 +19,7 @@
   - [[#speed-up-emacs][Speed up Emacs]]
   - [[#whitespace][Whitespace]]
   - [[#zoom][Zoom]]
+  - [[#custom-functions][Custom Functions]]
 - [[#languages][Languages]]
   - [[#lua-mode][Lua-Mode]]
   - [[#markdown-mode][Markdown-Mode]]
@@ -208,6 +209,50 @@ Define keybindings for zooming in and out of text. You can use =CTRL= plus +/- f
   (global-set-key (kbd "C--") 'text-scale-decrease)
 #+end_src
 
+** Custom Functions
+*** Run Selected Line in Async
+A small function that takes the current line and runs it inside an async shell command.
+
+#+begin_src emacs-lisp
+  (defun my/run-selected-line-async ()
+    "Run the current line in an async shell command."
+    (interactive)
+    (let ((command (thing-at-point 'line t)))  ; Get the current line
+      (if (and command (not (string-blank-p command)))
+          (async-shell-command command)  ; Run the command asynchronously
+        (message "No command found on the current line."))))
+#+end_src
+
+
+*** Copy Link to File
+A small function that copies and saves links from eww to a file.
+
+#+begin_src emacs-lisp
+  (defun my/eww-copy-link-to-file ()
+    (interactive)
+    (let ((url (shr-url-at-point current-prefix-arg)))
+      (async-shell-command (concat
+                            "echo " (shell-quote-argument url) " >> ~/links.txt"))))
+
+
+#+end_src
+
+*** Extract Links from Org File
+ A function to extract all the links inside an org file.
+
+#+begin_src emacs-lisp
+  (defun my/org-extract-links ()
+    "Extract all links from the current Org buffer and copy them to the clipboard."
+    (interactive)
+    (let ((links (org-element-map (org-element-parse-buffer) 'link
+                   (lambda (link) (org-element-property :raw-link link)))))
+      (if links
+          (progn
+            (kill-new (mapconcat 'identity links "\n"))
+            (message "Copied %d links to clipboard." (length links)))
+        (message "No links found."))))
+#+end_src
+
 * Languages
 Emacs has built-in programming language modes for Lisp, Scheme, DSSSL, Ada, ASM, AWK, C, C++, Fortran, Icon, IDL (CORBA),
 IDLWAVE, Java, Javascript, M4, Makefiles, Metafont, Modula2, Object Pascal, Objective-C, Octave, Pascal, Perl, Pike, PostScript,
@@ -385,14 +430,14 @@ Configure org-agenda for managing tasks and schedules.
            ;; Custom agenda view for daily tasks. This view displays all tasks scheduled for the current day,
            ;; with a separate heading for 'High Priority Tasks.'
            '(("d" "Daily Agenda"
-              ((tags-todo "+PRIORITY=\"A\"+SCHEDULED<=\"<today>\""
+              ((todo "INPROGRESS"
+                     ((org-agenda-overriding-header "Currently Active Tasks")))
+               (tags-todo "+PRIORITY=\"A\"+SCHEDULED<=\"<today>\""
                           ((org-agenda-overriding-header "High Priority Tasks")))
                (tags-todo "+DEADLINE<=\"<+10d>\""
-                     ((org-agenda-overriding-header "Deadlines")))
+                          ((org-agenda-overriding-header "Deadlines")))
                (todo "WAIT"
                      ((org-agenda-overriding-header "Tasks On Hold")))
-               (todo "INPROGRESS"
-                     ((org-agenda-overriding-header "Tasks in Progress")))
                (agenda " " ((org-agenda-span 'day)))))
              ;; Custom agenda for weekly review. This agenda displays all completed tasks from the current week,
              ;; as well as any unfinished tasks for review.
@@ -517,17 +562,10 @@ Add extra configurations for Org mode.
    '(org-agenda-priority ((t (:foreground "#f38ba8" :weight bold)))))
 
 
-  ;; A function to extract all the links inside an org file
-  (defun my/org-extract-links ()
-    "Extract all links from the current Org buffer and copy them to the clipboard."
-    (interactive)
-    (let ((links (org-element-map (org-element-parse-buffer) 'link
-                   (lambda (link) (org-element-property :raw-link link)))))
-      (if links
-          (progn
-            (kill-new (mapconcat 'identity links "\n"))
-            (message "Copied %d links to clipboard." (length links)))
-        (message "No links found."))))
+  ;; support to evaluate src block from org-files
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((shell . t)))
 #+end_src
 
 * Dired
@@ -836,12 +874,13 @@ Keybindings specific to operator-pending-state.
       "u" 'ibuffer
       "l" 'undo-tree-visualize
       "f" 'eval-region
-      "a" 'async-shell-command
+      "a a" 'async-shell-command
       "q" 'evil-quit
       "w" 'kill-buffer
       "x" 'multi-vterm-dedicated-toggle
       "b" 'vterm
       "z" 'eww
+      "v" 'my/eww-copy-link-to-file
       "RET" 'evil-toggle-fold
       "p" 'recentf-open-files
       "m" 'eldoc-box-help-at-point
@@ -851,11 +890,15 @@ Keybindings specific to operator-pending-state.
       "i" '(lambda () (interactive) (load-file "~/.config/emacs/init.el"))
       "d" '(lambda () (interactive) (find-file "~/.config/nixconfig/docs/emacs-config.org"))
       "k" '(lambda () (interactive) (find-file "~/Documents/Org/journal/index.org"))
+      "a r" 'my/run-selected-line-async
 
       ;; org
       "y a" 'org-agenda
       "y d" 'org-capture
       "y j" 'my/org-extract-links
+      "y t" 'org-todo
+      "y s" 'org-schedule
+      "y p" 'org-priority
 
       ;;perspective config
       "; r" 'persp-switch
