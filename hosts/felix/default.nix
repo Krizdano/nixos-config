@@ -1,9 +1,10 @@
 { pkgs, user, dirs, ... }:
 let
-  serviceFiles = [
+  serviceModules = [
     "/greetd.nix"
     "/resolved.nix"
     "/nix-daemon.nix"
+    "/flatpak.nix"
   ];
 in
   {
@@ -12,7 +13,7 @@ in
       ../persist.nix
       (dirs.programs + "/plymouth.nix")
       (dirs.common + /default.nix )
-    ] ++ map (file: dirs.services + file) serviceFiles;
+    ] ++ map (module: dirs.services + module) serviceModules;
 
     hardware = {
       amdgpu = {
@@ -25,8 +26,6 @@ in
         };
       };
     };
-
-    services.flatpak.enable = true;
 
     systemd.tmpfiles.rules = [
       "d /persist/home - ${user.userName} users -"

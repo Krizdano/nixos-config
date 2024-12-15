@@ -1,10 +1,10 @@
 { dirs, packages,  ... }:
 let
-  homeFiles = [
+  homeModules = [
     "/default.nix"
     "/persist.nix"
   ];
-  wmFiles = [
+  wmModules = [
     "/hyprland/default.nix"
     "/niri/default.nix"
   ];
@@ -13,8 +13,8 @@ in
     imports = [
 
     ] ++ (import dirs.services)
-      ++ map (file: dirs.home + file) homeFiles
-      ++ map (file: dirs.wms + file) wmFiles;
+      ++ map (module: dirs.home + module) homeModules
+      ++ map (module: dirs.wms + module) wmModules;
 
     home.packages = packages.felix;
   }

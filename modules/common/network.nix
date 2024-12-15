@@ -2,6 +2,7 @@ _:{
   #network settings
   networking = {
     networkmanager = {
+      enable = true;
       wifi = {
         backend = "iwd";
         powersave = false;

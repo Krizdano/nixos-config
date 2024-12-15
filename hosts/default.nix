@@ -1,6 +1,6 @@
 { pkgs, inputs, dirs, ... }:
 let
-  serviceFiles = [
+  serviceModules = [
     "/dbus.nix"
     "/pipewire.nix"
     "/openssh.nix"
@@ -10,7 +10,7 @@ in
 
     imports = [
       dirs.security
-    ] ++ map (file: dirs.services + file) serviceFiles;
+    ] ++ map (module: dirs.services + module) serviceModules;
 
     # Enable flakes
     nix = {
@@ -26,9 +26,6 @@ in
       };
       registry.nixpkgs.flake = inputs.nixpkgs;
     };
-
-    # Enable networking
-    networking.networkmanager.enable = true;
 
     time.timeZone = "Asia/Kolkata";
 
