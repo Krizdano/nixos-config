@@ -198,7 +198,7 @@ NOTE: sudo is not available on this live image, doas is used instead of sudo
 
 #+begin_src bash
   cd nixconfig
-  doas disko --mode disko ./disko.nix --arg device '"/dev/diskname"
+  doas disko --mode disko ./hosts/Felix/disko.nix --arg device '"/dev/diskname"'
 #+end_src
 
 If for some reason you want the latest version of ~disko~, run
