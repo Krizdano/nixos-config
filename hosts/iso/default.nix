@@ -1,4 +1,4 @@
-{pkgs, user, dirs, users, lib, ... }:
+{dirs, ... }:
 let
   serviceFiles = [
     "/greetd.nix"

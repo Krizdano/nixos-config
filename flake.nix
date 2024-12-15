@@ -36,7 +36,7 @@
         config.allowUnfree = true;
       };
       dirs = import ./config/directories.nix;
-
+      packages = import ./config/packages.nix { inherit pkgs; };
       secrets = if builtins.pathExists (dirs.root + "/secrets.nix") then
         import ./secrets.nix
       else
@@ -68,7 +68,6 @@
                    secrets
                    users
                    user
-                   gtkTheme
                    pkgs
                    stable-pkgs
                    inputs;
@@ -93,7 +92,7 @@
                       extraSpecialArgs = {
                         inherit
                          dirs
-                         secrets
+                         packages
                          user
                          gtkTheme
                          pkgs
@@ -112,11 +111,62 @@
                 ];
               };
 
+          Livia =
+            let
+              hostname = "Livia";
+              user = users.secondary;
+              gtkTheme = {
+                name = "Adwaita";
+              };
+            in
+              lib.nixosSystem {
+                inherit system;
+                specialArgs = {
+                  inherit
+                   dirs
+                   secrets
+                   users
+                   user
+                   pkgs
+                   stable-pkgs
+                   inputs;
                 };
-              }
-            ];
-          };
+                modules = with inputs; [
+                  {
+                    nixpkgs.hostPlatform = lib.mkDefault system;
+                    networking.hostName = lib.mkDefault hostname;
+                  }
 
+                  disko.nixosModules.default
+                  (import (dirs.livia + "/disko.nix") { device = "/dev/sda"; })
+
+                  home-manager.nixosModules.home-manager
+                  dirs.hosts
+                  dirs.livia
+                  {
+                    home-manager = {
+                      useGlobalPkgs = true;
+                      useUserPackages = true;
+                      extraSpecialArgs = {
+                        inherit
+                         dirs
+                         packages
+                         user
+                         gtkTheme
+                         pkgs
+                         stable-pkgs
+                         inputs;
+                      };
+                      users.${user.userName} = {
+                        imports = [
+                          nixvim.homeManagerModules.nixvim
+                          (dirs.livia + "/home.nix")
+                        ];
+                      };
+                    };
+                  }
+                ];
+              };
 
           iso = let
             hostname = "ISO";
@@ -149,7 +199,7 @@
                     extraSpecialArgs = {
                       inherit
                        dirs
-                       users
+                       gtkTheme
                        user
                        pkgs
                        stable-pkgs

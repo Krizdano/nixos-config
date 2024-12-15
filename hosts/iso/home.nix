@@ -1,4 +1,4 @@
-{ pkgs, dirs, config, ... }: {
+{ packages, dirs, config, ... }: {
 
   imports = [
     (dirs.home + "/default.nix")
@@ -6,19 +6,8 @@
   ] ++ (import dirs.services);
 
   home = {
-    packages = with pkgs; [
-      toki
-      keepassxc
-      plymouth
-      nitch
-      unzip
-      gdu # disk management
-      scripts # my scripts
-      jmtpfs
-      imv
-    ];
+    packages = packages.iso;
     file."${config.xdg.configHome}/nixconfig".source = ../..;
-
     activation = {
       make-emacs-directory = config.lib.dag.entryBefore ["load-emacs-config"] ''
                    mkdir ${config.xdg.configHome}/emacs

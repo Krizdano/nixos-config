@@ -2,7 +2,13 @@
 let
   inherit (config.xdg) configHome dataHome;
   emacs = ''${config.programs.emacs.package}/bin/emacs --batch --eval "(require 'org)" --eval'';
-  checkHostName = if osConfig.networking.hostName == "Livia" then false else true;
+  gtk =
+    let hostName = osConfig.networking.hostName;
+    in
+      {
+        gtk-application-prefer-dark-theme = if hostName == "Livia" then false else true;
+        color-scheme = if hostName == "Livia" then "prefer-light" else "prefer-dark";
+      };
 in
 {
   imports = [ (dirs.services + "/systemd-services.nix") ]
@@ -30,26 +36,6 @@ in
   };
 
   home = {
-    packages = with pkgs; [
-      w3m # terminal browser
-      glow # terminal markdown reader
-      xdg-utils # for xdg-open to work
-      wtype
-      ripgrep
-      swaylock
-      wl-clipboard
-      fastfetch
-      disko
-      unzip
-      nix-helpers
-      toki
-      gdu # disk management
-      scripts
-      jmtpfs
-      imv
-      nyxt
-    ];
-
     file = {
       "${dataHome}/w3m/keymap".source = ../../config/w3m/keymap;
     };
@@ -121,16 +107,16 @@ in
       package = pkgs.papirus-icon-theme.override { color = "black"; };
     };
     gtk3.extraConfig = {
-      gtk-application-prefer-dark-theme = true;
+      inherit (gtk) gtk-application-prefer-dark-theme;
     };
     gtk4.extraConfig = {
-      gtk-application-prefer-dark-theme = true;
+      inherit (gtk) gtk-application-prefer-dark-theme;
     };
   };
 
   dconf.settings = {
     "org/gnome/desktop/interface" = {
-      color-scheme = "prefer-dark";
+      inherit (gtk) color-scheme;
     };
   };
 

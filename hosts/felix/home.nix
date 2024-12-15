@@ -1,4 +1,4 @@
-{ pkgs, dirs,  ... }:
+{ dirs, packages,  ... }:
 let
   homeFiles = [
     "/default.nix"
@@ -16,15 +16,5 @@ in
       ++ map (file: dirs.home + file) homeFiles
       ++ map (file: dirs.wms + file) wmFiles;
 
-    home.packages = with pkgs; [
-      oi # cli program for quick google search
-      redqu # media centric reddit client
-      keepassxc
-      nitch
-      virt-manager
-      gdu # disk management
-      tdesktop # telegram
-      signal-desktop
-      toot # mastodon cli client
-    ];
+    home.packages = packages.felix;
   }
