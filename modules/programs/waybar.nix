@@ -1,9 +1,9 @@
-_: {
+{packages, ...}: {
   programs.waybar = {
     enable = true;
     style = ''
       * {
-        font-family:'Ubuntu Nerd Font';
+        font-family:'${packages.fonts.forWaybar.name}';
         padding-left: 3px;
         padding-right: 3px;
       }

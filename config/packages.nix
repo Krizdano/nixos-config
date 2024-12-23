@@ -1,4 +1,4 @@
-{pkgs, ... }:
+{ pkgs, ... }:
 let
   common = with pkgs; [
     toki
@@ -18,7 +18,6 @@ let
     fastfetch
     disko
     nix-helpers
-    nyxt
   ];
 
   felix = with pkgs; [
@@ -44,11 +43,27 @@ let
 
   iso = with pkgs; [
   ] ++ common;
+
+ fonts = {
+   main = {
+     name = "Iosevka Nerd Font";
+     package = pkgs.nerd-fonts.iosevka;
+   };
+   forWaybar = {
+     name = "Ubuntu Nerd Font";
+     package = pkgs.nerd-fonts.ubuntu;
+   };
+   forHyprlock = {
+     name = "FiraCode Nerd Font";
+     package = pkgs.nerd-fonts.fira-code;
+   };
+ };
 in
  {
    inherit
    common
    felix
    livia
-   iso;
+   iso
+   fonts;
 }

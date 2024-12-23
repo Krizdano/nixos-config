@@ -35,9 +35,9 @@
         inherit system;
         config.allowUnfree = true;
       };
-      dirs = import ./config/directories.nix;
+      modules = import ./config/modules.nix;
       packages = import ./config/packages.nix { inherit pkgs; };
-      secrets = if builtins.pathExists (dirs.root + "/secrets.nix") then
+      secrets = if builtins.pathExists (modules.root + "/secrets.nix") then
         import ./secrets.nix
       else
         (lib.warn ''file "secrets.nix" is missing. Using file "templates/secrets.nix"''
@@ -64,7 +64,8 @@
                 inherit system;
                 specialArgs = {
                   inherit
-                   dirs
+                   packages
+                   modules
                    secrets
                    users
                    user
@@ -80,18 +81,18 @@
                   impermanence.nixosModules.impermanence
 
                   disko.nixosModules.default
-                  (import (dirs.felix + "/disko.nix" ){ device = "/dev/nvme0n1"; })
+                  (import (modules.felix + "/disko.nix" ){ device = "/dev/nvme0n1"; })
 
                   home-manager.nixosModules.home-manager
-                  dirs.hosts
-                  dirs.felix
+                  modules.hosts
+                  modules.felix
                   {
                     home-manager = {
                       useGlobalPkgs = true;
                       useUserPackages = true;
                       extraSpecialArgs = {
                         inherit
-                         dirs
+                         modules
                          packages
                          user
                          gtkTheme
@@ -103,7 +104,7 @@
                         imports = [
                           impermanence.nixosModules.home-manager.impermanence
                           nixvim.homeManagerModules.nixvim
-                          (dirs.felix + "/home.nix")
+                          (modules.felix + "/home.nix")
                         ];
                       };
                     };
@@ -123,7 +124,8 @@
                 inherit system;
                 specialArgs = {
                   inherit
-                   dirs
+                   modules
+                   packages
                    secrets
                    users
                    user
@@ -138,18 +140,18 @@
                   }
 
                   disko.nixosModules.default
-                  (import (dirs.livia + "/disko.nix") { device = "/dev/sda"; })
+                  (import (modules.livia + "/disko.nix") { device = "/dev/sda"; })
 
                   home-manager.nixosModules.home-manager
-                  dirs.hosts
-                  dirs.livia
+                  modules.hosts
+                  modules.livia
                   {
                     home-manager = {
                       useGlobalPkgs = true;
                       useUserPackages = true;
                       extraSpecialArgs = {
                         inherit
-                         dirs
+                         modules
                          packages
                          user
                          gtkTheme
@@ -160,7 +162,7 @@
                       users.${user.userName} = {
                         imports = [
                           nixvim.homeManagerModules.nixvim
-                          (dirs.livia + "/home.nix")
+                          (modules.livia + "/home.nix")
                         ];
                       };
                     };
@@ -175,7 +177,8 @@
               inherit system;
               specialArgs = {
                 inherit
-                 dirs
+                 modules
+                 packages
                  secrets
                  users
                  user
@@ -184,8 +187,8 @@
                  inputs;
               };
               modules = with inputs; [
-                dirs.hosts
-                dirs.iso
+                modules.hosts
+                modules.iso
                 {
                   nixpkgs.hostPlatform = lib.mkDefault system;
                   networking.hostName = lib.mkDefault hostname;
@@ -198,7 +201,7 @@
                     useUserPackages = true;
                     extraSpecialArgs = {
                       inherit
-                       dirs
+                       modules
                        gtkTheme
                        user
                        pkgs
@@ -208,7 +211,7 @@
                     users.${user.userName} = {
                       imports = [
                         nixvim.homeManagerModules.nixvim
-                        (dirs.iso + "/home.nix")
+                        (modules.iso + "/home.nix")
                       ];
                     };
                   };

@@ -1,4 +1,4 @@
-_: {
+_:{
 imports = [
   ./users.nix
   ./network.nix

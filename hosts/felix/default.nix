@@ -1,45 +1,34 @@
-{ pkgs, user, dirs, ... }:
-let
-  serviceModules = [
-    "/greetd.nix"
-    "/resolved.nix"
-    "/nix-daemon.nix"
-    "/flatpak.nix"
-  ];
-in
-  {
-    imports = [
-      ./rollback.nix
-      ../persist.nix
-      (dirs.programs + "/plymouth.nix")
-      (dirs.common + /default.nix )
-    ] ++ map (module: dirs.services + module) serviceModules;
+{pkgs, modules, ...}: {
+  imports = with modules; [
+    ./rollback.nix
+    persist
+    common
+    greeters
+    (programs + /plymouth.nix)
+  ] ++ import hardware;
 
-    hardware = {
-      amdgpu = {
-        opencl = {
-          enable = true;
-        };
-        amdvlk = {
-          enable = true;
-          support32Bit.enable = true;
-        };
-      };
-    };
+  network = {
+    enable = true;
+    enablePrivateDNS = true;
+  };
 
-    systemd.tmpfiles.rules = [
-      "d /persist/home - ${user.userName} users -"
-    ];
+  persist = {
+    enable = true;
+    enableForHome = true;
+  };
 
-    #qemu and virt-manager
-    virtualisation = {
-      libvirtd = {
+  graphics.amdgpuSupport.enable = true;
+  display.greeter = "greetd";
+
+  #qemu and virt-manager
+  virtualisation = {
+    libvirtd = {
+      enable = true;
+      package = pkgs.libvirt;
+      qemu.ovmf = {
         enable = true;
-        package = pkgs.libvirt;
-        qemu.ovmf = {
-          enable = true;
-          packages = [ pkgs.OVMFFull.fd ];
-        };
+        packages = [ pkgs.OVMFFull.fd ];
       };
     };
-  }
+  };
+}

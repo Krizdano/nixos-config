@@ -1,16 +1,16 @@
-{ pkgs, inputs, dirs, ... }:
+{ pkgs, inputs, modules, packages, ... }:
 let
   serviceModules = [
-    "/dbus.nix"
-    "/pipewire.nix"
-    "/openssh.nix"
+    /dbus.nix
+    /pipewire.nix
+    /openssh.nix
+    /nix-daemon.nix
   ];
 in
   {
-
     imports = [
-      dirs.security
-    ] ++ map (module: dirs.services + module) serviceModules;
+      modules.security
+    ] ++ map (module: modules.services + module) serviceModules;
 
     # Enable flakes
     nix = {
@@ -43,6 +43,8 @@ in
       useXkbConfig = true;
     };
 
+    services.flatpak.enable = true;
+
     programs = {
       # dconf (for gtk apps to work properly)
       dconf = {
@@ -57,7 +59,6 @@ in
 
     environment = {
       systemPackages = with pkgs; [
-        git-crypt
         wget
       ];
       defaultPackages = [ ]; # remove default packages
@@ -79,13 +80,11 @@ in
 
     fonts = {
       fontconfig.enable = true;
-      packages = with pkgs; [
-        noto-fonts
-      ] ++ (with nerd-fonts; [
-      ubuntu
-      iosevka
-      fira-code
-    ]);
+      packages = with packages.fonts; [
+        main.package
+        forWaybar.package
+        forHyprlock.package
+      ];
     };
 
     #xdg

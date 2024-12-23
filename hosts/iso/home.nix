@@ -1,9 +1,21 @@
-{ packages, dirs, config, ... }: {
+{packages, modules, config, ...}: {
 
-  imports = [
-    (dirs.home + "/default.nix")
-    (dirs.wms + "/niri/default.nix")
-  ] ++ (import dirs.services);
+  imports = with modules; [
+    home
+  ] ++ (import services);
+
+  browsers.firefox = {
+    enable = true;
+    hardened = true;
+  };
+
+  display = {
+    wms = ["niri"];
+    menu = "fuzzel";
+    lockscreen = "hyprlock";
+    idle-daemon = "hypridle";
+    notifications = "dunst";
+  };
 
   home = {
     packages = packages.iso;

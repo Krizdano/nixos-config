@@ -1,19 +1,16 @@
-{ pkgs, gtkTheme, config, osConfig, dirs, ... }:
+{ pkgs, gtkTheme, config, osConfig, modules, lib, ... }:
 let
   inherit (config.xdg) configHome dataHome;
   emacs = ''${config.programs.emacs.package}/bin/emacs --batch --eval "(require 'org)" --eval'';
-  gtk =
-    let hostName = osConfig.networking.hostName;
-    in
-      {
-        gtk-application-prefer-dark-theme = if hostName == "Livia" then false else true;
-        color-scheme = if hostName == "Livia" then "prefer-light" else "prefer-dark";
-      };
 in
 {
-  imports = [ (dirs.services + "/systemd-services.nix") ]
-            ++ (import ../programs)
-            ++ (import ../shell);
+  imports = with modules; [
+    programs
+    ./theme.nix
+   ] ++ (import services)
+     ++ (import ../shell);
+
+  terminals.alacritty = true;
 
   # fzf
   programs.fzf = {
@@ -57,12 +54,7 @@ in
 
       load-emacs-config = config.lib.dag.entryAfter ["writeBoundary"] ''
             ${emacs} '(org-babel-tangle-file
-              "${dirs.root}/docs/emacs-config.org")'
-            '';
-
-      load-nyxt-config = config.lib.dag.entryAfter ["writeBoundary"] ''
-            ${emacs} '(org-babel-tangle-file
-              "${dirs.root}/docs/nyxt-config.org")'
+              "${modules.root}/docs/emacs-config.org")'
             '';
     };
     stateVersion = "23.11";
@@ -84,44 +76,10 @@ in
       createDirectories = true;
       templates = null;
       publicShare = null;
-      music = null;
       desktop = null;
       extraConfig = {
         XDG_OTHER_DIR = "${config.home.homeDirectory}/Other";
       };
     };
-  };
-
-  # themes
-  gtk = {
-    enable = true;
-    gtk2.configLocation = "${configHome}/gtk-2.0/gtkrc";
-    theme = gtkTheme;
-    cursorTheme = {
-      name = "catppuccin-mocha-dark-cursors";
-      package = pkgs.catppuccin-cursors.mochaDark;
-      size = 29;
-    };
-    iconTheme = {
-      name = "Papirus-Dark";
-      package = pkgs.papirus-icon-theme.override { color = "black"; };
-    };
-    gtk3.extraConfig = {
-      inherit (gtk) gtk-application-prefer-dark-theme;
-    };
-    gtk4.extraConfig = {
-      inherit (gtk) gtk-application-prefer-dark-theme;
-    };
-  };
-
-  dconf.settings = {
-    "org/gnome/desktop/interface" = {
-      inherit (gtk) color-scheme;
-    };
-  };
-
-  qt = {
-    enable = true;
-    platformTheme.name = "gtk3";
   };
 }

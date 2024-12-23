@@ -1,28 +1,34 @@
-[
-  ./gh.nix
-  ./git.nix
-  # ./kitty.nix
-  ./lf.nix
-  ./mpv.nix
-  ./htop.nix
-  ./starship.nix
-  ./waybar.nix
-  ./alacritty.nix
-  ./direnv.nix
-  #./wofi.nix
-  ./emacs.nix
-  ./firefox
-  #./mako.nix
-  #./dunst.nix
-  ./pistol.nix
-  # ./chromium.nix
-  #./atuin.nix
-  #./plymouth
-  ./zellij.nix
-  ./nixvim.nix
-  # ./wezterm.nix
-  ./aria2.nix
-  ./rofi
-  ./fuzzel.nix
-  ./hyprlock.nix
-]
+{modules, ...}:
+let
+  browserList = [
+    /firefox
+    /chromium.nix
+    /qute.nix
+    /nyxt.nix
+  ];
+  terminalList = [
+    /kitty.nix
+    /alacritty.nix
+    /wezterm.nix
+  ];
+in
+  {
+    imports = with modules; [
+      ./gh.nix
+      ./git.nix
+      ./lf.nix
+      ./mpv.nix
+      ./htop.nix
+      ./starship.nix
+      ./waybar.nix
+      ./direnv.nix
+      ./emacs.nix
+      ./pistol.nix
+      #./atuin.nix
+      #./plymouth
+      ./zellij.nix
+      ./nixvim.nix
+      ./aria2.nix
+    ] ++ map (terminal: terminals + terminal) terminalList
+      ++ map (browser: browsers + browser) browserList;
+ }

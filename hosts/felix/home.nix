@@ -1,20 +1,33 @@
-{ dirs, packages,  ... }:
-let
-  homeModules = [
-    "/default.nix"
-    "/persist.nix"
+{modules, packages,  ...}: {
+  imports = with modules; [
+    display
+    home
   ];
-  wmModules = [
-    "/hyprland/default.nix"
-    "/niri/default.nix"
-  ];
-in
-  {
-    imports = [
 
-    ] ++ (import dirs.services)
-      ++ map (module: dirs.home + module) homeModules
-      ++ map (module: dirs.wms + module) wmModules;
+  home.packages = packages.felix;
 
-    home.packages = packages.felix;
-  }
+  display = {
+    wms = [
+      "hyprland"
+      "niri"
+    ];
+    menu = "fuzzel";
+    lockscreen = "hyprlock";
+    idle-daemon = "hypridle";
+    notifications = "dunst";
+  };
+
+  browsers = {
+    firefox = {
+      enable = true;
+      hardened = true;
+    };
+    nyxt = true;
+  };
+
+  services = {
+    sortfiles = true;
+    batlevel = true;
+    chpaper = true;
+  };
+}

@@ -1,15 +1,14 @@
-{dirs, ... }:
-let
-  serviceModules = [
-    "/greetd.nix"
-    "/resolved.nix"
-    "/nix-daemon.nix"
-  ];
-in
+{modules, ...}:
 {
-  imports = [
-    (dirs.common + "/default.nix")
-  ] ++ map (module: dirs.services + module) serviceModules;
+  imports = with modules; [
+    (common + /default.nix)
+    (services + /greetd.nix)
+  ] ++ map (module: services + module) serviceModules;
+
+  network = {
+    enable = true;
+    privateDns = true;
+  };
 
   isoImage.squashfsCompression = "gzip -Xcompression-level 1";
 }
