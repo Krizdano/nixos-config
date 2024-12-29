@@ -6,6 +6,7 @@
       nerd-icons-dired
       vterm
       sml-mode
+      emms
       evil
       evil-collection
       general

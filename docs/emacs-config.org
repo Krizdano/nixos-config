@@ -46,6 +46,7 @@
   - [[#direnv][Direnv]]
   - [[#drag-stuff][Drag Stuff]]
   - [[#eat][Eat]]
+  - [[#emms][EMMS]]
   - [[#evil-mc][Evil-Mc]]
   - [[#evil-mode][Evil Mode]]
   - [[#general][General]]
@@ -690,6 +691,18 @@ The [[https://github.com/rejeep/drag-stuff.el][Drag Stuff]] minor mode allows dr
     :commands eat)
 #+end_src
 
+** EMMS
+#+begin_src emacs-lisp
+  (use-package emms
+    :config
+    (setq
+     emms-player-list '(emms-player-mpv)
+     emms-source-file-default-directory "~/Music")
+    :init
+    (emms-all))
+
+#+end_src
+
 ** Evil-Mc
 [[https://github.com/gabesoft/evil-mc][Evil-mc]] is a multiple cursors implementation for Evil mode.
 
@@ -891,6 +904,13 @@ Keybindings specific to operator-pending-state.
       "d" '(lambda () (interactive) (find-file "~/.config/nixconfig/docs/emacs-config.org"))
       "k" '(lambda () (interactive) (find-file "~/Documents/Org/journal/index.org"))
       "a r" 'my/run-selected-line-async
+
+      ;; emms
+      "o o" 'emms
+      "o SPC" 'emms-pause
+      "o m" 'emms-previous
+      "o i" 'emms-next
+      "o q" 'emms-stop
 
       ;; org
       "y a" 'org-agenda
