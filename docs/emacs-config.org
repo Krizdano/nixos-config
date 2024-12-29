@@ -131,7 +131,7 @@ Specify font preferences for Emacs.
 
 #+begin_src emacs-lisp
   ;; Set default font
-  (set-frame-font "Iosevka Nerd Font 14")
+  (set-frame-font "Iosevka Nerd Font 16")
 
   (set-face-attribute 'font-lock-comment-face nil
                       :slant 'italic)
@@ -139,7 +139,7 @@ Specify font preferences for Emacs.
                       :slant 'italic)
 
   ;; This sets the default font for emacsclient
-  (add-to-list 'default-frame-alist '(font . "Iosevka Nerd Font 14"))
+  (add-to-list 'default-frame-alist '(font . "Iosevka Nerd Font 16"))
 #+end_src
 
 ** Line numbers
