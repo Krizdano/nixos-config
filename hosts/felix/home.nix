@@ -30,4 +30,6 @@
     batlevel = true;
     chpaper = true;
   };
+
+  shells.list = ["nushell" "fish"];
 }

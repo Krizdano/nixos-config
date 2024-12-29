@@ -3,7 +3,7 @@
     type = lib.types.bool;
     default = false;
   };
-  config = lib.mkIf (config.browsers.qute) {
+  config = lib.mkIf config.browsers.qute {
     programs.qutebrowser = {
       enable = true;
       keyBindings = {

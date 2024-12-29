@@ -29,25 +29,25 @@ in
     ++ map (module: notification-daemons + module) notificationModules
     ++ map (module: lockscreens + module) lockscreenModules;
 
-  options.display = {
-    wms = lib.mkOption {
-      type = lib.types.listOf lib.types.str;
+  options.display =  with lib; with lib.types; {
+    wms = mkOption {
+      type = listOf str;
       default = [];
     };
-    menu = lib.mkOption {
-      type = lib.types.str;
+    menu = mkOption {
+      type = str;
       default = "";
     };
-    idle-daemon = lib.mkOption {
-      type = lib.types.str;
+    idle-daemon = mkOption {
+      type = str;
       default = "";
     };
-    lockscreen = lib.mkOption {
-      type = lib.types.str;
+    lockscreen = mkOption {
+      type = str;
       default = "";
     };
-    notifications = lib.mkOption {
-      type = lib.types.str;
+    notifications = mkOption {
+      type = str;
       default = "";
     };
   };

@@ -3,7 +3,6 @@ let
   inherit (config.xdg) configHome;
 in
  {
-  # themes
   options.gtk.enableDarkMode = lib.mkOption {
     type = lib.types.bool;
     default = true;

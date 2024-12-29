@@ -1,4 +1,4 @@
-{lib, cfg}: {
+{lib, cfg, isHardened}: {
   DontCheckDefaultBrowser = true;
   DisableFirefoxAccounts = true;
   DisablePocket = true;
@@ -13,7 +13,7 @@
   };
 
   FirefoxHome = {
-    Search = lib.mkIf (cfg.hardened) false;
+    Search = isHardened false;
     TopSites = false;
     SponsoredTopSites = false;
     Highlights = false;
@@ -44,7 +44,7 @@
   };
 
   # clear all data on exit
-  SanitizeOnShutdown = lib.mkIf (cfg.hardened) {
+  SanitizeOnShutdown = isHardened {
     Cache = true;
     Cookies = true;
     History = true;
@@ -67,7 +67,7 @@
   PasswordManagerEnabled = false;
   PromptForDownloadLocation = true;
 
-  Homepage = lib.mkIf (cfg.hardened) {
+  Homepage = isHardened {
     URL = "https://Krizdano.github.io/browser-home-page/";
     StartPage = "homepage";
     Locked = true;
@@ -95,55 +95,55 @@
 
   "3rdparty" = {
     Extensions = {
-      "uBlock0@raymondhill.net".adminSettings = lib.mkIf (cfg.hardened) (builtins.readFile ./extension-settings/my-ublock-settings.txt);
+      "uBlock0@raymondhill.net".adminSettings = isHardened (builtins.readFile ./extension-settings/my-ublock-settings.txt);
       "treestyletab@piro.sakura.ne.jp" = builtins.readFile ./extension-settings/treestyle-tab-config.json;
       "vimium-c@gdh1995.cn" = builtins.readFile ./extension-settings/vimium-c-settings.json;
     };
   };
 
-  ExtensionSettings = {
+  ExtensionSettings = with lib; {
     # vimium c
-    "vimium-c@gdh1995.cn" = lib.mkIf (cfg.enableVimSupport) {
+    "vimium-c@gdh1995.cn" = mkIf cfg.enableVimSupport {
       installation_mode = "force_installed";
       install_url = "https://addons.mozilla.org/firefox/downloads/latest/vimium-c/latest.xpi";
     };
 
     # darkreader
-    "addon@darkreader.org" = lib.mkIf (cfg.enableDarkMode) {
+    "addon@darkreader.org" = mkIf cfg.enableDarkMode {
       installation_mode = "force_installed";
       install_url = "https://addons.mozilla.org/firefox/downloads/latest/darkreader/latest.xpi";
     };
 
     # ublock origin
-    "uBlock0@raymondhill.net" = lib.mkIf (cfg.enableAdBlock) {
+    "uBlock0@raymondhill.net" = mkIf cfg.enableAdBlock {
       installation_mode = "force_installed";
       install_url = "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi";
     };
 
     # multi-account-containers
-    "@testpilot-containers" = lib.mkIf (cfg.enableContainers) {
+    "@testpilot-containers" = mkIf cfg.enableContainers {
       installation_mode = "force_installed";
       install_url = "https://addons.mozilla.org/firefox/downloads/latest/multi-account-containers/latest.xpi";
     };
 
     # bitwarden
-    "446900e4-71c2-419f-a6a7-df9c091e268b" = lib.mkIf (cfg.enableBitWarden) {
+    "446900e4-71c2-419f-a6a7-df9c091e268b" = mkIf cfg.enableBitWarden {
       installation_mode = "force_installed";
       install_url = "https://addons.mozilla.org/firefox/downloads/latest/bitwarden-password-manager/latest.xpi";
     };
 
-    # imagus (image enlarger)
+    # imagus image enlarger
     "{00000f2a-7cde-4f20-83ed-434fcb420d71}" = {
       installation_mode = "force_installed";
       install_url = "https://addons.mozilla.org/firefox/downloads/latest/imagus/latest.xpi";
     };
 
     # keepassxc
-    "keepassxc-browser@keepassxc.org" = lib.mkIf (cfg.enableKeepass) {
+    "keepassxc-browser@keepassxc.org" = mkIf cfg.enableKeepass {
       installation_mode = "force_installed";
       install_url = "https://addons.mozilla.org/firefox/downloads/latest/keepassxc-browser/latest.xpi";
     };
   };
 
-  Preferences = lib.mkIf (cfg.hardened) (import ./preferences.nix);
+  Preferences = isHardened (import ./preferences.nix);
 }

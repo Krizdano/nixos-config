@@ -1,4 +1,4 @@
-{ pkgs, gtkTheme, config, osConfig, modules, lib, ... }:
+{ pkgs, config, modules, ... }:
 let
   inherit (config.xdg) configHome dataHome;
   emacs = ''${config.programs.emacs.package}/bin/emacs --batch --eval "(require 'org)" --eval'';
@@ -6,9 +6,9 @@ in
 {
   imports = with modules; [
     programs
-    ./theme.nix
-   ] ++ (import services)
-     ++ (import ../shell);
+    ../shell
+    ./gtk.nix
+   ] ++ (import services);
 
   terminals.alacritty = true;
 

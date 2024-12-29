@@ -23,7 +23,7 @@
      };
    };
  in {
-   imports = [ ./home.nix ];
+   imports = [ ./home.nix ./rollback.nix ];
    options.persist = {
      enable = lib.mkOption {
        type = lib.types.bool;

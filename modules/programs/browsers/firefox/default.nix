@@ -1,57 +1,60 @@
 { pkgs, lib, config, ... }: {
-  options.browsers.firefox = {
-    enable = lib.mkOption {
-      type = lib.types.bool;
+  options.browsers.firefox = with lib; with lib.types; {
+    enable = mkOption {
+      type = bool;
       default = false;
     };
-    hardened = lib.mkOption {
-      type = lib.types.bool;
+    hardened = mkOption {
+      type = bool;
       default = false;
     };
-    enableAdBlock = lib.mkOption {
-      type = lib.types.bool;
+    enableAdBlock = mkOption {
+      type = bool;
       default = false;
     };
-    enableVimSupport = lib.mkOption {
-      type = lib.types.bool;
+    enableVimSupport = mkOption {
+      type = bool;
       default = false;
     };
-    enableDarkMode = lib.mkOption {
-      type = lib.types.bool;
+    enableDarkMode = mkOption {
+      type = bool;
       default = false;
     };
-    enableBitWarden = lib.mkOption {
-      type = lib.types.bool;
+    enableBitWarden = mkOption {
+      type = bool;
       default = false;
     };
-    enableKeepass = lib.mkOption {
-      type = lib.types.bool;
+    enableKeepass = mkOption {
+      type = bool;
       default = false;
     };
-    enableContainers = lib.mkOption {
-      type = lib.types.bool;
+    enableContainers = mkOption {
+      type = bool;
       default = false;
     };
   };
-  config = let cfg = config.browsers.firefox; in {
-    browsers.firefox = lib.mkIf cfg.hardened {
+  config = let
+    cfg = config.browsers.firefox;
+    isHardened = lib.mkIf cfg.hardened;
+  in {
+    browsers.firefox = isHardened {
       enableDarkMode = true;
       enableContainers = true;
       enableAdBlock = true;
       enableVimSupport = true;
       enableKeepass = true;
     };
-    programs = lib.mkIf (cfg.enable) {
+    programs = lib.mkIf cfg.enable {
       firefox = {
         enable = true;
-        policies = (import ./policies.nix { inherit cfg lib; });
-        profiles.default = lib.mkIf (cfg.hardened) {
+        policies = import ./policies.nix { inherit cfg lib isHardened; };
+        profiles.default = {
           id = 0;
           name = "Default";
           isDefault = true;
           search = {
             force = true;
-            default = "Searx";
+            default = if cfg.hardened then "Searx" else "Brave";
             engines = {
               "Nix Packages" = {
                 urls = [{
@@ -82,7 +85,7 @@
           };
 
 
-          settings = {
+          settings = isHardened {
             #userChrome settings
             "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
             "layers.acceleration.force-enabled" = true;
@@ -92,7 +95,7 @@
             "layout.css.overflow-overlay.enabled" = true;
             "svg.context-properties.content.enabled" = true;
           };
-          userChrome = builtins.readFile ./userChrome.css;
+          userChrome = if cfg.hardened then builtins.readFile ./userChrome.css else {};
         };
       };
     };

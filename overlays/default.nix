@@ -1,5 +1,8 @@
-final: prev:
+{ stable, system }: final: prev:
 {
+  stable = import stable { inherit system; config.allowUnfree = true; }; # Add nixpkgs stable as an overlay
+
+  # Custom packages not available on nixpkgs
   chpaper = prev.callPackage ../modules/programs/chpaper.nix { }; # Set and change wallpaper
   scripts = prev.callPackage ../config/scripts { }; # My personal scripts
   oi = prev.callPackage ../modules/programs/oi.nix { }; # Cli program for quick google search

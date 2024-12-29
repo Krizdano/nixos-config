@@ -1,34 +1,25 @@
-{ pkgs, config, ... }: {
-  programs.zsh = {
-    enable = true;
-    enableCompletion = true;
-    syntaxHighlighting.enable = true;
-    autosuggestion.enable = true;
-    dotDir = ".config/zsh";
-    history.path = "${config.xdg.dataHome}/zsh/.zsh_history";
-    autocd = true;
-    shellAliases = {
-      vi = "nvim-client";
-      vim = "nvim-client";
-      ll = "ls -l";
-      ls = "ls --color=always";
-      notes = ''glow  $NIXOS_CONFIG/notes'';
-      re = "pushd $NIXOS_CONFIG; sudo nixos-rebuild switch --flake path:.#$(hostname); popd"; # nixos rebuild
-      update = "pushd $NIXOS_CONFIG; nix flake update; popd";
-      gg = "w3m google.com"; # w3m with google
-      search = "nix search nixpkgs";
-      connect = "kdeconnect-cli";
-    };
+{shellAliases}: {pkgs, config, lib, osConfig, ... }:
+ {
+  config = lib.mkIf (osConfig.users.defaultUserShell == pkgs.zsh || builtins.elem "zsh" config.shells.list) {
+    programs.zsh = {
+      enable = true;
+      enableCompletion = true;
+      syntaxHighlighting.enable = true;
+      autosuggestion.enable = true;
+      dotDir = ".config/zsh";
+      history.path = "${config.xdg.dataHome}/zsh/.zsh_history";
+      autocd = true;
+      shellAliases = shellAliases.zsh;
 
-    completionInit = "autoload -Uz compinit
-                      zstyle ':completion:*' menu select
+      completionInit = "autoload -Uz compinit
+        zstyle ':completion:*' menu select
                       zmodload zsh/complist
                       compinit
                       ";
 
-    defaultKeymap = "viins";
-    initExtra =
-      ''eval "$(starship init zsh)"
+      defaultKeymap = "viins";
+      initExtra =
+        ''eval "$(starship init zsh)"
 
       export KEYTIMEOUT=1
 
@@ -99,6 +90,7 @@
       ZSH_HIGHLIGHT_STYLES[global-alias]='fg=blue,bold'
 
       ZSH_HIGHLIGHT_STYLES[builtin]='fg=blue,bold'
-      '';
+        '';
+    };
   };
 }

@@ -1,9 +1,11 @@
-_: {
-  programs.nushell = {
-    enable = true;
-    configFile = {
-      text = ''
-        $env.config = {
+{shellAliases}: {config, lib, osConfig, pkgs, ...}: {
+  config = lib.mkIf (osConfig.users.defaultUserShell == pkgs.nushell || builtins.elem "nushell" config.shells.list) {
+    programs.nushell = {
+      enable = true;
+      shellAliases = shellAliases.nushell;
+      configFile = {
+        text = ''
+          $env.config = {
           show_banner: false,
           edit_mode: vi
           cursor_shape: {
@@ -29,16 +31,10 @@ _: {
               }
           ]
         }
-
-        def conf [] { ls ~/.config/nixconfig/**/*.nix | get name | to text | fzf --preview="pistol {}" | xargs vi }
-        def sc [] { vi (ls ~/.config/nixconfig/**/*.sh | get name | to text | fzf --preview="pistol {}") }
-        def nt [] { ls ~/.config/nixconfig/**/*.md | get name | to text | fzf --preview="pistol {}" | xargs vi }
-        alias re = doas nixos-rebuild switch --flake /persist/home/.config/nixconfig#laptop
-        alias up = doas nix flake update /persist/home/.config/nixconfig/
-
         $env.PROMPT_INDICATOR_VI_INSERT = ""
         $env.PROMPT_INDICATOR_VI_NORMAL = ""
-      '';
+        '';
+      };
     };
   };
 }

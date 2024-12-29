@@ -3,7 +3,7 @@
     type = lib.types.bool;
     default = false;
   };
-  config = lib.mkIf (config.browsers.chromium) {
+  config = lib.mkIf config.browsers.chromium {
     programs.chromium = {
       enable = true;
     };

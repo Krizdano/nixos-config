@@ -1,10 +1,9 @@
 {pkgs, modules, ...}: {
   imports = with modules; [
-    ./rollback.nix
     persist
     common
     greeters
-    (programs + /plymouth.nix)
+    plymouth
   ] ++ import hardware;
 
   network = {
@@ -19,6 +18,7 @@
 
   graphics.amdgpuSupport.enable = true;
   display.greeter = "greetd";
+  disks.setupEncryptedBtrfs = true;
 
   #qemu and virt-manager
   virtualisation = {
