@@ -62,7 +62,6 @@
   - [[#smex][Smex]]
   - [[#tldr][TLDR]]
   - [[#toc-org][TOC-Org]]
-  - [[#treemacs][Treemacs]]
   - [[#undo-tree][Undo Tree]]
   - [[#vterm][Vterm]]
 
@@ -1110,13 +1109,6 @@ and most frequently used commands. And to all the other commands, too.
   (use-package toc-org
     :commands toc-org-enable
     :hook (org-mode . toc-org-mode))
-#+end_src
-
-** Treemacs
-[[https://github.com/Alexander-Miller/treemacs][Treemacs]] is a tree layout file explorer for Emacs.
-
-#+begin_src emacs-lisp
-  (use-package treemacs)
 #+end_src
 
 ** Undo Tree

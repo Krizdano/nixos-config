@@ -26,7 +26,6 @@
       evil-mc
       sly
       popper
-      treemacs
       catppuccin-theme
       doom-themes
       doom-modeline
