@@ -77,7 +77,7 @@ in
       };
     };
 
-    config = lib.mkIf (config.persist.enableForHome) {
+    config = lib.mkIf config.persist.enableForHome {
       home-manager.users.${user.userName} =  {config, ...}: {
         home.persistence."/persist/home/" = {
           allowOther = true;

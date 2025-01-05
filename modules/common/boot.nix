@@ -6,7 +6,7 @@
   config = {
     # Bootloader.
     boot = {
-      kernelParams = lib.mkIf (config.boot.disableBuiltinKeyboard) [
+      kernelParams = lib.mkIf config.boot.disableBuiltinKeyboard [
         # Disable bultin keyboard because it is faulty
         "i8042.nokbd"
       ];
@@ -16,7 +16,7 @@
           # only store 5 nixos generations
           configurationLimit = 5;
         };
-        timeout = 0;
+        timeout = lib.mkDefault 0;
         # UEFI settings
         efi = {
           canTouchEfiVariables = true;

@@ -3,7 +3,7 @@
     type = lib.types.bool;
     default = false;
   };
-  config = lib.mkIf (config.terminals.kitty) {
+  config = lib.mkIf config.terminals.kitty {
     programs.kitty = {
       enable = true;
       shellIntegration = {
@@ -11,7 +11,7 @@
         enableBashIntegration = true;
       };
       font = {
-        name = packages.fonts.main.name;
+        inherit (packages.fonts.main) name;
         size = 14;
       };
       keybindings = {

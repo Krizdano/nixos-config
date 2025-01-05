@@ -3,7 +3,7 @@
     type = lib.types.bool;
     default = false;
   };
-  config = lib.mkIf (config.terminals.alacritty) {
+  config = lib.mkIf config.terminals.alacritty {
     programs.alacritty = {
       enable = true;
       settings = {

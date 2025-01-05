@@ -12,8 +12,8 @@
     };
   };
 
-  config = {
-    hardware = lib.mkIf (config.graphics.amdgpuSupport.enable) {
+  config = let cfg = config.graphics; in {
+    hardware = lib.mkIf cfg.amdgpuSupport.enable {
       amdgpu = {
         opencl = {
           enable = true;
@@ -23,7 +23,7 @@
           support32Bit.enable = true;
         };
       };
-      graphics = lib.mkIf (config.graphics.enable) {
+      graphics = lib.mkIf cfg.enable {
         enable = true;
       };
     };

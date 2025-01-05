@@ -1,14 +1,16 @@
-{modules, ...}:
+{myModules, ...}:
 {
-  imports = with modules; [
-    (common + /default.nix)
-    (services + /greetd.nix)
-  ] ++ map (module: services + module) serviceModules;
+  imports = with myModules; [
+    common
+    greeters
+  ];
 
   network = {
     enable = true;
-    privateDns = true;
+    enablePrivateDNS = true;
+    disableWpaSupplicant = true;
   };
 
+  display.greeter = "greetd";
   isoImage.squashfsCompression = "gzip -Xcompression-level 1";
 }

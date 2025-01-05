@@ -1,18 +1,22 @@
-{lib, config, ...}:{
-  options.network = {
-    enable = lib.mkOption {
-      type = lib.types.bool;
+{lib, config, ...}: {
+  options.network = with lib; with lib.types; {
+    enable = mkOption {
+      type = bool;
       default = false;
     };
-    enablePrivateDNS = lib.mkOption {
-      type = lib.types.bool;
+    enablePrivateDNS = mkOption {
+      type = bool;
+      default = false;
+    };
+    disableWpaSupplicant = mkOption {
+      type = bool;
       default = false;
     };
   };
-  config = {
-    networking = lib.mkIf (config.network.enable) {
+  config = let cfg = config.network; in {
+    networking = lib.mkIf cfg.enable {
       networkmanager = {
-        dns = lib.mkIf (config.network.enablePrivateDNS) "systemd-resolved";
+        dns = lib.mkIf cfg.enablePrivateDNS "systemd-resolved";
         enable = true;
         wifi = {
           backend = "iwd";
@@ -21,6 +25,7 @@
       };
       useDHCP = false;
       wireless = {
+        enable = lib.mkIf cfg.disableWpaSupplicant (lib.mkForce false);
         iwd = {
           enable = true;
           settings = {
@@ -34,7 +39,7 @@
         };
       };
     };
-    services.resolved = lib.mkIf (config.network.enablePrivateDNS) {
+    services.resolved = lib.mkIf cfg.enablePrivateDNS {
       enable = true;
       dnssec = "false";
       domains = [ "~." ];

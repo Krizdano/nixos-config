@@ -1,6 +1,6 @@
-{modules, ...}: {
-  imports = with modules; [
-    (programs + /plymouth.nix)
+{myModules, ...}: {
+  imports = with myModules; [
+    plymouth
     common
     desktopManagers
     greeters

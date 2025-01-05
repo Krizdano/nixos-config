@@ -22,10 +22,10 @@ in
         package = pkgs.whitesur-icon-theme;
       };
       gtk3.extraConfig = {
-        gtk-application-prefer-dark-theme = lib.mkIf (config.gtk.enableDarkMode) true;
+        gtk-application-prefer-dark-theme = lib.mkIf config.gtk.enableDarkMode true;
       };
       gtk4.extraConfig = {
-        gtk-application-prefer-dark-theme = lib.mkIf (config.gtk.enableDarkMode) true;
+        gtk-application-prefer-dark-theme = lib.mkIf config.gtk.enableDarkMode true;
       };
     };
 

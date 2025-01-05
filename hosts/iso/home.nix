@@ -1,8 +1,9 @@
-{packages, modules, config, ...}: {
+{packages, myModules, config, ...}: {
 
-  imports = with modules; [
+  imports = with myModules; [
     home
-  ] ++ (import services);
+    display
+  ];
 
   browsers.firefox = {
     enable = true;

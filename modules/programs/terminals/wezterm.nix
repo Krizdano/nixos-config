@@ -3,7 +3,7 @@
     type = lib.types.bool;
     default = false;
   };
-  config = lib.mkIf (config.terminals.wezterm) {
+  config = lib.mkIf config.terminals.wezterm {
     programs.wezterm = {
       enable = true;
       enableZshIntegration = true;

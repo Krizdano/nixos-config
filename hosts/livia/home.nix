@@ -1,7 +1,7 @@
-{modules, packages, ...}: {
-  imports = with modules; [
+{myModules, packages, ...}: {
+  imports = with myModules; [
     home
-  ] ++ (import services);
+  ];
 
   home.packages = packages.livia;
   browsers.firefox = {

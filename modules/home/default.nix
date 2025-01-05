@@ -1,10 +1,10 @@
-{ pkgs, config, modules, ... }:
+{ pkgs, config, myModules, ... }:
 let
   inherit (config.xdg) configHome dataHome;
   emacs = ''${config.programs.emacs.package}/bin/emacs --batch --eval "(require 'org)" --eval'';
 in
 {
-  imports = with modules; [
+  imports = with myModules; [
     programs
     ../shell
     ./gtk.nix
@@ -54,7 +54,7 @@ in
 
       load-emacs-config = config.lib.dag.entryAfter ["writeBoundary"] ''
             ${emacs} '(org-babel-tangle-file
-              "${modules.root}/docs/emacs-config.org")'
+              "${myModules.root}/docs/emacs-config.org")'
             '';
     };
     stateVersion = "23.11";

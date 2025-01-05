@@ -1,4 +1,4 @@
-{lib, modules, ...}:
+{lib, myModules, ...}:
 let
   shellAliases = {
     common = {
@@ -28,10 +28,11 @@ let
   ];
 in
   {
-    imports =  map (shell: import (modules.shells + shell) { inherit shellAliases;}) shells;
+    imports =  map (shell: import (myModules.shells + shell) { inherit shellAliases;}) shells;
 
     options.shells.list = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       default = [];
+      description = "list of shells installed";
     };
   }

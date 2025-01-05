@@ -1,5 +1,5 @@
-{pkgs, modules, ...}: {
-  imports = with modules; [
+{pkgs, myModules, ...}: {
+  imports = with myModules; [
     persist
     common
     greeters

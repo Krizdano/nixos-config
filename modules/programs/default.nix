@@ -1,4 +1,4 @@
-{modules, ...}:
+{myModules, ...}:
 let
   browserList = [
     /firefox
@@ -13,7 +13,7 @@ let
   ];
 in
   {
-    imports = with modules; [
+    imports = with myModules; [
       ./gh.nix
       ./git.nix
       ./lf.nix

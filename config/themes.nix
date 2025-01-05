@@ -1,8 +1,13 @@
 {pkgs, ...}: {
-  name = "Orchis-Dark";
-  package = pkgs.orchis-theme.override {
-    tweaks = [
-      "black"
-    ];
+  orchis = {
+    name = "Orchis-Dark";
+    package = pkgs.orchis-theme.override {
+      tweaks = [
+        "black"
+      ];
+    };
+  };
+  adwaita = {
+    name = "Adwaita";
   };
 }

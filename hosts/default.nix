@@ -1,4 +1,4 @@
-{ pkgs, inputs, modules, packages, ... }:
+{ pkgs, inputs, myModules, packages, ... }:
 let
   serviceModules = [
     /dbus.nix
@@ -9,8 +9,8 @@ let
 in
   {
     imports = [
-      modules.security
-    ] ++ map (module: modules.services + module) serviceModules;
+      myModules.security
+    ] ++ map (module: myModules.services + module) serviceModules;
 
     # Enable flakes
     nix = {

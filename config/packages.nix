@@ -41,8 +41,7 @@ let
     scripts
   ];
 
-  iso = with pkgs; [
-  ] ++ common;
+  iso = common;
 
  fonts = {
    main = {

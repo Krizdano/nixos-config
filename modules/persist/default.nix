@@ -9,7 +9,7 @@
        ];
      };
      lib = {
-       root = (dirs.var.root + "lib/");
+       root = dirs.var.root + "lib/";
        dirs = [
          "libvirt"
          "iwd"
@@ -30,7 +30,7 @@
        default = false;
      };
    };
-   config = lib.mkIf (config.persist.enable) {
+   config = lib.mkIf config.persist.enable {
      programs.fuse.userAllowOther = true;
      environment.persistence."/persist" = {
        hideMounts = true;

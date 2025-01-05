@@ -1,5 +1,5 @@
-{modules, packages,  ...}: {
-  imports = with modules; [
+{myModules, packages,  ...}: {
+  imports = with myModules; [
     display
     home
   ];

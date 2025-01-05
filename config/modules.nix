@@ -1,6 +1,8 @@
 let
   root = ../.;
+  lib = root + /lib;
   config = root + /config;
+  packages = config + /packages.nix;
   themes = config + /themes.nix;
   modules = root + /modules;
   persist = modules + /persist;
@@ -27,10 +29,20 @@ let
   felix = hosts + /felix;
   livia = hosts + /livia;
   iso = hosts + /iso;
+  secrets = let
+    secretsPath = (root + /secrets.nix);
+    secretsTemplate = (root + /templates/secrets.nix);
+    warningMessage = ''MISSING FILE: file "secrets.nix" is missing. Using file "templates/secrets.nix"'';
+  in
+    if builtins.pathExists secretsPath then import secretsPath
+    else builtins.warn warningMessage import secretsTemplate;
 in {
   inherit
     root
+    secrets
+    lib
     config
+    packages
     themes
     modules
     persist

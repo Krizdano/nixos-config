@@ -1,4 +1,4 @@
-{lib, config, pkgs, modules, ...}:
+{lib, config, pkgs, myModules, ...}:
 let
   emacs = ''${config.programs.emacs.package}/bin/emacs --batch --eval "(require 'org)" --eval'';
 in
@@ -8,14 +8,14 @@ in
       default = false;
     };
 
-    config = lib.mkIf (config.browsers.nyxt) {
+    config = lib.mkIf config.browsers.nyxt {
       home.packages = [
         pkgs.nyxt
       ];
 
       home.activation.load-nyxt-config = config.lib.dag.entryAfter ["writeBoundary"] ''
         ${emacs} '(org-babel-tangle-file
-              "${modules.root}/docs/nyxt-config.org")'
+              "${myModules.root}/docs/nyxt-config.org")'
       '';
     };
   }
