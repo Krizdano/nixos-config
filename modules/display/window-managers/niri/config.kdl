@@ -159,7 +159,7 @@ binds {
     Mod+Ctrl+I     { move-workspace-to-monitor-right; }
 
     Super+Alt+N { move-column-to-workspace-down; }
-    Super+Alt+E { move-column-to-workspace-down; }
+    Super+Alt+E { move-column-to-workspace-up; }
 
     Mod+WheelScrollUp    { spawn "volume" "volume_up"; }
     Mod+WheelScrollDown  { spawn "volume" "volume_down"; }
