@@ -112,9 +112,7 @@ Configure Eldoc to display documentation in a separate window rather than the mi
   (setq eldoc-display-functions '(eldoc-display-in-buffer))
 
   ;; to show information provided by eldoc in a pop-up window
-  (use-package eldoc-box
-    :hook
-    (eldoc-mode-hook . eldoc-box-hover-mode))
+  (use-package eldoc-box)
 #+end_src
 
 ** Enable MELPA
@@ -274,6 +272,7 @@ Enable Markdown mode.
     :mode "\\.md\\'")
 
 #+end_src
+
 ** SML
 Enable SML mode
 
