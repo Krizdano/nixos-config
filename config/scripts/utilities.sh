@@ -87,6 +87,12 @@ bat_level() {
         elif [[ $bat_lvl -ge 80 && $bat_stat == "Charging" ]]; then
             notify-send --urgency=CRITICAL "Unplug Your Charger" "Battery Level: ${bat_lvl}%"
             sleep 300
+
+        elif [[ $bat_lvl -le 25 && $bat_stat == "Discharging" ]]; then
+            notify-send --urgency=CRITICAL "Battery is at" "Level: ${bat_lvl}% Going to Sleep"
+            sleep 5
+            systemctl suspend
+            sleep 300
         else
             sleep 120
         fi
