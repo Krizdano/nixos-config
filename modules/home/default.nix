@@ -57,11 +57,10 @@ in
               "${myModules.root}/docs/emacs-config.org")'
             '';
     };
-    stateVersion = "23.11";
+    stateVersion = "24.11";
   };
 
 
-  #default home directories
   xdg = {
     enable = true;
     mimeApps = {

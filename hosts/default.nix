@@ -122,6 +122,6 @@ in
           ${pkgs.nvd}/bin/nvd --nix-bin-dir=${pkgs.nix}/bin diff /run/current-system "$systemConfig"
         '';
       };
-      stateVersion = "23.11";
+      stateVersion = "24.11";
     };
   }
