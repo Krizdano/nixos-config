@@ -811,6 +811,7 @@ Keybindings specific to =vim= Visual mode.
   (define-key evil-visual-state-map (kbd "L") 'evil-upcase)
   (define-key evil-visual-state-map (kbd "u") 'evil-insert)
   (define-key evil-visual-state-map (kbd "u")  evil-inner-text-objects-map)
+  (define-key evil-visual-state-map (kbd "N")  'evil-join)
 #+end_src
 
 **** Motion
