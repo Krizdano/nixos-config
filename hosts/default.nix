@@ -60,8 +60,9 @@ in
     environment = {
       systemPackages = with pkgs; [
         wget
+        ed
       ];
-      defaultPackages = [ ]; # remove default packages
+      defaultPackages = with pkgs; [ ed ]; # Remove default packages
       pathsToLink = [ "/share/zsh" ];
       shells = with pkgs; [ zsh ];
       variables = {
