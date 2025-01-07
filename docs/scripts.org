@@ -16,7 +16,6 @@
   - [[#dependencies][Dependencies]]
 - [[#copy-url][Copy Url]]
 - [[#organize-files][Organize Files]]
-- [[#neovim-client][Neovim Client]]
 - [[#system-utilities][System Utilities]]
   - [[#functions-1][Functions]]
   - [[#main-logic-1][Main Logic]]
@@ -339,18 +338,6 @@ errors for unknown file types by notifying the user.
           esac
       done
   done
-#+end_src
-
-* Neovim Client
-This setup is useful for connecting Neovim in to an already running Neovim server for remote interaction and then opening a UI
-that connects to this server.
-
-#+begin_src bash :tangle ../config/scripts/nvim-client.sh
-  #!/usr/bin/env sh
-
-  # neovim as a client
-  nvim --server /tmp/neovim.pipe --remote-silent $(realpath ${1:-.}) & nvim --server /tmp/neovim.pipe --remote-ui;
-  clear
 #+end_src
 
 * System Utilities

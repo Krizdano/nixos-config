@@ -27,7 +27,7 @@ in
       #./atuin.nix
       #./plymouth
       ./zellij.nix
-      ./nixvim.nix
+      ./neovim.nix
       ./aria2.nix
     ] ++ map (terminal: terminals + terminal) terminalList
       ++ map (browser: browsers + browser) browserList;

@@ -55,7 +55,6 @@ in
                 users.${user.userName} = {
                   imports = [
                     impermanence.nixosModules.home-manager.impermanence
-                    nixvim.homeManagerModules.nixvim
                     (myModules.${hostname} + "/home.nix")
                   ];
                 };

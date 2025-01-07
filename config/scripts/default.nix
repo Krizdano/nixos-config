@@ -32,9 +32,6 @@ stdenvNoCC.mkDerivation {
     cp utilities.sh $out/bin/ut
     chmod +x $out/bin/ut
 
-    cp nvim-client.sh $out/bin/nvim-client
-    chmod +x $out/bin/nvim-client
-
     cp volume.sh $out/bin/volume
     chmod +x $out/bin/volume
 

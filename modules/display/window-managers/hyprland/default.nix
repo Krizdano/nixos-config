@@ -29,7 +29,6 @@ in
             "hyprctl setcursor ${config.gtk.cursorTheme.name} 29"
             "${pkgs.scripts}/bin/sortfiles"
             "${ut} bat_level"
-            "nohup nvim --listen /tmp/neovim.pipe --headless > /dev/null 2>&1 0< /dev/null &!" # start nvim server
             "[workspace special:Terminal silent]  alacritty --title=terminal-main --class=terminal-main -e zellij -s main"
             ''[workspace special:Terminal silent]  emacsclient -c -e "(vterm)"''
           ];

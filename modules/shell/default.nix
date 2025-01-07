@@ -2,8 +2,6 @@
 let
   shellAliases = {
     common = {
-      vi = "nvim-client";
-      vim = "nvim-client";
       ll = "ls -l";
       gg = "w3m google.com"; # w3m with google
       search = "nix search nixpkgs";
