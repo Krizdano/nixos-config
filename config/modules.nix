@@ -30,8 +30,8 @@ let
   livia = hosts + /livia;
   iso = hosts + /iso;
   secrets = let
-    secretsPath = (root + /secrets.nix);
-    secretsTemplate = (root + /templates/secrets.nix);
+    secretsPath = root + /secrets.nix;
+    secretsTemplate = root + /templates/secrets.nix;
     warningMessage = ''MISSING FILE: file "secrets.nix" is missing. Using file "templates/secrets.nix"'';
   in
     if builtins.pathExists secretsPath then import secretsPath

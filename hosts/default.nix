@@ -65,7 +65,7 @@ in
       pathsToLink = [ "/share/zsh" ];
       shells = with pkgs; [ zsh ];
       variables = {
-        NIX_REMOTE = "daemon"; # force nix command to call the daemon
+        NIX_REMOTE = "daemon"; # Force nix command to call the daemon
         NIXOS_OZONE_WL = 1;
       };
     };

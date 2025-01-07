@@ -20,12 +20,14 @@ in
       };
       packages = import myModules.packages { inherit pkgs; };
       themes = import (myModules.config + /themes.nix) {inherit pkgs;};
+
       gtkTheme = themes.${themeForGtk};
     in
       lib.nixosSystem
         {
           inherit system;
-          specialArgs =  args // { inherit user pkgs packages; };
+          inherit pkgs;
+          specialArgs =  args // { inherit user packages; };
           modules = with inputs; [
             {
               nixpkgs.hostPlatform = lib.mkDefault system;

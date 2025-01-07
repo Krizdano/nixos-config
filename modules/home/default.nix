@@ -71,6 +71,7 @@ in
         "image/png" = "imv";
       };
     };
+    # Default home directories
     userDirs = {
       enable = true;
       createDirectories = true;
