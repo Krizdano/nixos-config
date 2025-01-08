@@ -19,13 +19,21 @@
 
       defaultKeymap = "viins";
       initExtra =
-        ''eval "$(starship init zsh)"
-
+        ''
+      eval "$(starship init zsh)"
       export KEYTIMEOUT=1
+
+      # vterm intergration
+      if [[ "$INSIDE_EMACS" = 'vterm' ]] \
+         && [[ -n ''${EMACS_VTERM_PATH} ]] \
+         && [[ -f ''${EMACS_VTERM_PATH}/etc/emacs-vterm-zsh.sh ]]; then
+             source ''${EMACS_VTERM_PATH}/etc/emacs-vterm-zsh.sh
+        fi
 
       # eat integration
       [ -n "$EAT_SHELL_INTEGRATION_DIR" ] && \
       source "$EAT_SHELL_INTEGRATION_DIR/zsh"
+
 
       # launch w3m with a search query
       ww(){

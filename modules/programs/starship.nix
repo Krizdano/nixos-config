@@ -2,7 +2,9 @@ _: {
   # starship shell prompt
   programs.starship = {
     enable = true;
-    enableZshIntegration = true; # enable zsh integration
+    # Note: ZSH integration is disabled here and is set inside zsh.nix (zshrc)
+    # This is so it doesn't mess with my vterm intergration for emacs
+    enableZshIntegration = false;
     enableNushellIntegration = true;
     enableBashIntegration = true;
     # config
