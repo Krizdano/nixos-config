@@ -686,6 +686,11 @@ The [[https://github.com/rejeep/drag-stuff.el][Drag Stuff]] minor mode allows dr
 
 #+begin_src emacs-lisp
   (use-package eat
+    :config
+    (setq  eat-very-visible-cursor-type '(bar nil nil)
+           eat-default-cursor-type '(hbar nil nil))
+    (eat-eshell-mode)
+    (setq eshell-visual-commands '())
     :commands eat)
 #+end_src
 
@@ -756,7 +761,7 @@ The [[https://github.com/rejeep/drag-stuff.el][Drag Stuff]] minor mode allows dr
 
     ;; Called after evil-collection makes its keybindings
     (add-hook 'evil-collection-setup-hook #'my-hjkl-rotation)
-    (setq evil-collection-mode-list '(dashboard eww dired vterm ibuffer agenda help))
+    (setq evil-collection-mode-list '(dashboard eww dired eat vterm ibuffer agenda help))
     (evil-collection-init))
     #+end_src
 
