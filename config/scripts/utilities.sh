@@ -40,9 +40,11 @@ change_default_sink() {
 
 play_videos() {
     video=$(find ~/Videos/ -type f -printf "%f\n" | $menu "Videos ")
+    video_with_full_path=$(find ~/Videos/ -name $video)
 
     if [ ! -z $video ]; then
-        mpv $(find ~/Videos/ -name $video)
+        mpv $video_with_full_path;
+        mv $video_with_full_path ~/Videos/watched/WATCHED_$video
     fi
 }
 
