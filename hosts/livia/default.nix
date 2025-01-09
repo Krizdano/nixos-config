@@ -9,8 +9,8 @@
   graphics.enable = true;
   network.enable = true;
   display = {
-    desktopManagers = ["gnome"];
-    greeter = "gdm";
+    desktopManagers = ["plasma"];
+    greeter = "sddm";
   };
   boot.disableBuiltinKeyboard = true;
 }
