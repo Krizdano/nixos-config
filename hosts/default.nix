@@ -115,13 +115,5 @@ in
       allowedTCPPorts = [ ];
     };
 
-    system = {
-      activationScripts.diff = {
-        supportsDryActivation = true;
-        text = ''
-          ${pkgs.nvd}/bin/nvd --nix-bin-dir=${pkgs.nix}/bin diff /run/current-system "$systemConfig"
-        '';
-      };
-      stateVersion = "24.11";
-    };
+    system.stateVersion = "24.11";
   }

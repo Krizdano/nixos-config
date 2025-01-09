@@ -48,10 +48,6 @@ in
     };
 
     activation = {
-      report-changes = config.lib.dag.entryAnywhere ''
-            ${pkgs.nvd}/bin/nvd --nix-bin-dir=${pkgs.nix}/bin diff $oldGenPath $newGenPath
-            '';
-
       load-emacs-config = config.lib.dag.entryAfter ["writeBoundary"] ''
             ${emacs} '(org-babel-tangle-file
               "${myModules.root}/docs/emacs-config.org")'
