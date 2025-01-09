@@ -23,9 +23,7 @@ in
             gnome-terminal
             epiphany # web browser
             geary # email reader
-            evince # document viewer
             gnome-characters
-            gnome-software
             gnome-tour
             totem # video player
             tali # poker game
