@@ -29,6 +29,7 @@ in
       ./zellij.nix
       ./neovim.nix
       ./aria2.nix
+      ./bat.nix
     ] ++ map (terminal: terminals + terminal) terminalList
       ++ map (browser: browsers + browser) browserList;
  }
