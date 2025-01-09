@@ -908,6 +908,8 @@ Keybindings specific to operator-pending-state.
       "d" '(lambda () (interactive) (find-file "~/.config/nixconfig/docs/emacs-config.org"))
       "k" '(lambda () (interactive) (find-file "~/Documents/Org/journal/index.org"))
       "a r" 'my/run-selected-line-async
+      "ESC" 'repeat-complex-command
+      "=" 'indent-rigidly
 
       ;; emms
       "o o" 'emms
