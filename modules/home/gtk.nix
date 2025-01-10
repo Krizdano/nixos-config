@@ -18,8 +18,8 @@ in
         size = 29;
       };
       iconTheme = {
-        name = "WhiteSur-light";
-        package = pkgs.whitesur-icon-theme;
+        name = "Tela-circle";
+        package = pkgs.tela-circle-icon-theme;
       };
       gtk3.extraConfig = {
         gtk-application-prefer-dark-theme = lib.mkIf config.gtk.enableDarkMode true;
