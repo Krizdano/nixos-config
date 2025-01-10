@@ -94,7 +94,7 @@ terminal () {
         switch_workspace Terminal
     else
         workspace="Terminal"
-        check_workspace_and_run emacsclient -c -e "(vterm)"
+        check_workspace_and_run alacritty --title=emacs --class=emacs -e emacsclient -nw -e "(vterm)"
     fi
 }
 
