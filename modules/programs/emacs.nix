@@ -6,9 +6,11 @@
       nerd-icons-dired
       vterm
       sml-mode
+      xclip
       emms
       evil
       evil-collection
+      evil-terminal-cursor-changer
       general
       drag-stuff
       undo-tree
@@ -61,4 +63,8 @@
     enable = true;
     startWithUserSession = "graphical";
   };
+  systemd.user.services.emacs.Service.Environment = [
+    "COLORTERM=truecolor"
+    "TERM=xterm-256color"
+  ];
 }

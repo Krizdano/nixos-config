@@ -49,6 +49,7 @@
   - [[#emms][EMMS]]
   - [[#evil-mc][Evil-Mc]]
   - [[#evil-mode][Evil Mode]]
+  - [[#evil-terminal-cursor-changer][Evil Terminal Cursor Changer]]
   - [[#general][General]]
   - [[#indent-bars][Indent-bars]]
   - [[#nerd-icons][Nerd Icons]]
@@ -64,6 +65,7 @@
   - [[#toc-org][TOC-Org]]
   - [[#undo-tree][Undo Tree]]
   - [[#vterm][Vterm]]
+  - [[#xclip][Xclip]]
 
 * Settings
 ** Backup
@@ -168,14 +170,15 @@ By default, Emacs requires you to press =ESC= three times to escape quit the min
 Set commonly preferred defaults for better usability.
 
 #+begin_src emacs-lisp
-  (electric-indent-mode -1)          ;; Disable electric-indent
-  (global-visual-line-mode -1)       ;; Disables truncated lines
-  (electric-pair-mode 1)             ;; Enables autopairing
-  (ido-mode 1)                       ;; Enables ido mode
-  (recentf-mode 1)                   ;; Enables recent files
-  (setq-default indent-tabs-mode nil)        ;; Disable indent using tabs
-  (setq use-package-always-ensure t) ;; No need to specify 'ensure' every time when using use-package.
-  ;; (setq use-package-verbose t)    ;; Displays reports on loading and configuration details.
+  (electric-indent-mode -1)             ;; Disable electric-indent
+  (global-visual-line-mode -1)          ;; Disables truncated lines
+  (electric-pair-mode 1)                ;; Enables autopairing
+  (fido-vertical-mode 1)                ;; Enables fido mode for completions
+  (recentf-mode 1)                      ;; Enables recent files
+  (setq visible-cursor nil)             ;; Disables visible-cursor mode so cusors work fine in terminal emacs
+  (setq-default indent-tabs-mode nil)   ;; Disable indent using tabs
+  (setq use-package-always-ensure t)    ;; No need to specify 'ensure' every time when using use-package.
+  ;; (setq use-package-verbose t)       ;; Displays reports on loading and configuration details.
 #+end_src
 
 ** Speed up Emacs
@@ -870,6 +873,17 @@ Keybindings specific to operator-pending-state.
   (define-key evil-motion-state-map (kbd "TAB") nil)
 #+end_src
 
+** Evil Terminal Cursor Changer
+[[https://github.com/7696122/evil-terminal-cursor-changer][evil-terminal-cursor-changer]] is changing cursor shape and color by evil state for evil-mode.
+When running in terminal, It's especially helpful to recognize evil's state.
+
+#+begin_src emacs-lisp
+  (unless (display-graphic-p)
+    (use-package evil-terminal-cursor-changer
+      :init
+      (evil-terminal-cursor-changer-activate)))
+#+end_src
+
 ** General
 [[https://github.com/noctuid/general.el][General]] simplifies keybinding in Emacs for both evil and non-evil users.
 
@@ -902,7 +916,7 @@ Keybindings specific to operator-pending-state.
       "p" 'recentf-open-files
       "m" 'eldoc-box-help-at-point
       "t" 'compile
-      "r" 'maximize-window
+      "h" 'maximize-window
       "s" '(lambda () (interactive) (dired "."))
       "i" '(lambda () (interactive) (load-file "~/.config/emacs/init.el"))
       "d" '(lambda () (interactive) (find-file "~/.config/nixconfig/docs/emacs-config.org"))
@@ -910,6 +924,12 @@ Keybindings specific to operator-pending-state.
       "a r" 'my/run-selected-line-async
       "ESC" 'repeat-complex-command
       "=" 'indent-rigidly
+      "'" 'org-edit-special
+      "r r" 'point-to-register
+      "r j" 'jump-to-register
+      "r a" 'append-to-register
+      "r u" 'insert-register
+      "r w" 'window-configuration-to-register
 
       ;; emms
       "o o" 'emms
@@ -935,7 +955,7 @@ Keybindings specific to operator-pending-state.
       "4" '(lambda () (interactive) (persp-switch-by-number 4))
       "5" '(lambda () (interactive) (persp-switch-by-number 5))
       "6" '(lambda () (interactive) (persp-switch-by-number 6))
-      "SPC" 'smex))
+      "SPC" 'execute-extended-command))
 #+end_src
 
 ** Indent-bars
@@ -1144,4 +1164,15 @@ and most frequently used commands. And to all the other commands, too.
   (use-package multi-vterm
     :config
     (setq multi-vterm-dedicated-window-height-percent 50))
+#+end_src
+
+** Xclip
+[[https://elpa.gnu.org/packages/xclip.html][xclip]] package allows Emacs to copy to and paste from the GUI clipboard
+when running in text terminal.
+
+#+begin_src emacs-lisp
+  (unless (display-graphic-p)
+    (use-package xclip
+      :init
+      (xclip-mode)))
 #+end_src

@@ -14,7 +14,7 @@
           normal = {
             family = packages.fonts.main.name;
           };
-          size = 14.0;
+          size = 16.0;
           offset = {
             x = 1;
           };
