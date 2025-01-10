@@ -1,7 +1,13 @@
 { pkgs, lib, config, ... }:{
-  options.boot.disableBuiltinKeyboard = lib.mkOption {
-    type = lib.types.bool;
-    default = false;
+  options.boot = with lib; with lib.types; {
+    disableBuiltinKeyboard = mkOption {
+      type = lib.types.bool;
+      default = false;
+    };
+    useStableKernel = mkOption {
+      type = bool;
+      default = false;
+    };
   };
   config = {
     # Bootloader.
@@ -24,7 +30,7 @@
         };
       };
       tmp.useTmpfs = true;
-      kernelPackages = pkgs.linuxPackages_latest;  # get latest kernel
+      kernelPackages = lib.mkIf (!config.boot.useStableKernel) pkgs.linuxPackages_latest;
       kernel.sysctl = { "vm.swappiness" = 10; };
     };
   };
