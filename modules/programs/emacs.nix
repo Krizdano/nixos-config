@@ -44,6 +44,7 @@
       smex
       indent-bars
       nerd-icons
+      ledger-mode
     ];
   };
 
@@ -54,6 +55,7 @@
     nil
     zls
     cargo
+    ledger
     rustc
     python3 # for treemacs
     python312Packages.python-lsp-server

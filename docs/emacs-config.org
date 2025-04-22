@@ -23,6 +23,7 @@
 - [[#languages][Languages]]
   - [[#lua-mode][Lua-Mode]]
   - [[#markdown-mode][Markdown-Mode]]
+  - [[#ledger-mode][Ledger-mode]]
   - [[#sml][SML]]
   - [[#lsp][LSP]]
   - [[#tree-sitter][Tree-Sitter]]
@@ -274,6 +275,16 @@ Enable Markdown mode.
   (use-package markdown-mode
     :mode "\\.md\\'")
 
+#+end_src
+
+** Ledger-mode
+This Emacs library provides a major mode for editing files in the format used by the [[https://github.com/ledger/ledger][ledger]]
+command-line accounting system. It also provides automated support for some ledger workflows,
+such as reconciling transactions, or running certain reports.
+
+#+begin_src emacs-lisp
+  (use-package ledger-mode
+    :mode "\\.lgr\\'")
 #+end_src
 
 ** SML
@@ -1176,3 +1187,4 @@ when running in text terminal.
       :init
       (xclip-mode)))
 #+end_src
+
